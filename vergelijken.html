@@ -155,7 +155,7 @@
         /* Rijen */
         const rijen = [
           rij("Beoordeling",
-            bedrijven.map((b) => `<span class="score-blok"><span class="score-cijfer">${b.rating.toFixed(1)}</span>${VF.sterrenHTML(b.rating)}</span>`),
+            bedrijven.map((b) => `<span class="score-blok"><span class="score-cijfer">${VF.komma(b.rating)}</span>${VF.sterrenHTML(b.rating)}</span>`),
             besteIndex(bedrijven.map((b) => b.rating), "max")),
           rij("Aantal reviews",
             bedrijven.map((b) => b.aantalReviews.toLocaleString("nl-NL") + " reviews"),

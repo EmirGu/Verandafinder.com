@@ -399,7 +399,9 @@
         if (a.opmerkingen) regels.push("", `Opmerkingen: ${a.opmerkingen}`);
         regels.push("", "Ik hoor graag van u.", "", "Met vriendelijke groet,", a.naam, `E-mail: ${a.email}`);
         if (a.telefoon) regels.push(`Telefoon: ${a.telefoon}`);
-        return `mailto:info@${b.id}.nl?subject=${encodeURIComponent("Offerteaanvraag via Verandawijzer")}&body=${encodeURIComponent(regels.join("\r\n"))}`;
+        /* Aanvragen lopen via het platformadres; zo belandt er nooit e-mail op een
+           verzonnen bedrijfsdomein. Het bedrijf staat in het onderwerp. */
+        return `mailto:offerte@verandawijzer.nl?subject=${encodeURIComponent(`Offerteaanvraag voor ${b.naam} via Verandawijzer`)}&body=${encodeURIComponent(regels.join("\r\n"))}`;
       }
 
       /* ---------- Resultaat renderen ---------- */
@@ -424,7 +426,7 @@
               <span class="match-logo" style="background:${b.kleur}" aria-hidden="true">${VF.initialen(b.naam)}</span>
               <div>
                 <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
-                <div class="score-blok">${VF.sterrenHTML(b.rating)}<span class="score-cijfer">${b.rating.toFixed(1)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
+                <div class="score-blok">${VF.sterrenHTML(b.rating)}<span class="score-cijfer">${VF.komma(b.rating)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
               </div>
             </div>
             ${badges.length ? `<div class="bedrijf-tags">${badges.join("")}</div>` : ""}

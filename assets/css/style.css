@@ -55,7 +55,9 @@
 
 /* ---------- 2. Reset & basis ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* overflow-x: clip voorkomt horizontaal pannen door uitstekende elementen,
+   zonder een scrollcontainer te maken (position: sticky blijft werken) */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -264,6 +266,7 @@ input.fout, select.fout, textarea.fout { border-color: var(--rood-600); }
 .veld-fout { color: var(--rood-600); font-size: .82rem; margin-top: 5px; font-weight: 500; }
 textarea { min-height: 110px; resize: vertical; }
 select {
+  max-width: 100%;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233d4a43' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
@@ -297,7 +300,7 @@ select {
   width: 44px; height: 44px; border-radius: 12px; background: var(--groen-50); color: var(--groen-700);
   display: grid; place-items: center;
 }
-.keuze-kaart .keuze-titel { font-family: var(--font-kop); font-weight: 600; font-size: .96rem; color: var(--groen-900); }
+.keuze-kaart .keuze-titel { font-family: var(--font-kop); font-weight: 600; font-size: .96rem; color: var(--groen-900); overflow-wrap: anywhere; }
 .keuze-kaart .keuze-sub { font-size: .8rem; color: var(--ink-500); line-height: 1.45; }
 .keuze-kaart:hover .keuze-binnen { border-color: var(--groen-500); }
 .keuze-kaart input:checked + .keuze-binnen {
@@ -347,7 +350,7 @@ select {
   background: #fff; border-radius: var(--radius-m); padding: 10px; display: flex; gap: 10px;
   box-shadow: var(--schaduw-l); max-width: 560px;
 }
-.hero-zoek select { border: 0; box-shadow: none; font-weight: 500; }
+.hero-zoek select { border: 0; box-shadow: none; font-weight: 500; flex: 1; min-width: 0; padding-right: 32px; background-position: right 10px center; }
 .hero-zoek select:focus { box-shadow: none; }
 .hero-cijfers { display: flex; gap: 38px; margin-top: 36px; flex-wrap: wrap; }
 .hero-cijfer .cijfer { font-family: var(--font-kop); font-weight: 700; font-size: 1.6rem; color: var(--amber-400); }
@@ -412,7 +415,7 @@ select {
 .specs-tabel { width: 100%; border-collapse: collapse; font-size: .94rem; }
 .specs-tabel th, .specs-tabel td { text-align: left; padding: 11px 6px; border-bottom: 1px solid var(--lijn); vertical-align: top; }
 .specs-tabel th { color: var(--ink-500); font-weight: 500; width: 44%; }
-.specs-tabel td { font-weight: 500; color: var(--ink-900); }
+.specs-tabel td { font-weight: 500; color: var(--ink-900); overflow-wrap: anywhere; }
 .breadcrumb { font-size: .85rem; color: var(--ink-500); }
 .breadcrumb a { color: inherit; text-decoration: none; }
 .breadcrumb a:hover { color: var(--groen-700); text-decoration: underline; }
@@ -437,7 +440,8 @@ select {
 .vergelijk-tabel th, .vergelijk-tabel td {
   padding: 15px 18px; text-align: left; border-bottom: 1px solid var(--lijn); vertical-align: top; font-size: .93rem;
 }
-.vergelijk-tabel thead th { background: var(--groen-50); position: sticky; top: 72px; z-index: 5; }
+/* De tabel scrolt binnen .vergelijk-scroll; sticky is dus t.o.v. die container */
+.vergelijk-tabel thead th { background: var(--groen-50); position: sticky; top: 0; z-index: 5; }
 .vergelijk-tabel tbody th { color: var(--ink-500); font-weight: 500; width: 190px; background: var(--creme); }
 .vergelijk-tabel .beste { background: var(--ok-50); font-weight: 600; color: var(--ok-600); border-radius: var(--radius-s); }
 .vergelijk-tabel td .ja { color: var(--ok-600); font-weight: 600; }
@@ -537,9 +541,10 @@ select {
   .hero-raster { grid-template-columns: 1fr; gap: 34px; }
   .hero-visual { display: none; }
   .footer-boven { grid-template-columns: 1fr 1fr; gap: 30px; }
-  .detail-raster { grid-template-columns: 1fr; }
+  .detail-raster { grid-template-columns: minmax(0, 1fr); }
+  .detail-raster > *, .detail-hoofdkolom > * { min-width: 0; }
   .detail-zijbalk { position: static; }
-  .overzicht-indeling { grid-template-columns: 1fr; }
+  .overzicht-indeling { grid-template-columns: minmax(0, 1fr); }
   .filter-paneel { position: static; max-height: none; display: none; }
   .filter-paneel.open { display: block; }
   .filter-toggle-knop { display: inline-flex; }
@@ -563,8 +568,11 @@ select {
   .footer-boven { grid-template-columns: 1fr; }
   .wizard-knoppen { flex-direction: column-reverse; }
   .wizard-knoppen .knop { width: 100%; }
-  .vergelijk-tabel thead th { top: 0; }
   .toast-houder { left: 16px; right: 16px; bottom: 16px; }
+  /* Lange knopteksten mogen op smalle schermen afbreken i.p.v. uitsteken */
+  .knop { white-space: normal; max-width: 100%; }
+  .cta-band .cta-acties { width: 100%; }
+  .cta-band .cta-acties .knop { flex: 1; }
 }
 
 @media print {

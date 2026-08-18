@@ -155,7 +155,7 @@
         </details>
         <details class="faq-item">
           <summary>Wat kost een veranda gemiddeld?</summary>
-          <div class="faq-antwoord"><p>Reken globaal op € 200 tot € 950 per m², afhankelijk van materiaal, daktype en opties. Een gemiddelde aluminium veranda van 5×3 meter met polycarbonaat dak kost inclusief montage rond de € 5.000 à € 7.500. Gebruik de <a href="prijzen.html">prijswijzer</a> voor een richtprijs op maat.</p></div>
+          <div class="faq-antwoord"><p>Reken globaal op € 200 tot € 950 per m², afhankelijk van materiaal, daktype en opties. Een gemiddelde aluminium veranda van 5×3 meter met polycarbonaat dak kost inclusief montage meestal tussen de € 4.500 en € 6.250. Gebruik de <a href="prijzen.html">prijswijzer</a> voor een richtprijs op maat.</p></div>
         </details>
         <details class="faq-item">
           <summary>Heb ik een vergunning nodig?</summary>
@@ -217,7 +217,7 @@
           <a class="hp-rij" href="bedrijf.html?id=${b.id}">
             <span class="hp-logo" style="background:${b.kleur}">${VF.initialen(b.naam)}</span>
             <span><span class="hp-naam">${b.naam}</span><br><span class="hp-sub">${b.plaats} · vanaf ${VF.euro(b.prijsPerM2.min)}/m²</span></span>
-            <span class="hp-score"><span class="score-cijfer">${b.rating.toFixed(1)}</span><br><span class="hp-sub">${b.aantalReviews} reviews</span></span>
+            <span class="hp-score"><span class="score-cijfer">${VF.komma(b.rating)}</span><br><span class="hp-sub">${b.aantalReviews} reviews</span></span>
           </a>`).join("")}
         <div class="hp-voet"><a href="bedrijven.html">Bekijk alle ${BEDRIJVEN.length} bedrijven →</a></div>`;
 

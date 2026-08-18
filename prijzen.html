@@ -55,7 +55,7 @@
       <div class="wrap">
         <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Prijswijzer</span></nav>
         <h1>Wat kost jouw veranda?</h1>
-        <p>Stel je overkapping samen en zie direct een realistische richtprijs. De prijswijzer rekent met de actuele tarieven van alle aangesloten bedrijven — dus geen natte-vingerwerk, maar cijfers uit de markt.</p>
+        <p>Stel je overkapping samen en zie direct een realistische richtprijs. De prijswijzer rekent met de actuele tarieven van alle aangesloten bedrijven — dus geen nattevingerwerk, maar cijfers uit de markt.</p>
       </div>
     </section>
 
@@ -205,7 +205,7 @@
           </li>
           <li>
             <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span><strong>Overweeg zelfbouw.</strong> Een zelfbouwpakket is gemiddeld zo'n 28 procent goedkoper. Reken wel op een lang weekend werk met twee personen en degelijk gereedschap.</span>
+            <span><strong>Overweeg zelfbouw.</strong> Met een zelfbouwpakket bespaar je de montagekosten — zo'n 15 tot 20 procent van de totaalprijs. Reken wel op een lang weekend werk met twee personen en degelijk gereedschap.</span>
           </li>
           <li>
             <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -276,24 +276,29 @@
          per m² loopt van het GEMIDDELDE van hun prijsPerM2.min tot het
          GEMIDDELDE van hun prijsPerM2.max. Daarop passen we toe:
 
-         1. Daktype (factor op de basisprijs per m²):
-              glas ×1,15 · lamellen ×1,45 · sandwichpaneel ×1,05 ·
-              polycarbonaat ×0,9 · geen voorkeur ×1
+         1. Daktype: de bedrijvenselectie is al op daktype gefilterd, dus hun
+            tarieven dekken dit daktype al. Een vaste opslagfactor zou dubbel
+            tellen. In plaats daarvan kiezen we een SEGMENT binnen de range
+            (0 = gemiddelde min, 1 = gemiddelde max):
+              polycarbonaat [0 – 0,55] · sandwichpaneel [0,15 – 0,7] ·
+              glas [0,3 – 1] · lamellen [0,45 – 1] · geen voorkeur [0 – 1]
          2. Opties (vaste toeslag per m², opgeteld bij de prijs per m²):
               led +€40 · zonwering +€95 · schuifwanden +€130 ·
               spiewanden +€60 · elektra +€35 · fundering +€45 · onderhoud +€0
             Maatwerk werkt door in het geheel: factor ×1,1.
-         3. Montage: zelfbouw ×0,72 (de bedrijfstarieven zijn incl. montage).
+         3. Montage: zelfbouw ×0,82 — de bedrijfstarieven zijn incl. montage,
+            en montage & arbeid is zo'n 15–20% van de totaalprijs (zie de
+            kostentabel op deze pagina).
 
          Totaal = prijs per m² × oppervlakte, afgerond op €50.
          Levert een combinatie geen enkel bedrijf op, dan vallen we terug op
          een ruimere selectie (eerst zonder daktype, daarna alleen product)
          en melden we dat bij de uitkomst.
          ===================================================================== */
-      const DAK_FACTOR = { glas: 1.15, lamellen: 1.45, sandwichpaneel: 1.05, polycarbonaat: 0.9 };
+      const DAK_SEGMENT = { polycarbonaat: [0, 0.55], sandwichpaneel: [0.15, 0.7], glas: [0.3, 1], lamellen: [0.45, 1] };
       const OPTIE_TOESLAG_M2 = { led: 40, zonwering: 95, schuifwanden: 130, spiewanden: 60, elektra: 35, fundering: 45, onderhoud: 0 };
       const MAATWERK_FACTOR = 1.1;
-      const ZELFBOUW_FACTOR = 0.72;
+      const ZELFBOUW_FACTOR = 0.82;
 
       const rond50 = (n) => Math.round(n / 50) * 50;
       const klem = (n, min, max, standaard) => Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : standaard;
@@ -327,7 +332,7 @@
 
       document.getElementById("chips-montage").innerHTML =
         chip("radio", "montage", "montage", "Inclusief montage", "", true) +
-        chip("radio", "montage", "zelfbouw", "Zelfbouwpakket", "−28%", false);
+        chip("radio", "montage", "zelfbouw", "Zelfbouwpakket", "−18%", false);
 
       /* ---------- Berekening ---------- */
       const form = document.getElementById("prijswijzer");
@@ -368,11 +373,12 @@
         const gemMin = lijst.reduce((som, b) => som + b.prijsPerM2.min, 0) / lijst.length;
         const gemMax = lijst.reduce((som, b) => som + b.prijsPerM2.max, 0) / lijst.length;
 
-        /* 1. Daktype-factor  2. Optietoeslagen per m² */
-        const dakFactor = daktype ? DAK_FACTOR[daktype] : 1;
+        /* 1. Daktype-segment binnen de range  2. Optietoeslagen per m² */
+        const span = gemMax - gemMin;
+        const segment = daktype ? DAK_SEGMENT[daktype] : [0, 1];
         const toeslagM2 = gekozenOpties.reduce((som, o) => som + (OPTIE_TOESLAG_M2[o] || 0), 0);
-        let minM2 = gemMin * dakFactor + toeslagM2;
-        let maxM2 = gemMax * dakFactor + toeslagM2;
+        let minM2 = gemMin + span * segment[0] + toeslagM2;
+        let maxM2 = gemMin + span * segment[1] + toeslagM2;
         if (gekozenOpties.includes("maatwerk")) { minM2 *= MAATWERK_FACTOR; maxM2 *= MAATWERK_FACTOR; }
 
         /* 3. Zelfbouw */

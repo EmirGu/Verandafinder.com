@@ -14,8 +14,9 @@ const VF = (() => {
   function lees(sleutel) {
     try {
       const raw = localStorage.getItem(sleutel);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) { return geheugen[sleutel] || []; }
+      const waarde = raw ? JSON.parse(raw) : [];
+      return Array.isArray(waarde) ? waarde : [];
+    } catch (e) { return Array.isArray(geheugen[sleutel]) ? geheugen[sleutel] : []; }
   }
   function schrijf(sleutel, waarde) {
     try { localStorage.setItem(sleutel, JSON.stringify(waarde)); }
@@ -27,13 +28,16 @@ const VF = (() => {
 
   const euro = (n) => "€ " + Math.round(n).toLocaleString("nl-NL");
 
+  /* Nederlandse decimale komma voor beoordelingen: 4.8 → "4,8" */
+  const komma = (n) => n.toFixed(1).replace(".", ",");
+
   function sterrenHTML(score) {
     let html = "";
     for (let i = 1; i <= 5; i++) {
       const vol = score >= i - 0.25;
       html += `<svg class="${vol ? "" : "ster-leeg"}" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.5 5.8 21l1.6-7L2 9.3l7.1-.7z"/></svg>`;
     }
-    return `<span class="sterren" role="img" aria-label="${score.toFixed(1)} van 5 sterren">${html}</span>`;
+    return `<span class="sterren" role="img" aria-label="${komma(score)} van 5 sterren">${html}</span>`;
   }
 
   const initialen = (naam) => naam.split(/\s+/).filter((w) => /^[A-Za-z&]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
@@ -64,7 +68,7 @@ const VF = (() => {
       <div class="kaart-inhoud">
         <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
         <span class="bedrijf-plaats"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>${b.plaats}, ${b.provincie}</span>
-        <div class="score-blok">${sterrenHTML(b.rating)}<span class="score-cijfer">${b.rating.toFixed(1)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
+        <div class="score-blok">${sterrenHTML(b.rating)}<span class="score-cijfer">${komma(b.rating)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
         <div class="bedrijf-tags">${tags.map((t) => `<span class="badge">${t}</span>`).join("")}</div>
         <div class="kaart-voet">
           <span class="prijs-vanaf">Vanaf<strong>${euro(b.prijsPerM2.min)} / m²</strong></span>
@@ -145,7 +149,8 @@ const VF = (() => {
   function renderHeader() {
     const houder = document.getElementById("site-header");
     if (!houder) return;
-    const hier = paginaNaam();
+    /* Artikelpagina's vallen in de navigatie onder Kennisbank */
+    const hier = paginaNaam().startsWith("artikel-") ? "kennisbank.html" : paginaNaam();
     const links = [
       ["bedrijven.html", "Bedrijven"],
       ["vergelijken.html", "Vergelijken", "vergelijk"],
@@ -316,7 +321,7 @@ const VF = (() => {
   });
 
   return {
-    getBedrijf, euro, sterrenHTML, initialen, coverHTML, bedrijfKaartHTML,
+    getBedrijf, euro, komma, sterrenHTML, initialen, coverHTML, bedrijfKaartHTML,
     leesVergelijk, toggleVergelijk, verwijderVergelijk,
     leesFavorieten, toggleFavoriet,
     toast, verversUI, bijVerversen
