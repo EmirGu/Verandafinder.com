@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.verandafinder.com/sitemap.xml
+Sitemap: https://www.verandawijzer.nl/sitemap.xml

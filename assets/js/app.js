@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Verandafinder.com — Gedeelde applicatielogica
+   Verandawijzer.nl — Gedeelde applicatielogica
    Header/footer, vergelijken (max 3), favorieten, toasts en render-helpers.
    Vereist: data.js is eerder geladen.
    ========================================================================== */
@@ -155,9 +155,9 @@ const VF = (() => {
     ];
     houder.innerHTML = `<header class="site-header">
       <div class="wrap">
-        <a class="logo" href="index.html" aria-label="Verandafinder home">
+        <a class="logo" href="index.html" aria-label="Verandawijzer home">
           <span class="logo-beeld"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 11 12 4l10 7"/><path d="M5 9.5V20M19 9.5V20"/><path d="M3 20h18"/><path d="M9 20v-5h6v5"/></svg></span>
-          <span>Veranda<span class="logo-finder">finder</span></span>
+          <span>Veranda<span class="logo-accent">wijzer</span></span>
         </a>
         <button class="menu-knop" type="button" aria-expanded="false" aria-controls="hoofdnav" aria-label="Menu">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -183,7 +183,7 @@ const VF = (() => {
       <div class="wrap">
         <div class="footer-boven">
           <div class="footer-intro">
-            <a class="logo" href="index.html" style="color:#fff"><span class="logo-beeld"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 11 12 4l10 7"/><path d="M5 9.5V20M19 9.5V20"/><path d="M3 20h18"/><path d="M9 20v-5h6v5"/></svg></span><span>Veranda<span class="logo-finder">finder</span></span></a>
+            <a class="logo" href="index.html" style="color:#fff"><span class="logo-beeld"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 11 12 4l10 7"/><path d="M5 9.5V20M19 9.5V20"/><path d="M3 20h18"/><path d="M9 20v-5h6v5"/></svg></span><span>Veranda<span class="logo-accent">wijzer</span></span></a>
             <p class="mt-2">Onafhankelijk veranda's, overkappingen en tuinkamers vergelijken. Vind het bedrijf dat bij jouw wensen, regio en budget past.</p>
           </div>
           <div>
@@ -207,7 +207,7 @@ const VF = (() => {
             </ul>
           </div>
           <div>
-            <h4>Verandafinder</h4>
+            <h4>Verandawijzer</h4>
             <ul>
               <li><a href="over-ons.html">Over ons</a></li>
               <li><a href="contact.html">Contact</a></li>
@@ -218,7 +218,7 @@ const VF = (() => {
           </div>
         </div>
         <div class="footer-onder">
-          <span>© ${jaar} Verandafinder.com — Vergelijk zorgeloos, kies bewust.</span>
+          <span>© ${jaar} Verandawijzer.nl — Vergelijk zorgeloos, kies bewust.</span>
           <ul>
             <li><a href="privacy.html">Privacy</a></li>
             <li><a href="voorwaarden.html">Voorwaarden</a></li>

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Verandafinder.com — Design System
+   Verandawijzer.nl — Design System
    Puur CSS, geen dependencies. Kleuren, typografie en componenten voor
    alle pagina's. Volgorde: tokens → reset → basis → componenten → pagina-
    secties → utilities → responsive.
@@ -148,7 +148,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus
   background: var(--groen-800);
   display: grid; place-items: center; color: var(--amber-400);
 }
-.logo .logo-finder { color: var(--amber-600); }
+.logo .logo-accent { color: var(--amber-600); }
 .hoofdnav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .hoofdnav a {
   font-family: var(--font-kop); font-weight: 500; font-size: .93rem; color: var(--ink-700);

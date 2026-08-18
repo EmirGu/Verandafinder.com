@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gratis offertes aanvragen — Verandafinder.com</title>
+  <title>Gratis offertes aanvragen — Verandawijzer.nl</title>
   <meta name="description" content="Stel in zes stappen je offerteaanvraag samen en zie direct welke verandabedrijven bij jouw wensen, regio en budget passen. Gratis en vrijblijvend — jij kiest wie je benadert.">
-  <meta property="og:title" content="Gratis offertes aanvragen — Verandafinder.com">
+  <meta property="og:title" content="Gratis offertes aanvragen — Verandawijzer.nl">
   <meta property="og:description" content="Beantwoord een paar korte vragen en zie welke verandabedrijven bij jouw project passen. Jij stelt je aanvraag samen en kiest zelf wie je benadert.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,7 @@
 
     <section class="sectie">
       <div class="wrap-smal">
-        <div class="usp-rij" aria-label="Waarom via Verandafinder">
+        <div class="usp-rij" aria-label="Waarom via Verandawijzer">
           <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>100% gratis</span>
           <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Geheel vrijblijvend</span>
           <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Jij kiest wie je benadert</span>
@@ -386,7 +386,7 @@
         const regels = [
           "Geachte heer/mevrouw,",
           "",
-          `Via Verandafinder.com kwam ik uit bij ${b.naam}. Graag ontvang ik vrijblijvend een offerte voor het volgende project:`,
+          `Via Verandawijzer.nl kwam ik uit bij ${b.naam}. Graag ontvang ik vrijblijvend een offerte voor het volgende project:`,
           "",
           `- Type: ${PRODUCTEN[a.product]}`,
           `- Materiaal: ${a.materiaal ? MATERIALEN[a.materiaal] : "nog geen voorkeur"}`,
@@ -399,7 +399,7 @@
         if (a.opmerkingen) regels.push("", `Opmerkingen: ${a.opmerkingen}`);
         regels.push("", "Ik hoor graag van u.", "", "Met vriendelijke groet,", a.naam, `E-mail: ${a.email}`);
         if (a.telefoon) regels.push(`Telefoon: ${a.telefoon}`);
-        return `mailto:info@${b.id}.nl?subject=${encodeURIComponent("Offerteaanvraag via Verandafinder")}&body=${encodeURIComponent(regels.join("\r\n"))}`;
+        return `mailto:info@${b.id}.nl?subject=${encodeURIComponent("Offerteaanvraag via Verandawijzer")}&body=${encodeURIComponent(regels.join("\r\n"))}`;
       }
 
       /* ---------- Resultaat renderen ---------- */
@@ -479,7 +479,7 @@
         resultaatTitel.textContent = "Deze bedrijven passen bij jouw aanvraag";
         resultaatEl.innerHTML = `
           <div class="melding melding-ok" role="status">Je aanvraag is samengesteld.</div>
-          <p class="klein mb-0">We vonden <strong>${matches.length}</strong> ${matches.length === 1 ? "bedrijf dat" : "bedrijven die"} jouw ${PRODUCTEN[a.product].toLowerCase()} in ${a.provincie} ${matches.length === 1 ? "kan" : "kunnen"} bouwen${matches.length > 5 ? "; dit zijn de vijf beste matches" : ""}. Verandafinder verstuurt niets automatisch: klik bij de bedrijven van jouw keuze op &ldquo;Stuur aanvraag&rdquo; en verstuur de voorbereide e-mail zelf.</p>
+          <p class="klein mb-0">We vonden <strong>${matches.length}</strong> ${matches.length === 1 ? "bedrijf dat" : "bedrijven die"} jouw ${PRODUCTEN[a.product].toLowerCase()} in ${a.provincie} ${matches.length === 1 ? "kan" : "kunnen"} bouwen${matches.length > 5 ? "; dit zijn de vijf beste matches" : ""}. Verandawijzer verstuurt niets automatisch: klik bij de bedrijven van jouw keuze op &ldquo;Stuur aanvraag&rdquo; en verstuur de voorbereide e-mail zelf.</p>
           <div class="match-lijst">${top.map((m) => matchKaartHTML(m.bedrijf, a, m.score)).join("")}</div>
           <div class="match-acties mt-2">
             <button type="button" class="knop knop-outline" id="knop-opnieuw">Opnieuw beginnen</button>

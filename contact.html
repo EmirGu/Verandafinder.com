@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — Verandafinder.com</title>
-  <meta name="description" content="Vragen over Verandafinder, een review melden of je bedrijf aanmelden? Stuur ons een bericht via het contactformulier — we reageren binnen twee werkdagen.">
+  <title>Contact — Verandawijzer.nl</title>
+  <meta name="description" content="Vragen over Verandawijzer, een review melden of je bedrijf aanmelden? Stuur ons een bericht via het contactformulier — we reageren binnen twee werkdagen.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
           <!-- Formulier -->
           <div class="kaart detail-blok">
             <h2 style="font-size:1.4rem">Stuur ons een bericht</h2>
-            <p class="klein">Verandafinder heeft geen eigen server voor formulieren: na het controleren van je bericht opent je e-mailprogramma met alles vooringevuld, zodat je het zelf verstuurt. Zo blijven je gegevens bij jou.</p>
+            <p class="klein">Verandawijzer heeft geen eigen server voor formulieren: na het controleren van je bericht opent je e-mailprogramma met alles vooringevuld, zodat je het zelf verstuurt. Zo blijven je gegevens bij jou.</p>
 
             <form id="contact-formulier" novalidate>
               <div class="veld">
@@ -75,7 +75,7 @@
                   <tr><th scope="row">Bericht</th><td id="sv-bericht"></td></tr>
                 </tbody>
               </table>
-              <p class="klein">Klik op de knop hieronder: je e-mailprogramma opent met je bericht aan info@verandafinder.com, klaar om te verzenden. Er wordt dus niets automatisch verstuurd.</p>
+              <p class="klein">Klik op de knop hieronder: je e-mailprogramma opent met je bericht aan info@verandawijzer.nl, klaar om te verzenden. Er wordt dus niets automatisch verstuurd.</p>
               <div style="display:flex; gap:12px; flex-wrap:wrap">
                 <a class="knop knop-accent" id="mailto-knop" href="#">Open je e-mailprogramma</a>
                 <button class="knop knop-outline" type="button" id="bewerk-knop">Bericht aanpassen</button>
@@ -91,11 +91,11 @@
                 <tbody>
                   <tr>
                     <th scope="row">Algemeen</th>
-                    <td><a href="mailto:info@verandafinder.com">info@verandafinder.com</a></td>
+                    <td><a href="mailto:info@verandawijzer.nl">info@verandawijzer.nl</a></td>
                   </tr>
                   <tr>
                     <th scope="row">Voor bedrijven</th>
-                    <td><a href="mailto:bedrijven@verandafinder.com">bedrijven@verandafinder.com</a></td>
+                    <td><a href="mailto:bedrijven@verandawijzer.nl">bedrijven@verandawijzer.nl</a></td>
                   </tr>
                   <tr>
                     <th scope="row">Antwoordtermijn</th>
@@ -103,7 +103,7 @@
                   </tr>
                 </tbody>
               </table>
-              <p class="klein mt-1 mb-0">Verandafinder is een online platform zonder bezoekadres of telefonische helpdesk — per e-mail helpen we je het snelst.</p>
+              <p class="klein mt-1 mb-0">Verandawijzer is een online platform zonder bezoekadres of telefonische helpdesk — per e-mail helpen we je het snelst.</p>
             </div>
             <div class="kaart detail-blok">
               <h2 style="font-size:1.15rem">Eerst zelf even kijken?</h2>
@@ -112,7 +112,7 @@
                 <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="veelgestelde-vragen.html">Veelgestelde vragen</a></li>
                 <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="prijzen.html">Wat kost een veranda? De prijswijzer</a></li>
                 <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="kennisbank.html">Gidsen in de kennisbank</a></li>
-                <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="over-ons.html">Hoe Verandafinder werkt</a></li>
+                <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="over-ons.html">Hoe Verandawijzer werkt</a></li>
               </ul>
             </div>
             <div class="kaart detail-blok">
@@ -197,10 +197,10 @@
         document.getElementById("sv-onderwerp").textContent = onderwerp;
         document.getElementById("sv-bericht").innerHTML = esc(bericht).replace(/\n/g, "<br>");
 
-        const mailOnderwerp = "[Verandafinder] " + onderwerp;
+        const mailOnderwerp = "[Verandawijzer] " + onderwerp;
         const mailTekst = bericht + "\r\n\r\n— " + naam + " (" + email + ")";
         document.getElementById("mailto-knop").href =
-          "mailto:info@verandafinder.com?subject=" + encodeURIComponent(mailOnderwerp) +
+          "mailto:info@verandawijzer.nl?subject=" + encodeURIComponent(mailOnderwerp) +
           "&body=" + encodeURIComponent(mailTekst);
 
         formulier.classList.add("verborgen");

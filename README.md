@@ -1,4 +1,4 @@
-# Verandafinder.com
+# Verandawijzer.nl
 
 **Dé onafhankelijke vergelijkingssite voor veranda's, overkappingen en tuinkamers in Nederland.**
 

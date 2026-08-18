@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Verandafinder.com — Bedrijvendata
+   Verandawijzer.nl — Bedrijvendata
    --------------------------------------------------------------------------
    LET OP: dit zijn FICTIEVE VOORBEELDBEDRIJVEN zodat de site direct volledig
    werkt. Vervang ze door echte aangesloten bedrijven vóór livegang.

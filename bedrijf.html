@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bedrijfsprofiel — Verandafinder.com</title>
+  <title>Bedrijfsprofiel — Verandawijzer.nl</title>
   <meta name="description" content="Bekijk reviews, prijzen, specificaties en werkgebied van dit verandabedrijf. Vergelijk met andere bedrijven en vraag gratis een offerte aan.">
-  <meta property="og:title" content="Bedrijfsprofiel — Verandafinder.com">
-  <meta property="og:description" content="Reviews, prijzen en specificaties van verandabedrijven, onafhankelijk op een rij gezet door Verandafinder.">
+  <meta property="og:title" content="Bedrijfsprofiel — Verandawijzer.nl">
+  <meta property="og:description" content="Reviews, prijzen en specificaties van verandabedrijven, onafhankelijk op een rij gezet door Verandawijzer.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,7 +70,7 @@
 
       /* --- Onbekend of ontbrekend id: nette foutmelding --- */
       if (!b) {
-        document.title = "Bedrijf niet gevonden — Verandafinder.com";
+        document.title = "Bedrijf niet gevonden — Verandawijzer.nl";
         houder.innerHTML = `
           <section class="pagina-kop">
             <div class="wrap">
@@ -85,7 +85,7 @@
                   <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--ink-300)" stroke-width="1.6" stroke-linecap="round" style="margin:0 auto"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M8.5 11h5"/></svg>
                 </div>
                 <h2>Dit bedrijfsprofiel bestaat niet (meer)</h2>
-                <p>De link die je volgde klopt niet, of het bedrijf is niet langer aangesloten bij Verandafinder. Geen zorgen: er zijn genoeg andere verandabouwers om te vergelijken.</p>
+                <p>De link die je volgde klopt niet, of het bedrijf is niet langer aangesloten bij Verandawijzer. Geen zorgen: er zijn genoeg andere verandabouwers om te vergelijken.</p>
                 <a class="knop knop-primair" href="bedrijven.html">Bekijk alle bedrijven</a>
               </div>
             </div>
@@ -94,7 +94,7 @@
       }
 
       /* --- Bedrijf gevonden: titel en profiel opbouwen --- */
-      document.title = b.naam + " — Verandafinder.com";
+      document.title = b.naam + " — Verandawijzer.nl";
 
       const werkgebiedTekst = b.werkgebied.includes("Landelijk") ? "Heel Nederland" : b.werkgebied.join(", ");
       const klasseBadge = { budget: "badge-groen", midden: "", premium: "badge-amber" }[b.prijsKlasse] || "";
@@ -246,7 +246,7 @@
                   <p class="klein mb-0 mt-2">Gratis en vrijblijvend · reactie meestal binnen één werkdag.</p>
                 </div>
                 <div class="kaart detail-blok">
-                  <h2>Waarom via Verandafinder</h2>
+                  <h2>Waarom via Verandawijzer</h2>
                   <ul class="icoon-lijst">
                     <li>${vinkjeSVG}Vergelijken en offertes aanvragen is 100% gratis.</li>
                     <li>${vinkjeSVG}Reviews komen van echte klanten en worden gecontroleerd.</li>
