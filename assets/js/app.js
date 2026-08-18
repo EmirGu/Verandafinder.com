@@ -7,6 +7,7 @@
 const VF = (() => {
   const VERGELIJK_KEY = "vf_vergelijk";
   const FAVORIETEN_KEY = "vf_favorieten";
+  const RECENT_KEY = "vf_recent";
   const MAX_VERGELIJK = 3;
 
   /* ---------- Opslag (localStorage met fallback) ---------- */
@@ -169,6 +170,15 @@ const VF = (() => {
     verversUI();
     return lijst;
   }
+
+  /* ---------- Recent bekeken (profielbezoeken, lokaal) ---------- */
+  function registreerBezoek(id) {
+    if (!getBedrijf(id)) return;
+    const lijst = lees(RECENT_KEY).filter((x) => x !== id);
+    lijst.unshift(id);
+    schrijf(RECENT_KEY, lijst.slice(0, 8));
+  }
+  const leesRecent = () => lees(RECENT_KEY).filter((id) => getBedrijf(id));
 
   /* ---------- Toast ---------- */
   function toast(tekst) {
@@ -421,6 +431,7 @@ const VF = (() => {
     heeftPrijzen: BEDRIJVEN.some((b) => b.prijsPerM2),
     leesVergelijk, toggleVergelijk, verwijderVergelijk,
     leesFavorieten, toggleFavoriet,
+    registreerBezoek, leesRecent,
     toast, verversUI, bijVerversen
   };
 })();
