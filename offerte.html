@@ -27,8 +27,7 @@
     .match-lijst { display: grid; gap: 14px; margin-top: 20px; }
     .match-inhoud { flex: 1; min-width: 0; display: grid; gap: 10px; }
     .match-kop { display: flex; align-items: center; gap: 12px; }
-    .match-logo { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-family: var(--font-kop); font-weight: 700; font-size: .9rem; flex: none; }
-    .match-kop h3 { margin: 0; font-size: 1.08rem; }
+    .match-kop h3 { margin: 0 0 2px; font-size: 1.08rem; }
     .match-feiten { display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: .9rem; color: var(--ink-500); }
     .match-feiten span { display: inline-flex; align-items: center; gap: 6px; }
     .match-feiten strong { color: var(--groen-900); }
@@ -353,32 +352,58 @@
       }
 
       /* ---------- Matching ----------
-         Filter: bedrijf voert het product, werkt in de provincie ("Landelijk"
-         telt altijd mee) en ondersteunt — indien gekozen — materiaal en daktype.
-         Score (max 100):
-           - 55 punten × (rating / 5)                     → kwaliteit weegt het zwaarst
-           - 30 punten × (gematchte opties / gewenste)    → geen opties gekozen = volle punten
-           - prijsklasse: budget 15, midden 11, premium 7 → scherpere prijs weegt licht mee */
+         FILTER — een bedrijf doet alleen mee als het:
+         1. het gekozen product voert (b.producten);
+         2. in de gekozen provincie werkt: de vestigingsprovincie is de gekozen
+            provincie, óf het gepubliceerde werkgebied bevat die provincie, óf
+            het werkgebied is "Landelijk". Is er geen werkgebied vermeld
+            (werkgebied = null), dan matchen we alleen op vestigingsprovincie;
+         3. het gekozen materiaal en daktype niet uitsluit. Een lege typen- of
+            dakTypen-lijst betekent "niet op de eigen site vermeld" — zulke
+            bedrijven vallen NIET af (onbekend is niet hetzelfde als nee),
+            maar krijgen er ook geen matchpunten voor.
+
+         SCORE (getoond als matchpercentage, max 100) — puur dekking van de
+         opgegeven wensen plus twee kleine feitelijke bonussen:
+           40  producteis    altijd volledig gedekt (zit in het filter)
+           20  materiaaleis  geen voorkeur = gedekt; "niet vermeld" = 0
+           20  dakeis        geen voorkeur = gedekt; "niet vermeld" = 0
+           12  opties        naar rato van gematchte gewenste opties;
+                             geen opties gewenst = volledig
+            4  bonus: showroom aanwezig
+            4  bonus: eigen montageteam
+         Er weegt géén rating of prijs mee: die gegevens zijn er (nog) niet
+         (rating en prijsPerM2 staan op null tot er echte data is). */
+      function werktInProvincie(b, provincie) {
+        if (b.provincie === provincie) return true;
+        return !!b.werkgebied && (b.werkgebied.includes("Landelijk") || b.werkgebied.includes(provincie));
+      }
+
       function matchScore(b, a) {
-        const ratingPunten = (b.rating / 5) * 55;
-        let optiePunten = 30;
-        if (a.opties.length) {
-          const geraakt = a.opties.filter((o) => b.opties.includes(o)).length;
-          optiePunten = 30 * (geraakt / a.opties.length);
-        }
-        const prijsPunten = { budget: 15, midden: 11, premium: 7 }[b.prijsKlasse] || 9;
-        return Math.round(ratingPunten + optiePunten + prijsPunten);
+        let punten = 40; /* producteis: door het filter altijd gedekt */
+        punten += !a.materiaal ? 20 : (b.typen.includes(a.materiaal) ? 20 : 0);
+        punten += !a.dak ? 20 : (b.dakTypen.includes(a.dak) ? 20 : 0);
+        punten += a.opties.length
+          ? Math.round(12 * (a.opties.filter((o) => b.opties.includes(o)).length / a.opties.length))
+          : 12;
+        if (b.showroom) punten += 4;
+        if (b.montageEigenTeam) punten += 4;
+        return punten;
       }
 
       function vindMatches(a) {
         return BEDRIJVEN
           .filter((b) =>
             b.producten.includes(a.product) &&
-            (b.werkgebied.includes("Landelijk") || b.werkgebied.includes(a.provincie)) &&
-            (!a.materiaal || b.typen.includes(a.materiaal)) &&
-            (!a.dak || b.dakTypen.includes(a.dak)))
+            werktInProvincie(b, a.provincie) &&
+            (!a.materiaal || !b.typen.length || b.typen.includes(a.materiaal)) &&
+            (!a.dak || !b.dakTypen.length || b.dakTypen.includes(a.dak)))
           .map((b) => ({ bedrijf: b, score: matchScore(b, a) }))
-          .sort((x, y) => y.score - x.score || y.bedrijf.rating - x.bedrijf.rating || y.bedrijf.aantalReviews - x.bedrijf.aantalReviews);
+          .sort((x, y) =>
+            y.score - x.score ||
+            /* gelijke score: bedrijf gevestigd in de gekozen provincie eerst, daarna alfabetisch */
+            (y.bedrijf.provincie === a.provincie) - (x.bedrijf.provincie === a.provincie) ||
+            x.bedrijf.naam.localeCompare(y.bedrijf.naam, "nl"));
       }
 
       /* ---------- Mailto: nette Nederlandse e-mail voorinvullen ---------- */
@@ -405,42 +430,58 @@
       }
 
       /* ---------- Resultaat renderen ---------- */
-      const TELEFOON_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
+      const PLAATS_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>';
+      const CHECK_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>';
+
+      /* Badge per wens: groen bij een match; gedempt met "niet vermeld" als het
+         bedrijf er zelf niets over publiceert — onbekend is niet hetzelfde als nee. */
+      const wensBadge = (label, vermeld) => vermeld
+        ? `<span class="badge badge-groen">✓ ${label}</span>`
+        : `<span class="badge badge-uit">${label} — niet vermeld</span>`;
 
       function matchKaartHTML(b, a, score) {
         const badges = [];
-        if (a.materiaal) badges.push(`<span class="badge badge-groen">✓ ${MATERIALEN[a.materiaal]}</span>`);
-        if (a.dak) badges.push(`<span class="badge badge-groen">✓ ${DAKTYPEN[a.dak]}</span>`);
-        a.opties.forEach((o) => {
-          badges.push(b.opties.includes(o)
-            ? `<span class="badge badge-groen">✓ ${OPTIES[o]}</span>`
-            : `<span class="badge badge-uit">✕ ${OPTIES[o]}</span>`);
-        });
-        const richtMin = b.prijsPerM2.min * a.m2;
-        const richtMax = b.prijsPerM2.max * a.m2;
-        const telHref = "tel:" + b.telefoon.replace(/\D/g, "");
+        if (a.materiaal) badges.push(wensBadge(MATERIALEN[a.materiaal], b.typen.includes(a.materiaal)));
+        if (a.dak) badges.push(wensBadge(DAKTYPEN[a.dak], b.dakTypen.includes(a.dak)));
+        a.opties.forEach((o) => badges.push(wensBadge(OPTIES[o], b.opties.includes(o))));
+        const plaats = b.plaats ? `${b.plaats}, ${b.provincie}` : "Landelijk";
         return `<article class="kaart match-kaart">
           <div class="match-score" role="img" aria-label="Matchscore ${score} procent">${score}%</div>
           <div class="match-inhoud">
             <div class="match-kop">
-              <span class="match-logo" style="background:${b.kleur}" aria-hidden="true">${VF.initialen(b.naam)}</span>
+              ${VF.avatarHTML(b)}
               <div>
                 <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
-                <div class="score-blok">${VF.sterrenHTML(b.rating)}<span class="score-cijfer">${VF.komma(b.rating)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
+                ${VF.scoreHTML(b)}
               </div>
             </div>
             ${badges.length ? `<div class="bedrijf-tags">${badges.join("")}</div>` : ""}
             <div class="match-feiten">
-              <span>Vanaf <strong>${VF.euro(b.prijsPerM2.min)}/m²</strong></span>
-              <span>Richtprijs voor ${nl(a.m2)} m²: <strong>${VF.euro(richtMin)} – ${VF.euro(richtMax)}</strong></span>
-              <span>${TELEFOON_SVG}<a href="${telHref}">${b.telefoon}</a></span>
+              <span>${PLAATS_SVG}${plaats}</span>
+              ${b.showroom ? `<span>${CHECK_SVG}Showroom</span>` : ""}
+              ${b.montageEigenTeam ? `<span>${CHECK_SVG}Eigen montageteam</span>` : ""}
             </div>
             <div class="match-acties">
               <a class="knop knop-primair knop-klein" href="${mailtoHref(b, a)}">Stuur aanvraag</a>
-              <a class="knop knop-outline knop-klein" href="bedrijf.html?id=${b.id}">Bekijk profiel</a>
+              ${b.website ? `<a class="knop knop-outline knop-klein" href="${b.website}" target="_blank" rel="noopener">Bezoek website</a>` : ""}
             </div>
           </div>
         </article>`;
+      }
+
+      /* Marktrichtprijs: één regel boven de matchlijst, berekend uit de
+         marktrichtprijzen per m² (RICHTPRIJZEN_M2, eigen marktanalyse
+         Verandawijzer) — nadrukkelijk géén offerte of prijs van de getoonde
+         bedrijven. Een lamellendak heeft een eigen range; anders geldt de
+         range van het gekozen materiaal, of "standaard" bij geen voorkeur. */
+      function marktRichtprijsHTML(a) {
+        const range = a.product === "lamellendak"
+          ? RICHTPRIJZEN_M2.lamellendak
+          : (RICHTPRIJZEN_M2[a.materiaal] || RICHTPRIJZEN_M2.standaard);
+        if (!range || !a.m2) return "";
+        return `<div class="m2-weergave" style="margin:16px 0 0">
+          <span>Marktrichtprijs voor ${nl(a.m2)} m²: <strong>${VF.euro(range.min * a.m2)} – ${VF.euro(range.max * a.m2)}</strong> inclusief montage. Dit is een marktrichtprijs op basis van onze eigen marktanalyse — geen offerte van deze bedrijven. <a href="prijzen.html">Meer over prijzen</a></span>
+        </div>`;
       }
 
       /* ---------- Aanvraag lokaal bewaren ---------- */
@@ -482,6 +523,7 @@
         resultaatEl.innerHTML = `
           <div class="melding melding-ok" role="status">Je aanvraag is samengesteld.</div>
           <p class="klein mb-0">We vonden <strong>${matches.length}</strong> ${matches.length === 1 ? "bedrijf dat" : "bedrijven die"} jouw ${PRODUCTEN[a.product].toLowerCase()} in ${a.provincie} ${matches.length === 1 ? "kan" : "kunnen"} bouwen${matches.length > 5 ? "; dit zijn de vijf beste matches" : ""}. Verandawijzer verstuurt niets automatisch: klik bij de bedrijven van jouw keuze op &ldquo;Stuur aanvraag&rdquo; en verstuur de voorbereide e-mail zelf.</p>
+          ${marktRichtprijsHTML(a)}
           <div class="match-lijst">${top.map((m) => matchKaartHTML(m.bedrijf, a, m.score)).join("")}</div>
           <div class="match-acties mt-2">
             <button type="button" class="knop knop-outline" id="knop-opnieuw">Opnieuw beginnen</button>
