@@ -172,11 +172,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus
 }
 .hoofdnav a:hover { background: var(--creme); color: var(--groen-900); }
 .hoofdnav a.actief { color: var(--groen-900); font-weight: 600; box-shadow: inset 0 -2px 0 var(--amber-500); border-radius: var(--radius-s) var(--radius-s) 0 0; }
-.hoofdnav a.nav-teller { position: relative; }
+/* Tellerbadge staat ín de link, náást de tekst — nooit eroverheen */
+.hoofdnav a.nav-teller { display: inline-flex; align-items: center; gap: 6px; }
 .nav-badge {
-  position: absolute; top: 0; right: 2px; min-width: 18px; height: 18px; padding: 0 5px;
+  min-width: 18px; height: 18px; padding: 0 5px;
   border-radius: var(--radius-pill); background: var(--amber-500); color: var(--groen-950);
-  font-size: .68rem; font-weight: 700; display: grid; place-items: center; line-height: 1;
+  font-size: .68rem; font-weight: 700; display: inline-grid; place-items: center; line-height: 1;
 }
 .nav-cta { margin-left: 6px; }
 .menu-knop {
@@ -362,6 +363,8 @@ select {
   color: #fff; transform: translateY(110%); transition: transform .3s ease; box-shadow: var(--schaduw-l);
 }
 .vergelijk-balk.zichtbaar { transform: translateY(0); }
+/* Ruimte onderaan de pagina zodat de balk geen content bedekt */
+body.met-vergelijkbalk { padding-bottom: 84px; }
 .vergelijk-balk .wrap { display: flex; align-items: center; gap: 18px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
 .vergelijk-balk .vb-titel { font-family: var(--font-kop); font-weight: 600; font-size: .95rem; }
 .vergelijk-balk .vb-items { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
@@ -384,22 +387,26 @@ select {
 }
 @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-/* ---------- 10. Hero (home) — licht en zoek-gericht ---------- */
+/* ---------- 10. Hero (home) — één ding: zoeken ---------- */
 .hero {
   background: #fff; border-bottom: 1px solid var(--lijn);
-  color: var(--ink-900); padding: 48px 0 54px; position: relative;
+  color: var(--ink-900); padding: 64px 0 60px; position: relative;
 }
-.hero h1 { max-width: 22ch; }
+.hero-midden { max-width: 780px; margin: 0 auto; text-align: center; }
+.hero .boventitel {
+  display: inline-block; font-family: var(--font-kop); font-size: .78rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .09em; color: var(--groen-600); margin-bottom: 10px;
+}
+.hero h1 { margin-left: auto; margin-right: auto; }
 .hero h1 em { font-style: normal; color: var(--groen-700); }
-.hero .hero-intro { font-size: 1.05rem; color: var(--ink-500); max-width: 56ch; margin-bottom: 22px; }
-.hero-raster { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; position: relative; z-index: 2; }
+.hero .hero-intro { font-size: 1.08rem; color: var(--ink-500); max-width: 54ch; margin: 0 auto 28px; }
 .hero-zoek {
   background: #fff; border: 1.5px solid var(--groen-700); border-radius: var(--radius-s);
-  padding: 6px; display: flex; gap: 6px; max-width: 580px; box-shadow: var(--schaduw-s);
+  padding: 6px; display: flex; gap: 6px; max-width: 620px; margin: 0 auto; box-shadow: var(--schaduw-s);
 }
-.hero-zoek select { border: 0; box-shadow: none; font-weight: 500; flex: 1; min-width: 0; padding-right: 32px; background-position: right 10px center; }
+.hero-zoek select { border: 0; box-shadow: none; font-weight: 500; flex: 1; min-width: 0; padding-right: 32px; background-position: right 10px center; text-align: left; }
 .hero-zoek select:focus { box-shadow: none; }
-.hero-cijfers { display: flex; gap: 30px; margin-top: 26px; flex-wrap: wrap; }
+.hero-cijfers { display: flex; gap: 12px 34px; margin-top: 26px; flex-wrap: wrap; justify-content: center; }
 .hero-cijfer { display: flex; align-items: baseline; gap: 8px; }
 .hero-cijfer .cijfer { font-family: var(--font-kop); font-weight: 700; font-size: 1.15rem; color: var(--kop-kleur); }
 .hero-cijfer .cijfer-label { font-size: .86rem; color: var(--ink-500); }

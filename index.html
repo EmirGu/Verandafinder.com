@@ -19,30 +19,50 @@
   <div id="site-header"></div>
 
   <main id="inhoud">
-    <!-- Hero -->
+    <!-- Hero: één ding — zoeken -->
     <section class="hero">
-      <div class="wrap hero-raster">
-        <div>
-          <h1>Vind de <em>beste verandabouwer</em> voor jouw tuin</h1>
-          <p class="hero-intro">Vergelijk verandabedrijven op aanbod, materiaal, werkgebied en specialisatie. Onafhankelijk, overzichtelijk en gratis.</p>
-          <form class="hero-zoek" action="bedrijven.html" method="get">
-            <select name="provincie" aria-label="Kies je provincie">
-              <option value="">Heel Nederland</option>
-            </select>
-            <select name="product" aria-label="Wat zoek je?">
-              <option value="">Alle producten</option>
-            </select>
-            <button class="knop knop-accent" type="submit">Toon bedrijven</button>
-          </form>
-          <div class="hero-cijfers">
-            <div class="hero-cijfer"><div class="cijfer" id="cijfer-bedrijven">—</div><div class="cijfer-label">bedrijven in de gids</div></div>
-            <div class="hero-cijfer"><div class="cijfer" id="cijfer-provincies">—</div><div class="cijfer-label">provincies gedekt</div></div>
-            <div class="hero-cijfer"><div class="cijfer" id="cijfer-showrooms">—</div><div class="cijfer-label">met eigen showroom</div></div>
-          </div>
+      <div class="wrap hero-midden">
+        <span class="boventitel">Onafhankelijke vergelijker</span>
+        <h1>Vind de <em>beste verandabouwer</em> voor jouw tuin</h1>
+        <p class="hero-intro">Vergelijk verandabedrijven op aanbod, materiaal en werkgebied. Onafhankelijk, overzichtelijk en gratis.</p>
+        <form class="hero-zoek" action="bedrijven.html" method="get">
+          <select name="provincie" aria-label="Kies je provincie">
+            <option value="">Heel Nederland</option>
+          </select>
+          <select name="product" aria-label="Wat zoek je?">
+            <option value="">Alle producten</option>
+          </select>
+          <button class="knop knop-accent" type="submit">Toon bedrijven</button>
+        </form>
+        <div class="hero-cijfers">
+          <div class="hero-cijfer"><div class="cijfer" id="cijfer-bedrijven">—</div><div class="cijfer-label">bedrijven in de gids</div></div>
+          <div class="hero-cijfer"><div class="cijfer" id="cijfer-provincies">—</div><div class="cijfer-label">provincies gedekt</div></div>
+          <div class="hero-cijfer"><div class="cijfer" id="cijfer-showrooms">—</div><div class="cijfer-label">met eigen showroom</div></div>
         </div>
-        <div class="hero-visual">
-          <div class="hero-paneel" id="hero-paneel"></div>
+      </div>
+    </section>
+
+    <!-- Uitgelichte bedrijven -->
+    <section class="sectie">
+      <div class="wrap">
+        <div class="sectie-kop">
+          <span class="boventitel">Uitgelicht</span>
+          <h2>Een greep uit de gids</h2>
+          <p>Bekijk profielen, zet bedrijven naast elkaar en vraag gericht offertes aan bij wie bij jouw project past.</p>
         </div>
+        <div class="kaarten-raster" id="top-bedrijven"></div>
+        <p class="tekst-midden mt-3"><a class="knop knop-outline" href="bedrijven.html">Bekijk alle bedrijven →</a></p>
+      </div>
+    </section>
+
+    <!-- Producttypen -->
+    <section class="sectie" style="background:#fff">
+      <div class="wrap">
+        <div class="sectie-kop midden">
+          <span class="boventitel">Wat zoek je?</span>
+          <h2>Vergelijk per type overkapping</h2>
+        </div>
+        <div class="kaarten-raster-4" id="product-typen"></div>
       </div>
     </section>
 
@@ -71,30 +91,6 @@
             <p>Beantwoord een paar vragen en zie direct welke bedrijven bij je wensen passen. Jij kiest wie je benadert — geen spam.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Best beoordeeld -->
-    <section class="sectie" style="background:#fff">
-      <div class="wrap">
-        <div class="sectie-kop">
-          <span class="boventitel">Uitgelicht</span>
-          <h2>Een greep uit de gids</h2>
-          <p>Bekijk profielen, zet bedrijven naast elkaar en vraag gericht offertes aan bij wie bij jouw project past.</p>
-        </div>
-        <div class="kaarten-raster" id="top-bedrijven"></div>
-        <p class="tekst-midden mt-3"><a class="knop knop-outline" href="bedrijven.html">Bekijk alle bedrijven →</a></p>
-      </div>
-    </section>
-
-    <!-- Producttypen -->
-    <section class="sectie">
-      <div class="wrap">
-        <div class="sectie-kop midden">
-          <span class="boventitel">Wat zoek je?</span>
-          <h2>Vergelijk per type overkapping</h2>
-        </div>
-        <div class="kaarten-raster-4" id="product-typen"></div>
       </div>
     </section>
 
@@ -218,17 +214,6 @@
       }
       document.getElementById("top-bedrijven").innerHTML = uitgelicht.map(VF.bedrijfKaartHTML).join("");
       VF.verversUI();
-
-      /* Hero-paneel: drie bedrijven uit de gids */
-      document.getElementById("hero-paneel").innerHTML = `
-        <div class="hp-kop">Uit de gids <span class="badge">${BEDRIJVEN.length} bedrijven</span></div>
-        ${uitgelicht.slice(0, 3).map((b) => `
-          <a class="hp-rij" href="bedrijf.html?id=${b.id}">
-            ${VF.avatarHTML(b)}
-            <span><span class="hp-naam">${b.naam}</span><br><span class="hp-sub">${b.plaats}${b.provincie ? ", " + b.provincie : ""} · ${b.producten.slice(0, 2).map((p) => PRODUCTEN[p]).join(", ")}</span></span>
-            <span class="hp-score">${b.rating ? `<span class="score-cijfer">${VF.komma(b.rating)}</span>` : `<span class="hp-sub">${b.showroom ? "Showroom" : "Bekijk profiel"}</span>`}</span>
-          </a>`).join("")}
-        <div class="hp-voet"><a href="bedrijven.html">Bekijk alle ${BEDRIJVEN.length} bedrijven →</a></div>`;
 
       /* Producttypen met aantallen */
       const iconen = {

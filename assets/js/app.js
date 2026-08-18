@@ -316,8 +316,10 @@ const VF = (() => {
     const lijst = leesVergelijk();
     if (!lijst.length || paginaNaam() === "vergelijken.html") {
       balk.classList.remove("zichtbaar");
+      document.body.classList.remove("met-vergelijkbalk");
       return;
     }
+    document.body.classList.add("met-vergelijkbalk");
     balk.innerHTML = `<div class="wrap">
       <span class="vb-titel">Vergelijken (${lijst.length}/${MAX_VERGELIJK})</span>
       <span class="vb-items">${lijst.map((id) => {
