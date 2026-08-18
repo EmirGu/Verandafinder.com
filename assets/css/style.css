@@ -633,6 +633,26 @@ body.met-vergelijkbalk { padding-bottom: 84px; }
   .cta-band .cta-acties .knop { flex: 1; }
 }
 
+/* ---------- 21. Paginatransities ---------- */
+/* Cross-document view transitions: zachte overgang bij het wisselen van pagina.
+   Werkt in Chrome/Edge/Safari; browsers zonder ondersteuning krijgen de
+   fallback hieronder. De header behoudt zijn eigen naam en blijft daardoor
+   rustig staan terwijl de inhoud overvloeit. */
+@view-transition { navigation: auto; }
+#site-header { view-transition-name: site-kop; }
+::view-transition-old(root) { animation: vt-uit .16s ease both; }
+::view-transition-new(root) { animation: vt-in .24s ease both; }
+@keyframes vt-uit { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes pagina-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@supports not (view-transition-name: root) {
+  main { animation: pagina-in .28s ease both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+  main { animation: none !important; }
+}
+
 @media print {
   .site-header, .site-footer, .vergelijk-balk, .toast-houder, .knop { display: none !important; }
   body { background: #fff; }
