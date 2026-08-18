@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prijswijzer: bereken wat jouw veranda kost — Verandafinder.com</title>
+  <meta name="description" content="Bereken in een paar klikken de richtprijs van je veranda, overkapping of tuinkamer. Actuele prijzen per m², inzicht in de prijsopbouw en slimme bespaartips.">
+  <meta property="og:title" content="Prijswijzer: bereken wat jouw veranda kost — Verandafinder.com">
+  <meta property="og:description" content="Kies type, materiaal, afmeting en opties en zie direct een realistische richtprijs, gebaseerd op actuele tarieven van aangesloten verandabedrijven.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    /* Pagina-specifiek: tweekoloms indeling van de prijswijzer */
+    .calc-kaart { overflow: hidden; }
+    .calc-raster { display: grid; grid-template-columns: 1.08fr .92fr; align-items: stretch; }
+    .calc-invoer { padding: 30px 32px 26px; min-width: 0; }
+    .calc-invoer fieldset { border: 0; padding: 0; margin: 0 0 22px; min-width: 0; }
+    .calc-invoer fieldset:last-of-type { margin-bottom: 0; }
+    .calc-invoer legend { font-weight: 600; font-size: .9rem; color: var(--groen-900); padding: 0; margin-bottom: 8px; }
+    .chip small { font-size: .78em; font-weight: 400; opacity: .8; }
+    .maat-raster { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: end; }
+    .maat-raster label { margin-bottom: 6px; }
+    .m2-uitkomst {
+      font-family: var(--font-kop); font-weight: 600; color: var(--groen-800);
+      background: var(--groen-50); border-radius: var(--radius-s); padding: 12px 18px; white-space: nowrap;
+    }
+    .calc-resultaat { border-radius: 0; display: flex; flex-direction: column; justify-content: center; }
+    .calc-resultaat .pu-label {
+      text-transform: uppercase; letter-spacing: .1em; font-size: .76rem; font-weight: 600;
+      color: var(--amber-400); margin: 0 0 4px;
+    }
+    .calc-resultaat a:not(.knop) { color: var(--amber-400); }
+    .calc-resultaat a:not(.knop):hover { color: #fff; }
+    .calc-resultaat hr { border: 0; border-top: 1px solid rgba(255, 255, 255, .18); margin: 18px 0 12px; width: 100%; }
+    .calc-resultaat .knop { margin-top: 16px; }
+    .calc-resultaat .pu-voetnoot { font-size: .78rem; color: #8fa79a; margin-top: 12px; }
+    @media (max-width: 900px) {
+      .calc-raster { grid-template-columns: 1fr; }
+      .maat-raster { grid-template-columns: 1fr 1fr; }
+      .m2-uitkomst { grid-column: 1 / -1; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
+  <div id="site-header"></div>
+
+  <main id="inhoud">
+    <!-- Paginakop -->
+    <section class="pagina-kop">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Prijswijzer</span></nav>
+        <h1>Wat kost jouw veranda?</h1>
+        <p>Stel je overkapping samen en zie direct een realistische richtprijs. De prijswijzer rekent met de actuele tarieven van alle aangesloten bedrijven — dus geen natte-vingerwerk, maar cijfers uit de markt.</p>
+      </div>
+    </section>
+
+    <!-- Prijswijzer -->
+    <section class="sectie">
+      <div class="wrap">
+        <div class="sectie-kop">
+          <span class="boventitel">Prijswijzer</span>
+          <h2>Stel je overkapping samen</h2>
+          <p>Pas je keuzes aan en de richtprijs rekent live mee. Alle bedragen zijn inclusief 21% btw.</p>
+        </div>
+
+        <div class="kaart calc-kaart">
+          <form id="prijswijzer" class="calc-raster" novalidate>
+            <div class="calc-invoer">
+              <fieldset>
+                <legend>Wat wil je plaatsen?</legend>
+                <div class="chips" id="chips-product"></div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Materiaal</legend>
+                <div class="chips" id="chips-materiaal"></div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Daktype</legend>
+                <div class="chips" id="chips-daktype"></div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Afmetingen</legend>
+                <div class="maat-raster">
+                  <div>
+                    <label for="calc-breedte">Breedte (meter)</label>
+                    <input type="number" id="calc-breedte" name="breedte" value="5" min="2" max="12" step="0.5" inputmode="decimal">
+                  </div>
+                  <div>
+                    <label for="calc-diepte">Diepte (meter)</label>
+                    <input type="number" id="calc-diepte" name="diepte" value="3" min="2" max="12" step="0.5" inputmode="decimal">
+                  </div>
+                  <div class="m2-uitkomst" id="calc-m2" aria-live="polite">15 m²</div>
+                </div>
+                <p class="hint" style="font-weight:400;color:var(--ink-500);font-size:.82rem;margin:6px 0 0">Van 2 tot 12 meter per zijde. Weet je de maat nog niet? Laat dan de standaardmaat 5 × 3 staan.</p>
+              </fieldset>
+
+              <fieldset>
+                <legend>Opties</legend>
+                <div class="chips" id="chips-opties"></div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Montage</legend>
+                <div class="chips" id="chips-montage"></div>
+              </fieldset>
+            </div>
+
+            <div class="prijs-uitkomst calc-resultaat" aria-live="polite">
+              <p class="pu-label">Geschatte richtprijs</p>
+              <div class="prijs-groot" id="res-range">€ —</div>
+              <p id="res-per-m2">—</p>
+              <p id="res-melding" class="verborgen"></p>
+              <hr>
+              <p id="res-bedrijven">—</p>
+              <a class="knop knop-accent knop-breed" href="offerte.html">Vraag gratis offertes aan</a>
+              <p class="pu-voetnoot">Richtprijs op basis van actuele tarieven van aangesloten bedrijven, inclusief 21% btw. Aan deze berekening kun je geen rechten ontlenen.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prijsinformatie -->
+    <section class="sectie" style="background:#fff">
+      <div class="wrap-smal artikel-inhoud">
+        <h2 class="mt-0">Richtprijzen per type overkapping</h2>
+        <p>Onderstaande richtprijzen zijn rechtstreeks afgeleid uit de tarieven van de aangesloten bedrijven: van het laagste tot het hoogste tarief per vierkante meter, inclusief standaard montage. Als voorbeeld rekenen we een gangbare maat van 15 m² (5 × 3 meter) voor je uit.</p>
+        <div class="tabel-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Aanbieders</th>
+                <th scope="col">Prijs per m²</th>
+                <th scope="col">Voorbeeld 15 m² (incl. montage)</th>
+              </tr>
+            </thead>
+            <tbody id="richtprijs-tbody"></tbody>
+          </table>
+        </div>
+        <p class="klein">Wil je meer achtergrond bij deze bedragen? Lees dan het artikel <a href="artikel-wat-kost-een-veranda.html">Wat kost een veranda in 2026?</a> in de kennisbank.</p>
+
+        <h2>Waar gaat je geld naartoe?</h2>
+        <p>Een offerte bestaat uit meer dan alleen de constructie. Dit is de gebruikelijke verdeling van de totaalprijs bij een veranda inclusief montage:</p>
+        <div class="tabel-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Kostenpost</th>
+                <th scope="col">Aandeel</th>
+                <th scope="col">Toelichting</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Constructie &amp; profielen</th>
+                <td>35–45%</td>
+                <td>Staanders, goot en liggers in aluminium, hout of staal, inclusief poedercoating of behandeling.</td>
+              </tr>
+              <tr>
+                <th scope="row">Dakbedekking</th>
+                <td>20–30%</td>
+                <td>Polycarbonaat is het voordeligst; glas en zeker kantelbare lamellen kosten flink meer.</td>
+              </tr>
+              <tr>
+                <th scope="row">Montage &amp; arbeid</th>
+                <td>15–20%</td>
+                <td>Inmeten, plaatsen en afwerken. Bij zelfbouw bespaar je dit deel grotendeels.</td>
+              </tr>
+              <tr>
+                <th scope="row">Fundering &amp; grondwerk</th>
+                <td>5–10%</td>
+                <td>Alleen nodig bij een slechte ondergrond of zware uitvoering; vaak een aparte offertepost.</td>
+              </tr>
+              <tr>
+                <th scope="row">Opties &amp; afwerking</th>
+                <td>0–20%</td>
+                <td>LED-verlichting, zonwering, schuifwanden en elektra. Hier lopen offertes het meest uiteen.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Zo bespaar je slim</h2>
+        <ul class="icoon-lijst">
+          <li>
+            <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><strong>Kies polycarbonaat in plaats van glas.</strong> Een helder polycarbonaat dak oogt vergelijkbaar, maar scheelt al snel 20 tot 25 procent op de totaalprijs.</span>
+          </li>
+          <li>
+            <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><strong>Blijf bij standaardmaten.</strong> Volledig maatwerk kost gemiddeld tien procent extra. Een standaardmaat van bijvoorbeeld 5 × 3 of 6 × 3,5 meter is vrijwel altijd voordeliger én sneller leverbaar.</span>
+          </li>
+          <li>
+            <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><strong>Vergelijk minimaal drie offertes.</strong> Voor hetzelfde project lopen offertes gerust duizenden euro's uiteen. Via de <a href="offerte.html">offerteservice</a> vraag je ze gericht en zonder verplichtingen aan.</span>
+          </li>
+          <li>
+            <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><strong>Overweeg zelfbouw.</strong> Een zelfbouwpakket is gemiddeld zo'n 28 procent goedkoper. Reken wel op een lang weekend werk met twee personen en degelijk gereedschap.</span>
+          </li>
+          <li>
+            <svg class="vinkje" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><strong>Plan buiten het hoogseizoen.</strong> In het najaar en de winter hebben bouwers meer ruimte in de planning: dat betekent vaak scherpere prijzen en kortere levertijden.</span>
+          </li>
+        </ul>
+
+        <div class="info-blok">
+          <strong>Let op: dit zijn richtprijzen.</strong> De prijswijzer en de tabellen geven een realistisch beeld op basis van de tarieven van aangesloten bedrijven, maar elke tuin is anders. Bereikbaarheid, ondergrond, kleurkeuze en de aansluiting op je gevel bepalen mede de uiteindelijke prijs. Vraag daarom altijd een <a href="offerte.html">vrijblijvende offerte</a> aan voor een exact bedrag.
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="sectie">
+      <div class="wrap-smal">
+        <div class="sectie-kop midden">
+          <span class="boventitel">Veelgestelde vragen</span>
+          <h2>Vragen over veranda­prijzen</h2>
+        </div>
+        <details class="faq-item">
+          <summary>Zijn de richtprijzen inclusief btw en montage?</summary>
+          <div class="faq-antwoord"><p>Ja. Alle prijzen op deze pagina zijn inclusief 21% btw en standaard montage, tenzij je in de prijswijzer voor een zelfbouwpakket kiest. Fundering, bestrating en elektra zitten er alleen bij als je die als optie aanvinkt — in offertes zijn dat vaak aparte posten.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Wat zit er precies in een offerte?</summary>
+          <div class="faq-antwoord"><p>Een complete offerte omvat de constructie, de dakbedekking, bevestigingsmaterialen, transport en montage. Controleer altijd wat er <em>niet</em> in zit: fundering, afvoer van een oude overkapping, elektra en eventuele vergunningskosten worden nogal eens vergeten. In onze <a href="artikel-veranda-kopen-waar-op-letten.html">koopchecklist</a> lees je precies waar je op moet letten.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Waarom is het verschil tussen budget en premium zo groot?</summary>
+          <div class="faq-antwoord"><p>Een premium veranda kan ruim het dubbele kosten van een budgetuitvoering met dezelfde maat. Dat verschil zit in de profieldikte en afwerking, de kwaliteit van de coating, de garantie (van 3 tot wel 15 jaar), montage door eigen vakmensen in plaats van onderaannemers en de mogelijkheid tot volledig maatwerk. Voor een standaardoverkapping op een beschutte plek is budget vaak prima; wie een blijvende aanbouw aan het huis wil, kiest meestal midden- of premiumsegment.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Waarom kan mijn offerte afwijken van de richtprijs?</summary>
+          <div class="faq-antwoord"><p>De prijswijzer rekent met gemiddelde tarieven per vierkante meter. Jouw situatie kan duurder of juist goedkoper uitpakken door de bereikbaarheid van de tuin, de staat van de ondergrond, een afwijkende kleur of de manier waarop de veranda op de gevel aansluit. Vraag daarom bij meerdere <a href="bedrijven.html">bedrijven</a> een offerte aan en vergelijk ze op de totaalprijs én op wat er precies is inbegrepen.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Slot-CTA -->
+    <section class="sectie-strak">
+      <div class="wrap">
+        <div class="cta-band">
+          <div>
+            <h2>Weten wat het in jouw tuin kost?</h2>
+            <p>Een richtprijs is een goed begin — een offerte op maat maakt het concreet. Vraag vrijblijvend offertes aan bij bedrijven die bij jouw project passen.</p>
+          </div>
+          <div class="cta-acties">
+            <a class="knop knop-wit" href="bedrijven.html">Bekijk alle bedrijven</a>
+            <a class="knop knop-accent knop-groot" href="offerte.html">Offertes aanvragen</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      /* =====================================================================
+         Prijswijzer — datagedreven berekening
+         ---------------------------------------------------------------------
+         Basisrange: neem alle bedrijven die het gekozen product leveren
+         (en, indien gekozen, ook het materiaal en daktype). De basisprijs
+         per m² loopt van het GEMIDDELDE van hun prijsPerM2.min tot het
+         GEMIDDELDE van hun prijsPerM2.max. Daarop passen we toe:
+
+         1. Daktype (factor op de basisprijs per m²):
+              glas ×1,15 · lamellen ×1,45 · sandwichpaneel ×1,05 ·
+              polycarbonaat ×0,9 · geen voorkeur ×1
+         2. Opties (vaste toeslag per m², opgeteld bij de prijs per m²):
+              led +€40 · zonwering +€95 · schuifwanden +€130 ·
+              spiewanden +€60 · elektra +€35 · fundering +€45 · onderhoud +€0
+            Maatwerk werkt door in het geheel: factor ×1,1.
+         3. Montage: zelfbouw ×0,72 (de bedrijfstarieven zijn incl. montage).
+
+         Totaal = prijs per m² × oppervlakte, afgerond op €50.
+         Levert een combinatie geen enkel bedrijf op, dan vallen we terug op
+         een ruimere selectie (eerst zonder daktype, daarna alleen product)
+         en melden we dat bij de uitkomst.
+         ===================================================================== */
+      const DAK_FACTOR = { glas: 1.15, lamellen: 1.45, sandwichpaneel: 1.05, polycarbonaat: 0.9 };
+      const OPTIE_TOESLAG_M2 = { led: 40, zonwering: 95, schuifwanden: 130, spiewanden: 60, elektra: 35, fundering: 45, onderhoud: 0 };
+      const MAATWERK_FACTOR = 1.1;
+      const ZELFBOUW_FACTOR = 0.72;
+
+      const rond50 = (n) => Math.round(n / 50) * 50;
+      const klem = (n, min, max, standaard) => Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : standaard;
+      const m2Tekst = (n) => (Math.round(n * 10) / 10).toLocaleString("nl-NL") + " m²";
+
+      /* ---------- Keuzechips opbouwen ---------- */
+      const chip = (type, naam, waarde, label, sub, checked) => `
+        <label class="chip">
+          <input type="${type}" name="${naam}" value="${waarde}" ${checked ? "checked" : ""}>
+          <span>${label}${sub ? ` <small>${sub}</small>` : ""}</span>
+        </label>`;
+
+      document.getElementById("chips-product").innerHTML =
+        Object.entries(PRODUCTEN).map(([sleutel, label], i) => chip("radio", "product", sleutel, label, "", i === 0)).join("");
+
+      document.getElementById("chips-materiaal").innerHTML =
+        chip("radio", "materiaal", "", "Geen voorkeur", "", true) +
+        Object.entries(MATERIALEN).map(([sleutel, label]) => chip("radio", "materiaal", sleutel, label, "")).join("");
+
+      document.getElementById("chips-daktype").innerHTML =
+        chip("radio", "daktype", "", "Geen voorkeur", "", true) +
+        Object.entries(DAKTYPEN).map(([sleutel, label]) => chip("radio", "daktype", sleutel, label, "")).join("");
+
+      document.getElementById("chips-opties").innerHTML =
+        Object.entries(OPTIES).map(([sleutel, label]) => {
+          const toeslag = OPTIE_TOESLAG_M2[sleutel];
+          const sub = sleutel === "maatwerk" ? "+10%"
+            : toeslag > 0 ? `+ € ${toeslag}/m²` : "";
+          return chip("checkbox", "opties", sleutel, label, sub, false);
+        }).join("");
+
+      document.getElementById("chips-montage").innerHTML =
+        chip("radio", "montage", "montage", "Inclusief montage", "", true) +
+        chip("radio", "montage", "zelfbouw", "Zelfbouwpakket", "−28%", false);
+
+      /* ---------- Berekening ---------- */
+      const form = document.getElementById("prijswijzer");
+      const resRange = document.getElementById("res-range");
+      const resPerM2 = document.getElementById("res-per-m2");
+      const resMelding = document.getElementById("res-melding");
+      const resBedrijven = document.getElementById("res-bedrijven");
+
+      function bereken() {
+        const fd = new FormData(form);
+        const product = fd.get("product") || "veranda";
+        const materiaal = fd.get("materiaal") || "";
+        const daktype = fd.get("daktype") || "";
+        const breedte = klem(parseFloat(fd.get("breedte")), 2, 12, 5);
+        const diepte = klem(parseFloat(fd.get("diepte")), 2, 12, 3);
+        const m2 = breedte * diepte;
+        const gekozenOpties = fd.getAll("opties");
+        const zelfbouw = fd.get("montage") === "zelfbouw";
+
+        document.getElementById("calc-m2").textContent = m2Tekst(m2);
+
+        /* Passende bedrijven zoeken; bij nul treffers stapsgewijs terugvallen */
+        const perProduct = BEDRIJVEN.filter((b) => b.producten.includes(product));
+        let lijst = perProduct;
+        if (materiaal) lijst = lijst.filter((b) => b.typen.includes(materiaal));
+        if (daktype) lijst = lijst.filter((b) => b.dakTypen.includes(daktype));
+        let terugval = false;
+        if (!lijst.length && materiaal) {
+          terugval = true;
+          lijst = perProduct.filter((b) => b.typen.includes(materiaal));
+        }
+        if (!lijst.length) {
+          terugval = true;
+          lijst = perProduct;
+        }
+
+        /* 0. Basisrange: gemiddelde min t/m gemiddelde max per m² */
+        const gemMin = lijst.reduce((som, b) => som + b.prijsPerM2.min, 0) / lijst.length;
+        const gemMax = lijst.reduce((som, b) => som + b.prijsPerM2.max, 0) / lijst.length;
+
+        /* 1. Daktype-factor  2. Optietoeslagen per m² */
+        const dakFactor = daktype ? DAK_FACTOR[daktype] : 1;
+        const toeslagM2 = gekozenOpties.reduce((som, o) => som + (OPTIE_TOESLAG_M2[o] || 0), 0);
+        let minM2 = gemMin * dakFactor + toeslagM2;
+        let maxM2 = gemMax * dakFactor + toeslagM2;
+        if (gekozenOpties.includes("maatwerk")) { minM2 *= MAATWERK_FACTOR; maxM2 *= MAATWERK_FACTOR; }
+
+        /* 3. Zelfbouw */
+        if (zelfbouw) { minM2 *= ZELFBOUW_FACTOR; maxM2 *= ZELFBOUW_FACTOR; }
+
+        const totMin = rond50(minM2 * m2);
+        const totMax = rond50(maxM2 * m2);
+
+        /* ---------- Uitkomst tonen ---------- */
+        resRange.textContent = `${VF.euro(totMin)} – ${VF.euro(totMax)}`;
+        resPerM2.textContent = `${VF.euro(minM2)} – ${VF.euro(maxM2)} per m² · ${m2Tekst(m2)} · ${zelfbouw ? "zelfbouwpakket" : "inclusief montage"}`;
+
+        if (terugval) {
+          resMelding.textContent = "Geen enkel bedrijf levert precies deze combinatie. De richtprijs is daarom gebaseerd op een ruimere selectie aanbieders.";
+          resMelding.classList.remove("verborgen");
+        } else {
+          resMelding.classList.add("verborgen");
+        }
+
+        const productLabel = PRODUCTEN[product].toLowerCase();
+        resBedrijven.innerHTML = `Gebaseerd op ${lijst.length} ${lijst.length === 1 ? "bedrijf" : "bedrijven"} —
+          <a href="bedrijven.html?product=${product}">bekijk alle aanbieders van een ${productLabel} →</a>`;
+      }
+
+      form.addEventListener("input", bereken);
+      form.addEventListener("change", bereken);
+      form.addEventListener("submit", (e) => { e.preventDefault(); bereken(); });
+      bereken();
+
+      /* ---------- Richtprijzentabel: live afgeleid uit de bedrijvendata ---------- */
+      document.getElementById("richtprijs-tbody").innerHTML =
+        Object.entries(PRODUCTEN).map(([sleutel, label]) => {
+          const aanbieders = BEDRIJVEN.filter((b) => b.producten.includes(sleutel));
+          const min = Math.min(...aanbieders.map((b) => b.prijsPerM2.min));
+          const max = Math.max(...aanbieders.map((b) => b.prijsPerM2.max));
+          return `<tr>
+            <th scope="row"><a href="bedrijven.html?product=${sleutel}">${label}</a></th>
+            <td>${aanbieders.length}</td>
+            <td>${VF.euro(min)} – ${VF.euro(max)}</td>
+            <td>${VF.euro(rond50(min * 15))} – ${VF.euro(rond50(max * 15))}</td>
+          </tr>`;
+        }).join("");
+    });
+  </script>
+</body>
+</html>

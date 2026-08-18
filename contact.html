@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Verandafinder.com</title>
+  <meta name="description" content="Vragen over Verandafinder, een review melden of je bedrijf aanmelden? Stuur ons een bericht via het contactformulier — we reageren binnen twee werkdagen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
+  <div id="site-header"></div>
+
+  <main id="inhoud">
+    <div class="pagina-kop">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › Contact</nav>
+        <h1>Contact</h1>
+        <p>Een vraag over de site, een review melden of je bedrijf aanmelden? Laat het ons weten — we reageren binnen twee werkdagen.</p>
+      </div>
+    </div>
+
+    <section class="sectie">
+      <div class="wrap">
+        <div class="detail-raster">
+          <!-- Formulier -->
+          <div class="kaart detail-blok">
+            <h2 style="font-size:1.4rem">Stuur ons een bericht</h2>
+            <p class="klein">Verandafinder heeft geen eigen server voor formulieren: na het controleren van je bericht opent je e-mailprogramma met alles vooringevuld, zodat je het zelf verstuurt. Zo blijven je gegevens bij jou.</p>
+
+            <form id="contact-formulier" novalidate>
+              <div class="veld">
+                <label for="cf-naam">Je naam</label>
+                <input type="text" id="cf-naam" name="naam" autocomplete="name" required>
+                <p class="veld-fout" id="fout-naam" hidden></p>
+              </div>
+              <div class="veld">
+                <label for="cf-email">Je e-mailadres</label>
+                <input type="email" id="cf-email" name="email" autocomplete="email" required>
+                <p class="hint">We gebruiken je e-mailadres alleen om je te antwoorden.</p>
+                <p class="veld-fout" id="fout-email" hidden></p>
+              </div>
+              <div class="veld">
+                <label for="cf-onderwerp">Onderwerp</label>
+                <select id="cf-onderwerp" name="onderwerp" required>
+                  <option value="">Maak een keuze…</option>
+                  <option value="Vraag over de site">Vraag over de site</option>
+                  <option value="Review melden">Review melden</option>
+                  <option value="Bedrijf aanmelden">Bedrijf aanmelden</option>
+                  <option value="Anders">Anders</option>
+                </select>
+                <p class="veld-fout" id="fout-onderwerp" hidden></p>
+              </div>
+              <div class="veld">
+                <label for="cf-bericht">Je bericht</label>
+                <textarea id="cf-bericht" name="bericht" required></textarea>
+                <p class="hint">Meld je een review? Noem dan het bedrijf en de titel van de review, dan zoeken we het sneller uit.</p>
+                <p class="veld-fout" id="fout-bericht" hidden></p>
+              </div>
+              <button class="knop knop-primair" type="submit">Controleer en verstuur</button>
+            </form>
+
+            <!-- Bevestiging (verschijnt na verzenden) -->
+            <div id="verzonden" class="verborgen">
+              <div class="melding melding-ok">Je bericht staat klaar. Controleer de samenvatting hieronder en open je e-mailprogramma om het te versturen.</div>
+              <table class="specs-tabel mb-2">
+                <tbody>
+                  <tr><th scope="row">Naam</th><td id="sv-naam"></td></tr>
+                  <tr><th scope="row">E-mailadres</th><td id="sv-email"></td></tr>
+                  <tr><th scope="row">Onderwerp</th><td id="sv-onderwerp"></td></tr>
+                  <tr><th scope="row">Bericht</th><td id="sv-bericht"></td></tr>
+                </tbody>
+              </table>
+              <p class="klein">Klik op de knop hieronder: je e-mailprogramma opent met je bericht aan info@verandafinder.com, klaar om te verzenden. Er wordt dus niets automatisch verstuurd.</p>
+              <div style="display:flex; gap:12px; flex-wrap:wrap">
+                <a class="knop knop-accent" id="mailto-knop" href="#">Open je e-mailprogramma</a>
+                <button class="knop knop-outline" type="button" id="bewerk-knop">Bericht aanpassen</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zijkolom -->
+          <aside class="detail-zijbalk" aria-label="Contactgegevens en handige links">
+            <div class="kaart detail-blok">
+              <h2 style="font-size:1.15rem">Contactgegevens</h2>
+              <table class="specs-tabel">
+                <tbody>
+                  <tr>
+                    <th scope="row">Algemeen</th>
+                    <td><a href="mailto:info@verandafinder.com">info@verandafinder.com</a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Voor bedrijven</th>
+                    <td><a href="mailto:bedrijven@verandafinder.com">bedrijven@verandafinder.com</a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Antwoordtermijn</th>
+                    <td>Binnen twee werkdagen</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="klein mt-1 mb-0">Verandafinder is een online platform zonder bezoekadres of telefonische helpdesk — per e-mail helpen we je het snelst.</p>
+            </div>
+            <div class="kaart detail-blok">
+              <h2 style="font-size:1.15rem">Eerst zelf even kijken?</h2>
+              <p class="klein">Veel antwoorden vind je direct op de site:</p>
+              <ul class="icoon-lijst">
+                <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="veelgestelde-vragen.html">Veelgestelde vragen</a></li>
+                <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="prijzen.html">Wat kost een veranda? De prijswijzer</a></li>
+                <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="kennisbank.html">Gidsen in de kennisbank</a></li>
+                <li><svg class="vinkje" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg><a href="over-ons.html">Hoe Verandafinder werkt</a></li>
+              </ul>
+            </div>
+            <div class="kaart detail-blok">
+              <h2 style="font-size:1.15rem">Bedrijf aanmelden?</h2>
+              <p class="klein mb-2">Lees eerst wat we van aangesloten bedrijven vragen en mail ons daarna je gegevens.</p>
+              <a class="knop knop-outline knop-klein" href="over-ons.html#voor-bedrijven">Informatie voor bedrijven</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const formulier = document.getElementById("contact-formulier");
+      const verzonden = document.getElementById("verzonden");
+      const velden = {
+        naam: document.getElementById("cf-naam"),
+        email: document.getElementById("cf-email"),
+        onderwerp: document.getElementById("cf-onderwerp"),
+        bericht: document.getElementById("cf-bericht")
+      };
+
+      const esc = (s) => s.replace(/[&<>"']/g, (t) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[t]));
+
+      function zetFout(sleutel, tekst) {
+        const veld = velden[sleutel];
+        const fout = document.getElementById("fout-" + sleutel);
+        if (tekst) {
+          veld.classList.add("fout");
+          veld.setAttribute("aria-invalid", "true");
+          veld.setAttribute("aria-describedby", "fout-" + sleutel);
+          fout.textContent = tekst;
+          fout.hidden = false;
+        } else {
+          veld.classList.remove("fout");
+          veld.removeAttribute("aria-invalid");
+          veld.removeAttribute("aria-describedby");
+          fout.textContent = "";
+          fout.hidden = true;
+        }
+      }
+
+      function controleer() {
+        const fouten = {};
+        if (velden.naam.value.trim().length < 2) fouten.naam = "Vul je naam in (minimaal 2 tekens).";
+        const email = velden.email.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) fouten.email = "Vul een geldig e-mailadres in, bijvoorbeeld naam@voorbeeld.nl.";
+        if (!velden.onderwerp.value) fouten.onderwerp = "Kies een onderwerp.";
+        if (velden.bericht.value.trim().length < 10) fouten.bericht = "Schrijf een bericht van minimaal 10 tekens.";
+        Object.keys(velden).forEach((sleutel) => zetFout(sleutel, fouten[sleutel] || null));
+        return fouten;
+      }
+
+      /* Fouten live opruimen zodra het veld wordt hersteld */
+      Object.keys(velden).forEach((sleutel) => {
+        velden[sleutel].addEventListener("input", () => zetFout(sleutel, null));
+        velden[sleutel].addEventListener("change", () => zetFout(sleutel, null));
+      });
+
+      formulier.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fouten = controleer();
+        const eersteFout = Object.keys(fouten)[0];
+        if (eersteFout) {
+          velden[eersteFout].focus();
+          return;
+        }
+
+        const naam = velden.naam.value.trim();
+        const email = velden.email.value.trim();
+        const onderwerp = velden.onderwerp.value;
+        const bericht = velden.bericht.value.trim();
+
+        document.getElementById("sv-naam").textContent = naam;
+        document.getElementById("sv-email").textContent = email;
+        document.getElementById("sv-onderwerp").textContent = onderwerp;
+        document.getElementById("sv-bericht").innerHTML = esc(bericht).replace(/\n/g, "<br>");
+
+        const mailOnderwerp = "[Verandafinder] " + onderwerp;
+        const mailTekst = bericht + "\r\n\r\n— " + naam + " (" + email + ")";
+        document.getElementById("mailto-knop").href =
+          "mailto:info@verandafinder.com?subject=" + encodeURIComponent(mailOnderwerp) +
+          "&body=" + encodeURIComponent(mailTekst);
+
+        formulier.classList.add("verborgen");
+        verzonden.classList.remove("verborgen");
+        verzonden.scrollIntoView({ behavior: "smooth", block: "center" });
+        VF.toast("Je bericht staat klaar om te versturen");
+      });
+
+      document.getElementById("bewerk-knop").addEventListener("click", () => {
+        verzonden.classList.add("verborgen");
+        formulier.classList.remove("verborgen");
+        velden.bericht.focus();
+      });
+    });
+  </script>
+</body>
+</html>

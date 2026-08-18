@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gratis offertes aanvragen — Verandafinder.com</title>
+  <meta name="description" content="Stel in zes stappen je offerteaanvraag samen en zie direct welke verandabedrijven bij jouw wensen, regio en budget passen. Gratis en vrijblijvend — jij kiest wie je benadert.">
+  <meta property="og:title" content="Gratis offertes aanvragen — Verandafinder.com">
+  <meta property="og:description" content="Beantwoord een paar korte vragen en zie welke verandabedrijven bij jouw project passen. Jij stelt je aanvraag samen en kiest zelf wie je benadert.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    /* Pagina-specifiek: USP-rij en opmaak van de matchresultaten */
+    .usp-rij { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; margin-bottom: 24px; font-size: .93rem; font-weight: 500; color: var(--ink-700); }
+    .usp-rij span { display: inline-flex; align-items: center; gap: 7px; }
+    .usp-rij svg { color: var(--ok-600); flex: none; }
+    #wizard-kaart { scroll-margin-top: 92px; }
+    #offerte-wizard fieldset { border: 0; padding: 0; margin: 0 0 24px; min-width: 0; }
+    #offerte-wizard legend { font-family: inherit; font-weight: 600; font-size: .9rem; color: var(--groen-900); padding: 0; margin-bottom: 10px; }
+    .veld-rij { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+    .m2-weergave { display: flex; align-items: baseline; gap: 10px; background: var(--groen-50); border: 1px solid var(--groen-100); border-radius: var(--radius-s); padding: 12px 16px; margin-bottom: 24px; font-size: .92rem; color: var(--groen-800); }
+    .m2-weergave strong { font-family: var(--font-kop); font-size: 1.15rem; color: var(--groen-900); }
+    .match-lijst { display: grid; gap: 14px; margin-top: 20px; }
+    .match-inhoud { flex: 1; min-width: 0; display: grid; gap: 10px; }
+    .match-kop { display: flex; align-items: center; gap: 12px; }
+    .match-logo { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-family: var(--font-kop); font-weight: 700; font-size: .9rem; flex: none; }
+    .match-kop h3 { margin: 0; font-size: 1.08rem; }
+    .match-feiten { display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: .9rem; color: var(--ink-500); }
+    .match-feiten span { display: inline-flex; align-items: center; gap: 6px; }
+    .match-feiten strong { color: var(--groen-900); }
+    .match-acties { display: flex; flex-wrap: wrap; gap: 10px; }
+    @media (max-width: 600px) {
+      .veld-rij { grid-template-columns: 1fr; }
+      .match-kaart { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
+  <div id="site-header"></div>
+
+  <main id="inhoud">
+    <section class="pagina-kop">
+      <div class="wrap-smal">
+        <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › Offertes aanvragen</nav>
+        <h1>Vraag gericht offertes aan</h1>
+        <p>Beantwoord een paar korte vragen over je project. Je ziet direct welke bedrijven bij je wensen passen — je stelt je aanvraag samen en verstuurt hem zelf per e-mail naar de bedrijven die jij kiest.</p>
+      </div>
+    </section>
+
+    <section class="sectie">
+      <div class="wrap-smal">
+        <div class="usp-rij" aria-label="Waarom via Verandafinder">
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>100% gratis</span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Geheel vrijblijvend</span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Jij kiest wie je benadert</span>
+        </div>
+
+        <div class="kaart detail-blok" id="wizard-kaart">
+          <div class="wizard-voortgang" aria-hidden="true">
+            <div class="wv-stap actief"></div>
+            <div class="wv-stap"></div>
+            <div class="wv-stap"></div>
+            <div class="wv-stap"></div>
+            <div class="wv-stap"></div>
+            <div class="wv-stap"></div>
+          </div>
+          <p class="wizard-stap-label" id="stap-label" aria-live="polite">Stap 1 van 6</p>
+
+          <form id="offerte-wizard" novalidate>
+            <!-- Stap 1: product -->
+            <div class="wizard-stap" id="wstap-1">
+              <h2 tabindex="-1" id="stap1-titel">Wat wil je laten bouwen?</h2>
+              <p class="klein mb-2">Kies het type project. Twijfel je tussen twee typen? Kies wat het dichtst in de buurt komt — je kunt dit later altijd nog met het bedrijf bespreken.</p>
+              <div class="keuze-raster" id="product-raster" role="radiogroup" aria-labelledby="stap1-titel" aria-describedby="fout-product"></div>
+              <div class="veld-fout" id="fout-product" aria-live="polite"></div>
+            </div>
+
+            <!-- Stap 2: materiaal en dak -->
+            <div class="wizard-stap verborgen" id="wstap-2">
+              <h2 tabindex="-1">Materiaal en dak</h2>
+              <p class="klein mb-2">Nog geen idee? Laat dan &ldquo;Nog geen voorkeur&rdquo; staan — dan zie je straks bedrijven met alle materialen en daktypen.</p>
+              <fieldset>
+                <legend>Welk materiaal heeft je voorkeur?</legend>
+                <div class="chips" id="materiaal-chips"></div>
+              </fieldset>
+              <fieldset>
+                <legend>Welk daktype heeft je voorkeur?</legend>
+                <div class="chips" id="dak-chips"></div>
+              </fieldset>
+            </div>
+
+            <!-- Stap 3: afmetingen -->
+            <div class="wizard-stap verborgen" id="wstap-3">
+              <h2 tabindex="-1">Afmetingen</h2>
+              <p class="klein mb-2">Een schatting is prima: het bedrijf meet altijd nog exact in. De meeste veranda&rsquo;s zijn tussen de 4 en 7 meter breed en 2,5 tot 4 meter diep.</p>
+              <div class="veld-rij">
+                <div class="veld">
+                  <label for="breedte">Breedte in meters</label>
+                  <input type="number" id="breedte" name="breedte" min="2" max="12" step="0.5" value="5" inputmode="decimal" aria-describedby="fout-breedte" data-fout="breedte">
+                  <div class="veld-fout" id="fout-breedte" aria-live="polite"></div>
+                </div>
+                <div class="veld">
+                  <label for="diepte">Diepte in meters</label>
+                  <input type="number" id="diepte" name="diepte" min="2" max="12" step="0.5" value="3" inputmode="decimal" aria-describedby="fout-diepte" data-fout="diepte">
+                  <div class="veld-fout" id="fout-diepte" aria-live="polite"></div>
+                </div>
+              </div>
+              <div class="m2-weergave" aria-live="polite">Oppervlakte: <strong id="m2-waarde">15 m²</strong></div>
+              <fieldset>
+                <legend>Welke opties wil je erbij? <span style="font-weight:400;color:var(--ink-500)">(meerdere mogelijk, niet verplicht)</span></legend>
+                <div class="chips" id="opties-chips"></div>
+              </fieldset>
+            </div>
+
+            <!-- Stap 4: waar en wanneer -->
+            <div class="wizard-stap verborgen" id="wstap-4">
+              <h2 tabindex="-1">Waar en wanneer</h2>
+              <p class="klein mb-2">Zo tonen we alleen bedrijven die in jouw provincie werken.</p>
+              <div class="veld">
+                <label for="provincie">In welke provincie staat je woning?</label>
+                <select id="provincie" name="provincie" aria-required="true" aria-describedby="fout-provincie" data-fout="provincie">
+                  <option value="" selected>Kies je provincie</option>
+                </select>
+                <div class="veld-fout" id="fout-provincie" aria-live="polite"></div>
+              </div>
+              <fieldset>
+                <legend>Wanneer wil je het laten plaatsen?</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="termijn" value="Zo snel mogelijk"><span>Zo snel mogelijk</span></label>
+                  <label class="chip"><input type="radio" name="termijn" value="Binnen 3 maanden"><span>Binnen 3 maanden</span></label>
+                  <label class="chip"><input type="radio" name="termijn" value="Binnen 6 maanden"><span>Binnen 6 maanden</span></label>
+                  <label class="chip"><input type="radio" name="termijn" value="Ik oriënteer me nog" checked><span>Ik oriënteer me nog</span></label>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- Stap 5: gegevens -->
+            <div class="wizard-stap verborgen" id="wstap-5">
+              <h2 tabindex="-1">Jouw gegevens</h2>
+              <p class="klein mb-2">Deze gegevens komen alleen in de e-mail te staan die jij straks zelf verstuurt.</p>
+              <div class="veld">
+                <label for="naam">Naam</label>
+                <input type="text" id="naam" name="naam" autocomplete="name" aria-required="true" aria-describedby="fout-naam" data-fout="naam">
+                <div class="veld-fout" id="fout-naam" aria-live="polite"></div>
+              </div>
+              <div class="veld-rij">
+                <div class="veld">
+                  <label for="email">E-mailadres</label>
+                  <input type="email" id="email" name="email" autocomplete="email" aria-required="true" aria-describedby="fout-email" data-fout="email">
+                  <div class="veld-fout" id="fout-email" aria-live="polite"></div>
+                </div>
+                <div class="veld">
+                  <label for="telefoon">Telefoonnummer <span class="hint" style="display:inline;font-size:.82rem">(niet verplicht)</span></label>
+                  <input type="tel" id="telefoon" name="telefoon" autocomplete="tel">
+                </div>
+              </div>
+              <div class="veld">
+                <label for="opmerkingen">Opmerkingen of bijzonderheden <span class="hint" style="display:inline;font-size:.82rem">(niet verplicht)</span></label>
+                <textarea id="opmerkingen" name="opmerkingen" rows="4" placeholder="Bijvoorbeeld: schuin aflopend terras, gewenste kleur, bestaande fundering…"></textarea>
+              </div>
+              <div class="melding melding-info mb-0">Je gegevens blijven in je eigen browser en worden alleen gebruikt om je aanvraag samen te stellen. Er wordt niets automatisch verzonden of gedeeld — jij verstuurt je aanvraag straks zelf per e-mail. Lees meer in onze <a href="privacy.html">privacyverklaring</a>.</div>
+            </div>
+
+            <!-- Stap 6: resultaat -->
+            <div class="wizard-stap verborgen" id="wstap-6">
+              <h2 tabindex="-1" id="resultaat-titel">Deze bedrijven passen bij jouw aanvraag</h2>
+              <div id="resultaat"></div>
+            </div>
+
+            <div class="wizard-knoppen">
+              <button type="button" class="knop knop-wit" id="knop-terug">← Terug</button>
+              <button type="submit" class="knop knop-primair" id="knop-verder">Verder →</button>
+            </div>
+          </form>
+        </div>
+
+        <p class="tekst-midden klein mt-2">Liever eerst rondkijken? <a href="bedrijven.html">Bekijk alle bedrijven</a> of <a href="prijzen.html">bereken je richtprijs</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const TOTAAL = 6;
+      let stap = 1;
+
+      const form = document.getElementById("offerte-wizard");
+      const kaartEl = document.getElementById("wizard-kaart");
+      const stapLabel = document.getElementById("stap-label");
+      const knopTerug = document.getElementById("knop-terug");
+      const knopVerder = document.getElementById("knop-verder");
+      const stappen = Array.from(document.querySelectorAll(".wizard-stap"));
+      const voortgang = Array.from(document.querySelectorAll(".wizard-voortgang .wv-stap"));
+      const resultaatEl = document.getElementById("resultaat");
+      const resultaatTitel = document.getElementById("resultaat-titel");
+
+      const nl = (n) => n.toLocaleString("nl-NL", { maximumFractionDigits: 2 });
+
+      /* ---------- Stap 1: productkeuze opbouwen ---------- */
+      const PRODUCT_ICONEN = {
+        veranda: '<path d="M3 12 12 5l9 7M5.5 10.5V19M18.5 10.5V19M3 19h18" stroke-linecap="round"/>',
+        terrasoverkapping: '<path d="M3 10h18M5 10v9M19 10v9M3 19h18M8 6l4-3 4 3" stroke-linecap="round"/>',
+        tuinkamer: '<path d="M3 11 12 4l9 7M5.5 9.5V19h13V9.5M9 19v-5h6v5M9 11h6" stroke-linecap="round"/>',
+        lamellendak: '<path d="M4 7h16M4 11h16M4 15h16M6 18h12" stroke-linecap="round"/>',
+        carport: '<path d="M2 10 12 4l10 6M4 9v10M20 9v10M7 16h10M8 19v-3M16 19v-3" stroke-linecap="round"/>'
+      };
+      const PRODUCT_SUB = {
+        veranda: "Overkapping aan de gevel, met of zonder wanden",
+        terrasoverkapping: "Dak boven je terras, vrijstaand of aan huis",
+        tuinkamer: "Geïsoleerd en het hele jaar bruikbaar",
+        lamellendak: "Kantelbare lamellen: open of dicht wanneer jij wilt",
+        carport: "Droge stalling voor auto, camper of caravan"
+      };
+      document.getElementById("product-raster").innerHTML = Object.entries(PRODUCTEN).map(([sleutel, label]) => `
+        <label class="keuze-kaart">
+          <input type="radio" name="product" value="${sleutel}">
+          <span class="keuze-binnen">
+            <span class="keuze-icoon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${PRODUCT_ICONEN[sleutel]}</svg></span>
+            <span class="keuze-titel">${label}</span>
+            <span class="keuze-sub">${PRODUCT_SUB[sleutel]}</span>
+          </span>
+        </label>`).join("");
+
+      /* ---------- Stap 2 en 3: chips opbouwen ---------- */
+      const chip = (naam, type, waarde, label, checked) =>
+        `<label class="chip"><input type="${type}" name="${naam}" value="${waarde}"${checked ? " checked" : ""}><span>${label}</span></label>`;
+
+      document.getElementById("materiaal-chips").innerHTML =
+        Object.entries(MATERIALEN).map(([sleutel, label]) => chip("materiaal", "radio", sleutel, label, false)).join("") +
+        chip("materiaal", "radio", "", "Nog geen voorkeur", true);
+
+      document.getElementById("dak-chips").innerHTML =
+        Object.entries(DAKTYPEN).map(([sleutel, label]) => chip("dak", "radio", sleutel, label, false)).join("") +
+        chip("dak", "radio", "", "Nog geen voorkeur", true);
+
+      document.getElementById("opties-chips").innerHTML =
+        Object.entries(OPTIES).map(([sleutel, label]) => chip("opties", "checkbox", sleutel, label, false)).join("");
+
+      /* ---------- Stap 3: live m² ---------- */
+      const inBreedte = document.getElementById("breedte");
+      const inDiepte = document.getElementById("diepte");
+      const m2Waarde = document.getElementById("m2-waarde");
+      function berekenM2() {
+        const b = parseFloat(inBreedte.value);
+        const d = parseFloat(inDiepte.value);
+        if (isNaN(b) || isNaN(d)) return null;
+        return Math.round(b * d * 100) / 100;
+      }
+      function toonM2() {
+        const m2 = berekenM2();
+        m2Waarde.textContent = m2 === null ? "—" : nl(m2) + " m²";
+      }
+      inBreedte.addEventListener("input", toonM2);
+      inDiepte.addEventListener("input", toonM2);
+      toonM2();
+
+      /* ---------- Stap 4: provincies ---------- */
+      const selProvincie = document.getElementById("provincie");
+      PROVINCIES.forEach((p) => selProvincie.insertAdjacentHTML("beforeend", `<option value="${p}">${p}</option>`));
+
+      /* ---------- Foutafhandeling ---------- */
+      function zetFout(veld, foutId, tekst) {
+        document.getElementById(foutId).textContent = tekst;
+        if (veld) { veld.classList.add("fout"); veld.setAttribute("aria-invalid", "true"); }
+      }
+      function wisFout(veld, foutId) {
+        document.getElementById(foutId).textContent = "";
+        if (veld) { veld.classList.remove("fout"); veld.removeAttribute("aria-invalid"); }
+      }
+      /* Fout verdwijnt zodra het veld wordt aangepast */
+      form.addEventListener("input", (e) => {
+        const el = e.target;
+        if (el.dataset.fout) wisFout(el, "fout-" + el.dataset.fout);
+        if (el.name === "product") wisFout(null, "fout-product");
+      });
+
+      function valideerStap(n) {
+        let ok = true;
+        if (n === 1) {
+          if (!form.querySelector('input[name="product"]:checked')) {
+            zetFout(null, "fout-product", "Kies eerst wat je wilt laten bouwen.");
+            ok = false;
+          }
+        }
+        if (n === 3) {
+          [[inBreedte, "fout-breedte", "breedte"], [inDiepte, "fout-diepte", "diepte"]].forEach(([veld, foutId, naam]) => {
+            const w = parseFloat(veld.value);
+            if (isNaN(w) || w < 2 || w > 12) {
+              zetFout(veld, foutId, `Vul een ${naam} in tussen 2 en 12 meter.`);
+              ok = false;
+            } else {
+              wisFout(veld, foutId);
+            }
+          });
+        }
+        if (n === 4) {
+          if (!selProvincie.value) {
+            zetFout(selProvincie, "fout-provincie", "Kies je provincie, zodat we bedrijven in jouw regio kunnen tonen.");
+            ok = false;
+          } else {
+            wisFout(selProvincie, "fout-provincie");
+          }
+        }
+        if (n === 5) {
+          const inNaam = document.getElementById("naam");
+          const inEmail = document.getElementById("email");
+          if (!inNaam.value.trim()) {
+            zetFout(inNaam, "fout-naam", "Vul je naam in.");
+            ok = false;
+          } else {
+            wisFout(inNaam, "fout-naam");
+          }
+          if (!inEmail.value.trim()) {
+            zetFout(inEmail, "fout-email", "Vul je e-mailadres in.");
+            ok = false;
+          } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inEmail.value.trim())) {
+            zetFout(inEmail, "fout-email", "Dit lijkt geen geldig e-mailadres. Controleer het even.");
+            ok = false;
+          } else {
+            wisFout(inEmail, "fout-email");
+          }
+        }
+        return ok;
+      }
+
+      /* ---------- Antwoorden verzamelen ---------- */
+      function verzamel() {
+        const f = new FormData(form);
+        return {
+          product: f.get("product"),
+          materiaal: f.get("materiaal") || "",
+          dak: f.get("dak") || "",
+          breedte: parseFloat(inBreedte.value),
+          diepte: parseFloat(inDiepte.value),
+          m2: berekenM2(),
+          opties: f.getAll("opties"),
+          provincie: f.get("provincie"),
+          termijn: f.get("termijn"),
+          naam: (f.get("naam") || "").trim(),
+          email: (f.get("email") || "").trim(),
+          telefoon: (f.get("telefoon") || "").trim(),
+          opmerkingen: (f.get("opmerkingen") || "").trim()
+        };
+      }
+
+      /* ---------- Matching ----------
+         Filter: bedrijf voert het product, werkt in de provincie ("Landelijk"
+         telt altijd mee) en ondersteunt — indien gekozen — materiaal en daktype.
+         Score (max 100):
+           - 55 punten × (rating / 5)                     → kwaliteit weegt het zwaarst
+           - 30 punten × (gematchte opties / gewenste)    → geen opties gekozen = volle punten
+           - prijsklasse: budget 15, midden 11, premium 7 → scherpere prijs weegt licht mee */
+      function matchScore(b, a) {
+        const ratingPunten = (b.rating / 5) * 55;
+        let optiePunten = 30;
+        if (a.opties.length) {
+          const geraakt = a.opties.filter((o) => b.opties.includes(o)).length;
+          optiePunten = 30 * (geraakt / a.opties.length);
+        }
+        const prijsPunten = { budget: 15, midden: 11, premium: 7 }[b.prijsKlasse] || 9;
+        return Math.round(ratingPunten + optiePunten + prijsPunten);
+      }
+
+      function vindMatches(a) {
+        return BEDRIJVEN
+          .filter((b) =>
+            b.producten.includes(a.product) &&
+            (b.werkgebied.includes("Landelijk") || b.werkgebied.includes(a.provincie)) &&
+            (!a.materiaal || b.typen.includes(a.materiaal)) &&
+            (!a.dak || b.dakTypen.includes(a.dak)))
+          .map((b) => ({ bedrijf: b, score: matchScore(b, a) }))
+          .sort((x, y) => y.score - x.score || y.bedrijf.rating - x.bedrijf.rating || y.bedrijf.aantalReviews - x.bedrijf.aantalReviews);
+      }
+
+      /* ---------- Mailto: nette Nederlandse e-mail voorinvullen ---------- */
+      function mailtoHref(b, a) {
+        const regels = [
+          "Geachte heer/mevrouw,",
+          "",
+          `Via Verandafinder.com kwam ik uit bij ${b.naam}. Graag ontvang ik vrijblijvend een offerte voor het volgende project:`,
+          "",
+          `- Type: ${PRODUCTEN[a.product]}`,
+          `- Materiaal: ${a.materiaal ? MATERIALEN[a.materiaal] : "nog geen voorkeur"}`,
+          `- Daktype: ${a.dak ? DAKTYPEN[a.dak] : "nog geen voorkeur"}`,
+          `- Afmetingen: ${nl(a.breedte)} m breed x ${nl(a.diepte)} m diep (ca. ${nl(a.m2)} m2)`,
+          `- Gewenste opties: ${a.opties.length ? a.opties.map((o) => OPTIES[o]).join(", ") : "geen"}`,
+          `- Provincie: ${a.provincie}`,
+          `- Gewenste termijn: ${a.termijn}`
+        ];
+        if (a.opmerkingen) regels.push("", `Opmerkingen: ${a.opmerkingen}`);
+        regels.push("", "Ik hoor graag van u.", "", "Met vriendelijke groet,", a.naam, `E-mail: ${a.email}`);
+        if (a.telefoon) regels.push(`Telefoon: ${a.telefoon}`);
+        return `mailto:info@${b.id}.nl?subject=${encodeURIComponent("Offerteaanvraag via Verandafinder")}&body=${encodeURIComponent(regels.join("\r\n"))}`;
+      }
+
+      /* ---------- Resultaat renderen ---------- */
+      const TELEFOON_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
+
+      function matchKaartHTML(b, a, score) {
+        const badges = [];
+        if (a.materiaal) badges.push(`<span class="badge badge-groen">✓ ${MATERIALEN[a.materiaal]}</span>`);
+        if (a.dak) badges.push(`<span class="badge badge-groen">✓ ${DAKTYPEN[a.dak]}</span>`);
+        a.opties.forEach((o) => {
+          badges.push(b.opties.includes(o)
+            ? `<span class="badge badge-groen">✓ ${OPTIES[o]}</span>`
+            : `<span class="badge badge-uit">✕ ${OPTIES[o]}</span>`);
+        });
+        const richtMin = b.prijsPerM2.min * a.m2;
+        const richtMax = b.prijsPerM2.max * a.m2;
+        const telHref = "tel:" + b.telefoon.replace(/\D/g, "");
+        return `<article class="kaart match-kaart">
+          <div class="match-score" role="img" aria-label="Matchscore ${score} procent">${score}%</div>
+          <div class="match-inhoud">
+            <div class="match-kop">
+              <span class="match-logo" style="background:${b.kleur}" aria-hidden="true">${VF.initialen(b.naam)}</span>
+              <div>
+                <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
+                <div class="score-blok">${VF.sterrenHTML(b.rating)}<span class="score-cijfer">${b.rating.toFixed(1)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
+              </div>
+            </div>
+            ${badges.length ? `<div class="bedrijf-tags">${badges.join("")}</div>` : ""}
+            <div class="match-feiten">
+              <span>Vanaf <strong>${VF.euro(b.prijsPerM2.min)}/m²</strong></span>
+              <span>Richtprijs voor ${nl(a.m2)} m²: <strong>${VF.euro(richtMin)} – ${VF.euro(richtMax)}</strong></span>
+              <span>${TELEFOON_SVG}<a href="${telHref}">${b.telefoon}</a></span>
+            </div>
+            <div class="match-acties">
+              <a class="knop knop-primair knop-klein" href="${mailtoHref(b, a)}">Stuur aanvraag</a>
+              <a class="knop knop-outline knop-klein" href="bedrijf.html?id=${b.id}">Bekijk profiel</a>
+            </div>
+          </div>
+        </article>`;
+      }
+
+      /* ---------- Aanvraag lokaal bewaren ---------- */
+      function bewaarAanvraag(a, matchIds) {
+        try {
+          const lijst = JSON.parse(localStorage.getItem("vf_aanvragen") || "[]");
+          const nieuw = { ...a, matches: matchIds };
+          const vorige = lijst[lijst.length - 1];
+          const zelfde = vorige && JSON.stringify({ ...vorige, datum: 0 }) === JSON.stringify({ ...nieuw, datum: 0 });
+          if (zelfde) return false;
+          nieuw.datum = new Date().toISOString();
+          lijst.push(nieuw);
+          localStorage.setItem("vf_aanvragen", JSON.stringify(lijst));
+          return true;
+        } catch (e) { return false; /* opslag niet beschikbaar (bijv. privémodus): stilzwijgend overslaan */ }
+      }
+
+      function renderResultaat(a) {
+        const matches = vindMatches(a);
+        const nieuwBewaard = bewaarAanvraag(a, matches.map((m) => m.bedrijf.id));
+
+        if (!matches.length) {
+          resultaatTitel.textContent = "Nog geen passend bedrijf gevonden";
+          resultaatEl.innerHTML = `
+            <div class="leeg-melding">
+              <div class="leeg-icoon" aria-hidden="true"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--ink-300)" stroke-width="1.8" stroke-linecap="round" style="margin:0 auto"><circle cx="10.5" cy="10.5" r="7"/><path d="M15.8 15.8 21 21"/></svg></div>
+              <h3>Geen bedrijven die aan ál je wensen voldoen</h3>
+              <p class="klein" style="max-width:46ch;margin:0 auto 18px">Deze combinatie van product, materiaal, daktype en provincie komt in ons bestand niet voor. Kies bij materiaal of daktype &ldquo;Nog geen voorkeur&rdquo;, of bekijk het volledige aanbod.</p>
+              <div class="match-acties" style="justify-content:center">
+                <button type="button" class="knop knop-primair" data-ga-naar="2">Pas materiaal en dak aan</button>
+                <a class="knop knop-outline" href="bedrijven.html">Bekijk alle bedrijven</a>
+              </div>
+            </div>`;
+          return;
+        }
+
+        const top = matches.slice(0, 5);
+        resultaatTitel.textContent = "Deze bedrijven passen bij jouw aanvraag";
+        resultaatEl.innerHTML = `
+          <div class="melding melding-ok" role="status">Je aanvraag is samengesteld.</div>
+          <p class="klein mb-0">We vonden <strong>${matches.length}</strong> ${matches.length === 1 ? "bedrijf dat" : "bedrijven die"} jouw ${PRODUCTEN[a.product].toLowerCase()} in ${a.provincie} ${matches.length === 1 ? "kan" : "kunnen"} bouwen${matches.length > 5 ? "; dit zijn de vijf beste matches" : ""}. Verandafinder verstuurt niets automatisch: klik bij de bedrijven van jouw keuze op &ldquo;Stuur aanvraag&rdquo; en verstuur de voorbereide e-mail zelf.</p>
+          <div class="match-lijst">${top.map((m) => matchKaartHTML(m.bedrijf, a, m.score)).join("")}</div>
+          <div class="match-acties mt-2">
+            <button type="button" class="knop knop-outline" id="knop-opnieuw">Opnieuw beginnen</button>
+          </div>`;
+        if (nieuwBewaard) VF.toast("Je aanvraag is samengesteld");
+      }
+
+      /* Acties binnen het resultaat (herrenderd, dus via delegatie) */
+      resultaatEl.addEventListener("click", (e) => {
+        if (e.target.closest("#knop-opnieuw")) {
+          form.reset();
+          toonM2();
+          resultaatEl.innerHTML = "";
+          toonStap(1);
+        }
+        const spring = e.target.closest("[data-ga-naar]");
+        if (spring) toonStap(parseInt(spring.dataset.gaNaar, 10));
+      });
+
+      /* ---------- Navigatie ---------- */
+      function toonStap(n, focus = true) {
+        stap = n;
+        stappen.forEach((el, i) => el.classList.toggle("verborgen", i !== n - 1));
+        voortgang.forEach((el, i) => {
+          el.classList.toggle("klaar", i < n - 1);
+          el.classList.toggle("actief", i === n - 1);
+        });
+        stapLabel.textContent = `Stap ${n} van ${TOTAAL}`;
+        knopTerug.style.visibility = n === 1 ? "hidden" : "visible";
+        knopTerug.textContent = n === TOTAAL ? "← Pas je aanvraag aan" : "← Terug";
+        knopVerder.classList.toggle("verborgen", n === TOTAAL);
+        knopVerder.textContent = n === TOTAAL - 1 ? "Toon passende bedrijven" : "Verder →";
+        if (focus) {
+          kaartEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          const kop = stappen[n - 1].querySelector("h2");
+          if (kop) kop.focus({ preventScroll: true });
+        }
+      }
+
+      /* Verder: ook Enter in een tekstveld komt hier terecht (geen pagina-refresh) */
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (stap >= TOTAAL) return;
+        if (!valideerStap(stap)) return;
+        if (stap === TOTAAL - 1) renderResultaat(verzamel());
+        toonStap(stap + 1);
+      });
+      knopTerug.addEventListener("click", () => { if (stap > 1) toonStap(stap - 1); });
+
+      toonStap(1, false);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bedrijven vergelijken — Verandafinder.com</title>
+  <meta name="description" content="Zet maximaal drie verandabedrijven naast elkaar en vergelijk beoordelingen, prijzen, garantie, levertijd, opties en keurmerken in één overzicht.">
+  <meta property="og:title" content="Bedrijven vergelijken — Verandafinder.com">
+  <meta property="og:description" content="Vergelijk tot drie verandabedrijven naast elkaar op prijs, reviews, garantie en opties. Onafhankelijk en gratis.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    /* Pagina-specifiek: selectiebeheer + kolomkoppen van de vergelijktabel */
+    .selectie-kop { font-size: 1.15rem; margin-bottom: 12px; }
+    .selectie-beheer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 26px; }
+    .selectie-chip {
+      display: inline-flex; align-items: center; gap: 9px; background: #fff;
+      border: 1px solid var(--lijn); border-radius: var(--radius-pill); padding: 6px 8px 6px 7px;
+      font-family: var(--font-kop); font-weight: 600; font-size: .9rem; color: var(--groen-900);
+      box-shadow: var(--schaduw-s);
+    }
+    .selectie-chip .sc-logo {
+      width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+      color: #fff; font-family: var(--font-kop); font-weight: 700; font-size: .66rem; flex: none;
+    }
+    .selectie-chip button {
+      background: var(--creme-2); border: 0; color: var(--ink-700); width: 24px; height: 24px;
+      border-radius: 50%; cursor: pointer; font-size: .78rem; line-height: 1; display: grid; place-items: center;
+    }
+    .selectie-chip button:hover { background: var(--rood-600); color: #fff; }
+    .selectie-toevoegen select { width: auto; min-width: 230px; padding: 9px 38px 9px 12px; font-size: .9rem; }
+    .vt-kop { display: flex; align-items: center; gap: 10px; }
+    .vt-logo {
+      width: 38px; height: 38px; border-radius: 8px; display: grid; place-items: center;
+      color: #fff; font-family: var(--font-kop); font-weight: 700; font-size: .82rem; flex: none;
+    }
+    .vt-naam { display: grid; line-height: 1.3; }
+    .vt-naam a { font-family: var(--font-kop); font-weight: 600; color: var(--groen-900); text-decoration: none; }
+    .vt-naam a:hover { text-decoration: underline; }
+    .vt-plaats { font-size: .78rem; color: var(--ink-500); font-weight: 400; }
+    .vt-acties { display: flex; gap: 8px; flex-wrap: wrap; }
+    .vergelijk-tabel td .opties-lijst div { margin-bottom: 3px; }
+    /* Binnen de horizontale scrollcontainer geldt de sticky-offset t.o.v. de container:
+       met top:72px zou de kop de eerste rij afdekken. Hier dus geen verticale offset. */
+    .vergelijk-scroll .vergelijk-tabel thead th { top: 0; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
+  <div id="site-header"></div>
+
+  <main id="inhoud">
+    <!-- Paginakop -->
+    <section class="pagina-kop">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Vergelijken</span></nav>
+        <h1>Bedrijven naast elkaar vergelijken</h1>
+        <p>Zet maximaal drie verandabedrijven naast elkaar en zie in één oogopslag de verschillen in beoordeling, prijs, garantie, levertijd en opties. Jouw selectie wordt lokaal in je browser bewaard.</p>
+      </div>
+    </section>
+
+    <!-- Vergelijking -->
+    <section class="sectie">
+      <div class="wrap">
+        <div id="vergelijk-inhoud" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const houder = document.getElementById("vergelijk-inhoud");
+
+      /* Select met alle nog niet gekozen bedrijven */
+      function toevoegSelectHTML(gekozen) {
+        const beschikbaar = BEDRIJVEN
+          .filter((b) => !gekozen.includes(b.id))
+          .sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
+        return `<span class="selectie-toevoegen">
+          <label class="sr-only" for="bedrijf-toevoegen">Bedrijf toevoegen aan de vergelijking</label>
+          <select id="bedrijf-toevoegen">
+            <option value="">+ Bedrijf toevoegen…</option>
+            ${beschikbaar.map((b) => `<option value="${b.id}">${b.naam} — ${b.plaats}</option>`).join("")}
+          </select>
+        </span>`;
+      }
+
+      function koppelSelect() {
+        const sel = document.getElementById("bedrijf-toevoegen");
+        if (sel) sel.addEventListener("change", () => { if (sel.value) VF.toggleVergelijk(sel.value); });
+      }
+
+      /* Index van de unieke beste waarde, of -1 (alleen bij 2+ bedrijven) */
+      function besteIndex(waarden, richting) {
+        if (waarden.length < 2) return -1;
+        const best = richting === "max" ? Math.max(...waarden) : Math.min(...waarden);
+        const winnaars = waarden.reduce((acc, w, i) => (w === best ? acc.concat(i) : acc), []);
+        return winnaars.length === 1 ? winnaars[0] : -1;
+      }
+
+      const rij = (label, cellen, besteIdx = -1) =>
+        `<tr><th scope="row">${label}</th>${cellen
+          .map((c, i) => `<td${i === besteIdx ? ' class="beste"' : ""}>${c}</td>`)
+          .join("")}</tr>`;
+
+      const jaNee = (waar) => (waar
+        ? '<span class="ja"><span aria-hidden="true">✓</span> Ja</span>'
+        : '<span class="nee"><span aria-hidden="true">✕</span> Nee</span>');
+
+      function render() {
+        const gekozen = VF.leesVergelijk();
+        const bedrijven = gekozen.map(VF.getBedrijf);
+
+        /* Lege staat */
+        if (!bedrijven.length) {
+          houder.innerHTML = `
+            <div class="kaart leeg-melding">
+              <div class="leeg-icoon" aria-hidden="true" style="color:var(--groen-600)">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="margin:0 auto"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+              </div>
+              <h2>Nog geen bedrijven geselecteerd</h2>
+              <p>Klik op het vergelijk-icoon op een bedrijfskaart om een bedrijf aan je selectie toe te voegen. Je kunt maximaal drie bedrijven naast elkaar zetten.</p>
+              <p><a class="knop knop-primair" href="bedrijven.html">Bekijk alle bedrijven</a></p>
+              <p class="klein mb-0" style="margin-top:22px">Of kies hier direct een bedrijf:</p>
+              <p class="mb-0 mt-1">${toevoegSelectHTML([])}</p>
+            </div>`;
+          koppelSelect();
+          return;
+        }
+
+        /* Selectiebeheer: chips + toevoeg-select */
+        const chips = bedrijven.map((b) => `
+          <span class="selectie-chip">
+            <span class="sc-logo" style="background:${b.kleur}" aria-hidden="true">${VF.initialen(b.naam)}</span>
+            ${b.naam}
+            <button type="button" data-vb-verwijder="${b.id}" aria-label="Verwijder ${b.naam} uit de vergelijking">✕</button>
+          </span>`).join("");
+
+        /* Kolomkoppen */
+        const kolomkoppen = bedrijven.map((b) => `<th scope="col">
+            <div class="vt-kop">
+              <span class="vt-logo" style="background:${b.kleur}" aria-hidden="true">${VF.initialen(b.naam)}</span>
+              <span class="vt-naam"><a href="bedrijf.html?id=${b.id}">${b.naam}</a><span class="vt-plaats">${b.plaats}, ${b.provincie}</span></span>
+            </div>
+          </th>`).join("");
+
+        /* Rijen */
+        const rijen = [
+          rij("Beoordeling",
+            bedrijven.map((b) => `<span class="score-blok"><span class="score-cijfer">${b.rating.toFixed(1)}</span>${VF.sterrenHTML(b.rating)}</span>`),
+            besteIndex(bedrijven.map((b) => b.rating), "max")),
+          rij("Aantal reviews",
+            bedrijven.map((b) => b.aantalReviews.toLocaleString("nl-NL") + " reviews"),
+            besteIndex(bedrijven.map((b) => b.aantalReviews), "max")),
+          rij("Prijs vanaf (per m²)",
+            bedrijven.map((b) => `${VF.euro(b.prijsPerM2.min)} / m²`),
+            besteIndex(bedrijven.map((b) => b.prijsPerM2.min), "min")),
+          rij("Prijsklasse", bedrijven.map((b) => PRIJSKLASSEN[b.prijsKlasse])),
+          rij("Producten", bedrijven.map((b) => b.producten.map((p) => PRODUCTEN[p]).join(", "))),
+          rij("Materialen", bedrijven.map((b) => b.typen.map((t) => MATERIALEN[t]).join(", "))),
+          rij("Daktypen", bedrijven.map((b) => b.dakTypen.map((d) => DAKTYPEN[d]).join(", "))),
+          rij("Opties", bedrijven.map((b) => `<div class="opties-lijst">${Object.entries(OPTIES).map(([sleutel, label]) => {
+            const heeft = b.opties.includes(sleutel);
+            return `<div class="${heeft ? "ja" : "nee"}"><span aria-hidden="true">${heeft ? "✓" : "✕"}</span> ${label}<span class="sr-only"> — ${heeft ? "ja" : "nee"}</span></div>`;
+          }).join("")}</div>`)),
+          rij("Garantie",
+            bedrijven.map((b) => `${b.garantieJaren} jaar`),
+            besteIndex(bedrijven.map((b) => b.garantieJaren), "max")),
+          rij("Levertijd",
+            bedrijven.map((b) => `± ${b.levertijdWeken} weken`),
+            besteIndex(bedrijven.map((b) => b.levertijdWeken), "min")),
+          rij("Eigen montageteam", bedrijven.map((b) => jaNee(b.montageEigenTeam))),
+          rij("Showroom", bedrijven.map((b) => jaNee(b.showroom))),
+          rij("Werkgebied", bedrijven.map((b) => b.werkgebied.join(", "))),
+          rij("Keurmerken", bedrijven.map((b) => (b.keurmerken.length
+            ? `<span class="bedrijf-tags">${b.keurmerken.map((k) => `<span class="badge">${k}</span>`).join("")}</span>`
+            : '<span class="nee">—</span>'))),
+          rij("Telefoon", bedrijven.map((b) => `<a href="tel:${b.telefoon.replace(/\D/g, "")}">${b.telefoon}</a>`)),
+          `<tr><th scope="row"><span class="sr-only">Acties</span></th>${bedrijven.map((b) => `<td>
+            <span class="vt-acties">
+              <a class="knop knop-outline knop-klein" href="bedrijf.html?id=${b.id}">Bekijk profiel</a>
+              <a class="knop knop-accent knop-klein" href="offerte.html">Offerte</a>
+            </span>
+          </td>`).join("")}</tr>`
+        ].join("");
+
+        houder.innerHTML = `
+          <h2 class="selectie-kop">Jouw selectie <span class="klein">(${bedrijven.length} van 3)</span></h2>
+          <div class="selectie-beheer">${chips}${bedrijven.length < 3 ? toevoegSelectHTML(gekozen) : ""}</div>
+          ${bedrijven.length === 1
+            ? '<div class="melding melding-info">Je vergelijkt nu één bedrijf. Voeg er nog één of twee toe om de verschillen echt te zien.</div>'
+            : '<p class="klein mb-2">De beste waarde per rij is <span class="badge badge-groen">groen gemarkeerd</span>.</p>'}
+          <div class="kaart vergelijk-scroll">
+            <table class="vergelijk-tabel">
+              <caption class="sr-only">Vergelijking van de geselecteerde verandabedrijven</caption>
+              <thead>
+                <tr><th scope="col"><span class="sr-only">Kenmerk</span></th>${kolomkoppen}</tr>
+              </thead>
+              <tbody>${rijen}</tbody>
+            </table>
+          </div>
+          <p class="klein mt-2">Alle prijzen zijn richtprijzen per m², inclusief montage. Vraag een <a href="offerte.html">vrijblijvende offerte</a> aan voor een prijs op maat.</p>`;
+        koppelSelect();
+      }
+
+      render();
+      VF.bijVerversen(render);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mijn favorieten — Verandafinder.com</title>
+  <meta name="description" content="Jouw bewaarde verandabedrijven op een rij. Favorieten worden lokaal in je browser opgeslagen — zonder account, zonder gedoe.">
+  <meta property="og:title" content="Mijn favorieten — Verandafinder.com">
+  <meta property="og:description" content="Bekijk de verandabedrijven die je als favoriet hebt bewaard en vergelijk ze of vraag direct offertes aan.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
+  <div id="site-header"></div>
+
+  <main id="inhoud">
+    <!-- Paginakop -->
+    <section class="pagina-kop">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Favorieten</span></nav>
+        <h1>Jouw favoriete bedrijven</h1>
+        <p>Bedrijven die je met het hartje bewaart, vind je hier terug. Je favorieten worden alleen lokaal in je browser opgeslagen — er is geen account nodig en wij bewaren niets.</p>
+      </div>
+    </section>
+
+    <!-- Favorieten -->
+    <section class="sectie">
+      <div class="wrap">
+        <div id="favorieten-inhoud" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Slot-CTA -->
+    <section class="sectie-strak">
+      <div class="wrap">
+        <div class="cta-band">
+          <div>
+            <h2>Van favorieten naar de juiste keuze</h2>
+            <p>Zet je favorieten naast elkaar in de vergelijker of vraag direct vrijblijvend offertes aan bij de bedrijven die je aanspreken.</p>
+          </div>
+          <div class="cta-acties">
+            <a class="knop knop-wit" href="vergelijken.html">Bedrijven vergelijken</a>
+            <a class="knop knop-accent knop-groot" href="offerte.html">Offertes aanvragen</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const houder = document.getElementById("favorieten-inhoud");
+
+      function render() {
+        const favorieten = VF.leesFavorieten();
+
+        /* Lege staat */
+        if (!favorieten.length) {
+          houder.innerHTML = `
+            <div class="kaart leeg-melding">
+              <div class="leeg-icoon" aria-hidden="true" style="color:var(--rood-600)">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="margin:0 auto"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </div>
+              <h2>Nog geen favorieten bewaard</h2>
+              <p>Zie je een bedrijf dat je aanspreekt? Klik dan op het hartje
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--rood-600)" stroke-width="2" aria-hidden="true" style="display:inline;vertical-align:-3px"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                op een bedrijfskaart. Zo bouw je rustig een lijstje op van bedrijven die je later wilt vergelijken of benaderen.</p>
+              <p class="mb-0"><a class="knop knop-primair" href="bedrijven.html">Bekijk alle bedrijven</a></p>
+            </div>`;
+          return;
+        }
+
+        /* Raster met bewaarde bedrijven */
+        const bedrijven = favorieten.map(VF.getBedrijf);
+        houder.innerHTML = `
+          <div class="resultaat-balk">
+            <span class="aantal">${bedrijven.length === 1 ? "1 favoriet bedrijf" : bedrijven.length + " favoriete bedrijven"}</span>
+            <button type="button" class="knop knop-outline knop-klein" id="wis-favorieten">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>
+              Alle favorieten wissen
+            </button>
+          </div>
+          <div class="kaarten-raster">${bedrijven.map(VF.bedrijfKaartHTML).join("")}</div>
+          <p class="klein mt-3 mb-0">Tip: gebruik het vergelijk-icoon op een kaart om tot drie favorieten <a href="vergelijken.html">naast elkaar te zetten</a>.</p>`;
+
+        document.getElementById("wis-favorieten").addEventListener("click", () => {
+          if (!confirm("Weet je zeker dat je al je favorieten wilt wissen?")) return;
+          try { localStorage.setItem("vf_favorieten", JSON.stringify([])); } catch (e) { /* privémodus: geen opslag */ }
+          VF.toast("Alle favorieten zijn gewist");
+          VF.verversUI();
+        });
+      }
+
+      render();
+      VF.verversUI();
+      VF.bijVerversen(render);
+    });
+  </script>
+</body>
+</html>
