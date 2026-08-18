@@ -2053,16 +2053,17 @@ const BEDRIJVEN = [
   {
     id: "eg-veranda", naam: "EG Veranda",
     plaats: "Venlo", provincie: "Limburg",
-    adres: "Huiskensstraat 72A, 5916 PN Venlo",
-    website: "https://egveranda.nl", werkgebied: null,
-    producten: ["veranda","terrasoverkapping","lamellendak"],
-    typen: ["aluminium"], dakTypen: ["lamellen"], opties: ["zonwering","schuifwanden","maatwerk"],
+    adres: "Huiskensstraat 72A, 5916 PN Venlo (tweede showroom: Hoppenkuil 17, Eindhoven)",
+    website: "https://egveranda.nl", werkgebied: ["Landelijk"],
+    producten: ["veranda", "terrasoverkapping", "tuinkamer", "lamellendak", "carport"],
+    typen: ["aluminium"], dakTypen: ["glas", "polycarbonaat", "lamellen"],
+    opties: ["led", "zonwering", "schuifwanden", "spiewanden", "maatwerk"],
     merken: [], keurmerken: [],
-    showroom: true, zelfbouwMogelijk: null, montageEigenTeam: null, opgericht: null,
-    profiel: "Fabrikant en leverancier van veranda's, terrasoverkappingen en lamellendaken uit eigen fabriek, met een showroom van ruim 800 m² in Venlo. Het assortiment omvat daarnaast glazen schuifwanden en boven- en onderdakzonwering op maat.",
-    kenmerken: ["Showroom van ruim 800 m² in Venlo, di t/m zo geopend","Productie in eigen fabriek","Ook glazen schuifwanden en ritsscreens","Boven- en onderdakzonwering voor veranda's"],
+    showroom: true, zelfbouwMogelijk: true, montageEigenTeam: true, opgericht: 2005,
+    profiel: "EG Veranda, opgericht in 2005, produceert veranda's, tuinkamers, lamellendaken, carports, glazen schuifwanden en aluminium kozijnen volledig in eigen fabriek (EG Aluminium). Het bedrijf levert en monteert door heel Nederland met eigen montageteams en biedt producten ook als zelfbouwpakket aan. Klanten kunnen terecht in showrooms in Venlo (800 m²) en Eindhoven.",
+    kenmerken: ["Eigen fabriek (EG Aluminium), maatwerk via online configurator", "Twee showrooms: Venlo (800 m², di t/m zo) en Eindhoven", "Levering en montage door heel Nederland, ook zelfbouw", "Dak in gelaagd glas, 16 mm polycarbonaat of kantelbare lamellen", "Ook zonwering, ritsscreens en aluminium kozijnen"],
     rating: null, aantalReviews: 0, reviews: [], prijsPerM2: null, prijsKlasse: null,
-    kleur: "#37506d", bron: "https://egveranda.nl/showroom-venlo/", gecontroleerd: "2026-08"
+    kleur: "#37506d", bron: "https://egveranda.nl/over-eg/", gecontroleerd: "2026-08"
   },
   {
     id: "ds-overkappingen-deventer", naam: "DS Overkappingen",
