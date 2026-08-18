@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bedrijfsprofiel — Verandawijzer.nl</title>
-  <meta name="description" content="Bekijk reviews, prijzen, specificaties en werkgebied van dit verandabedrijf. Vergelijk met andere bedrijven en vraag gratis een offerte aan.">
+  <meta name="description" content="Bekijk het profiel, de specificaties en het werkgebied van dit verandabedrijf. Vergelijk met andere bedrijven en vraag gratis een offerte aan.">
   <meta property="og:title" content="Bedrijfsprofiel — Verandawijzer.nl">
-  <meta property="og:description" content="Reviews, prijzen en specificaties van verandabedrijven, onafhankelijk op een rij gezet door Verandawijzer.">
+  <meta property="og:description" content="Profielen en specificaties van verandabedrijven, op basis van hun eigen websites, onafhankelijk op een rij gezet door Verandawijzer.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,10 +17,11 @@
     /* Pagina-specifiek: kleine aanvullingen op het design system */
     .detail-hero .bedrijf-plaats { color: #c9d9cf; font-size: .95rem; margin-top: 2px; }
     .detail-hero .review-aantal { color: #c9d9cf; }
+    .detail-hero .geen-reviews { color: #c9d9cf; font-size: .92rem; }
     .keurmerk-rij { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .detail-blok > h2 { font-size: 1.35rem; margin-bottom: 14px; }
     .detail-zijbalk h2 { font-size: 1.05rem; }
-    .prijs-regel { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+    .prijs-regel { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0; }
     .prijs-regel .prijs-bedrag { font-family: var(--font-kop); font-weight: 700; font-size: 1.55rem; color: var(--groen-900); }
     .prijs-regel .prijs-eenheid { font-size: .9rem; color: var(--ink-500); font-weight: 500; }
     .review-overzicht {
@@ -62,7 +63,7 @@
       const sterSVG = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="color:var(--amber-500)" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.5 5.8 21l1.6-7L2 9.3l7.1-.7z"/></svg>';
       const plusSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
       const hartSVG = (gevuld) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="${gevuld ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
-      const telefoonSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.4 19.4 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.27a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2z"/></svg>';
+      const externSVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 
       const houder = document.getElementById("profiel");
       const id = new URLSearchParams(location.search).get("id");
@@ -85,7 +86,7 @@
                   <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--ink-300)" stroke-width="1.6" stroke-linecap="round" style="margin:0 auto"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M8.5 11h5"/></svg>
                 </div>
                 <h2>Dit bedrijfsprofiel bestaat niet (meer)</h2>
-                <p>De link die je volgde klopt niet, of het bedrijf is niet langer aangesloten bij Verandawijzer. Geen zorgen: er zijn genoeg andere verandabouwers om te vergelijken.</p>
+                <p>De link die je volgde klopt niet, of het bedrijf is niet langer opgenomen in de gids van Verandawijzer. Geen zorgen: er zijn genoeg andere verandabouwers om te vergelijken.</p>
                 <a class="knop knop-primair" href="bedrijven.html">Bekijk alle bedrijven</a>
               </div>
             </div>
@@ -96,63 +97,117 @@
       /* --- Bedrijf gevonden: titel en profiel opbouwen --- */
       document.title = b.naam + " — Verandawijzer.nl";
 
-      const werkgebiedTekst = b.werkgebied.includes("Landelijk") ? "Heel Nederland" : b.werkgebied.join(", ");
-      const klasseBadge = { budget: "badge-groen", midden: "", premium: "badge-amber" }[b.prijsKlasse] || "";
-      const m2 = 15;
+      /* Vestiging, null-veilig: landelijke aanbieders zonder vermelde vestiging */
+      const plaatsTekst = [b.plaats, b.provincie].filter(Boolean).join(", ") || "Landelijk actief";
 
-      /* Reviews: nieuwste eerst + verdeling per aantal sterren */
-      const reviews = [...b.reviews].sort((a, c) => c.datum.localeCompare(a.datum));
-      const verdeling = [5, 4, 3, 2, 1].map((s) => ({ ster: s, aantal: b.reviews.filter((r) => r.score === s).length }));
-      const verdelingLabel = "Scoreverdeling: " + verdeling.map((v) => `${v.ster} sterren: ${v.aantal} ${v.aantal === 1 ? "review" : "reviews"}`).join(", ");
-      const verdelingHTML = verdeling.map((v) => {
-        const pct = b.reviews.length ? Math.round((v.aantal / b.reviews.length) * 100) : 0;
-        return `<div class="verdeling-rij">
-          <span style="display:flex;align-items:center;gap:4px;justify-content:flex-end">${v.ster} ${sterSVG}</span>
-          <div class="verdeling-balk"><span style="width:${pct}%"></span></div>
-          <span>${v.aantal}</span>
-        </div>`;
-      }).join("");
+      /* Merken (en eventuele geverifieerde keurmerken) als badges in de hero */
+      const heroBadges = [
+        ...(b.merken || []).map((m) => `<span class="badge">${m}</span>`),
+        ...(b.keurmerken || []).map((k) => `<span class="badge badge-keurmerk">${keurmerkSVG}${k}</span>`)
+      ];
 
-      const reviewsHTML = reviews.map((r) => `
-        <article class="review-kaart">
-          <div class="review-kop">
-            <div><span class="review-naam">${r.naam}</span> <span class="review-meta">${r.plaats} · ${maandJaar(r.datum)}</span></div>
-            ${VF.sterrenHTML(r.score)}
+      /* --- Specificaties: alleen rijen waarvoor echte data bestaat --- */
+      const werkgebiedTekst = b.werkgebied
+        ? (b.werkgebied.includes("Landelijk") ? "Heel Nederland" : b.werkgebied.join(", "))
+        : null;
+      const specRijen = [
+        ["Producten", b.producten.length ? b.producten.map((p) => PRODUCTEN[p]).join(", ") : null],
+        ["Materialen", b.typen.length ? b.typen.map((t) => MATERIALEN[t]).join(", ") : null],
+        ["Daktypen", b.dakTypen.length ? b.dakTypen.map((d) => DAKTYPEN[d]).join(", ") : null],
+        ["Opties", b.opties.length ? b.opties.map((o) => OPTIES[o]).join(", ") : null],
+        ["Merken", b.merken.length ? b.merken.join(", ") : null],
+        ["Werkgebied", werkgebiedTekst],
+        ["Adres", b.adres],
+        ["Opgericht", b.opgericht],
+        ["Showroom", b.showroom === true ? "Ja" : null],
+        ["Eigen montageteam", b.montageEigenTeam === true ? "Ja" : null],
+        ["Zelfbouwpakket mogelijk", b.zelfbouwMogelijk === true ? "Ja" : null]
+      ].filter(([, waarde]) => waarde);
+      const specsHTML = specRijen.map(([label, waarde]) => `<tr><th scope="row">${label}</th><td>${waarde}</td></tr>`).join("");
+
+      /* --- Prijsindicatie: marktrichtprijs uit de prijswijzer, geen bedrijfsprijs --- */
+      const RICHT_LABELS = { aluminium: "een aluminium veranda", hout: "een houten veranda", staal: "een stalen veranda", kunststof: "een kunststof veranda" };
+      const richtMateriaal = b.typen[0] || null;
+      const richt = (richtMateriaal && RICHTPRIJZEN_M2[richtMateriaal]) || RICHTPRIJZEN_M2.standaard;
+      const richtLabel = richtMateriaal ? RICHT_LABELS[richtMateriaal] : "een veranda (alle materialen)";
+
+      /* --- Reviews: echte reviews tonen zodra ze er zijn, anders een eerlijke lege staat --- */
+      const reviewMail = `mailto:reviews@verandawijzer.nl?subject=${encodeURIComponent("Review: " + b.naam)}`;
+      const deelKnop = `<a class="knop knop-outline" href="${reviewMail}">Deel jouw ervaring</a>`;
+      let reviewsBlokHTML;
+      if (b.reviews.length) {
+        const reviews = [...b.reviews].sort((a, c) => c.datum.localeCompare(a.datum));
+        const gemiddelde = b.rating || reviews.reduce((som, r) => som + r.score, 0) / reviews.length;
+        const aantal = b.aantalReviews || reviews.length;
+        const verdeling = [5, 4, 3, 2, 1].map((s) => ({ ster: s, aantal: reviews.filter((r) => r.score === s).length }));
+        const verdelingLabel = "Scoreverdeling: " + verdeling.map((v) => `${v.ster} sterren: ${v.aantal} ${v.aantal === 1 ? "review" : "reviews"}`).join(", ");
+        const verdelingHTML = verdeling.map((v) => {
+          const pct = Math.round((v.aantal / reviews.length) * 100);
+          return `<div class="verdeling-rij">
+            <span style="display:flex;align-items:center;gap:4px;justify-content:flex-end">${v.ster} ${sterSVG}</span>
+            <div class="verdeling-balk"><span style="width:${pct}%"></span></div>
+            <span>${v.aantal}</span>
+          </div>`;
+        }).join("");
+        const reviewsHTML = reviews.map((r) => `
+          <article class="review-kaart">
+            <div class="review-kop">
+              <div><span class="review-naam">${r.naam}</span> <span class="review-meta">${[r.plaats, maandJaar(r.datum)].filter(Boolean).join(" · ")}</span></div>
+              ${VF.sterrenHTML(r.score)}
+            </div>
+            ${r.titel ? `<h3 style="font-size:1rem;margin:0">${r.titel}</h3>` : ""}
+            <p>${r.tekst}</p>
+            ${r.project ? `<p class="review-project">Project: ${r.project}</p>` : ""}
+          </article>`).join("");
+        reviewsBlokHTML = `
+          <div class="review-overzicht">
+            <div>
+              <div class="review-gem-cijfer">${komma(gemiddelde)}</div>
+              ${VF.sterrenHTML(gemiddelde)}
+              <p class="klein mb-0 mt-1">op basis van ${aantal} ${aantal === 1 ? "beoordeling" : "beoordelingen"}</p>
+            </div>
+            <div role="img" aria-label="${verdelingLabel}">
+              ${verdelingHTML}
+            </div>
           </div>
-          <h3 style="font-size:1rem;margin:0">${r.titel}</h3>
-          <p>${r.tekst}</p>
-          <p class="review-project">Project: ${r.project}</p>
-        </article>`).join("");
+          ${reviewsHTML}
+          <p class="mb-0 mt-2">${deelKnop}</p>`;
+      } else {
+        reviewsBlokHTML = `
+          <p>Er zijn nog geen reviews van ${b.naam} via Verandawijzer.</p>
+          <p class="klein">Ons reviewsysteem is net gestart: we verzamelen ervaringen van klanten en tonen die hier zodra ze binnenkomen en gecontroleerd zijn. Heb jij een veranda of overkapping laten leveren door dit bedrijf? Met jouw ervaring help je anderen kiezen.</p>
+          ${deelKnop}`;
+      }
 
-      /* Vergelijkbare bedrijven: zelfde provincie in werkgebied of zelfde prijsklasse, hoogste rating eerst */
+      /* --- Vergelijkbare bedrijven: zelfde provincie of overlappend werkgebied (null-veilig) --- */
+      const eigenWerkgebied = b.werkgebied || [];
       const vergelijkbaar = BEDRIJVEN
         .filter((x) => x.id !== b.id)
-        .map((x) => ({
-          bedrijf: x,
-          score: (x.werkgebied.includes(b.provincie) || x.werkgebied.includes("Landelijk") ? 2 : 0) + (x.prijsKlasse === b.prijsKlasse ? 1 : 0)
-        }))
+        .map((x) => {
+          const xWerkgebied = x.werkgebied || [];
+          let score = 0;
+          if (b.provincie && x.provincie === b.provincie) score += 4;
+          if (b.provincie && (xWerkgebied.includes(b.provincie) || xWerkgebied.includes("Landelijk"))) score += 2;
+          if (x.provincie && (eigenWerkgebied.includes(x.provincie) || eigenWerkgebied.includes("Landelijk"))) score += 2;
+          if (eigenWerkgebied.includes("Landelijk") && xWerkgebied.includes("Landelijk")) score += 1;
+          return { bedrijf: x, score };
+        })
         .filter((x) => x.score > 0)
-        .sort((a, c) => c.score - a.score || c.bedrijf.rating - a.bedrijf.rating || c.bedrijf.aantalReviews - a.bedrijf.aantalReviews)
+        .sort((a, c) => c.score - a.score)
         .slice(0, 2)
         .map((x) => x.bedrijf);
-
-      const specRij = (label, waarde) => `<tr><th scope="row">${label}</th><td>${waarde}</td></tr>`;
 
       houder.innerHTML = `
         <section class="detail-hero">
           <div class="wrap">
             <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <a href="bedrijven.html">Bedrijven</a> › <span>${b.naam}</span></nav>
             <div class="detail-kop-raster">
-              <div class="detail-logo" style="background:${b.kleur}" aria-hidden="true">${VF.initialen(b.naam)}</div>
+              ${VF.avatarHTML(b, "detail-logo")}
               <div>
                 <h1>${b.naam}</h1>
-                <p class="bedrijf-plaats"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>${b.plaats}, ${b.provincie}</p>
-                <div class="score-blok mt-1">
-                  ${VF.sterrenHTML(b.rating)}
-                  <span class="score-cijfer">${komma(b.rating)}</span>
-                  <span class="review-aantal">${b.aantalReviews} reviews</span>
-                </div>
-                ${b.keurmerken.length ? `<div class="keurmerk-rij">${b.keurmerken.map((k) => `<span class="badge badge-keurmerk">${keurmerkSVG}${k}</span>`).join("")}</div>` : ""}
+                <p class="bedrijf-plaats"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>${plaatsTekst}</p>
+                <div class="mt-1">${VF.scoreHTML(b)}</div>
+                ${heroBadges.length ? `<div class="keurmerk-rij">${heroBadges.join("")}</div>` : ""}
               </div>
             </div>
           </div>
@@ -165,72 +220,46 @@
 
                 <section class="kaart detail-blok" aria-labelledby="kop-over">
                   <h2 id="kop-over">Over ${b.naam}</h2>
-                  <p>${b.beschrijving}</p>
-                  <ul class="icoon-lijst mt-2">
-                    ${b.usps.map((usp) => `<li>${vinkjeSVG}${usp}</li>`).join("")}
-                  </ul>
+                  <p>${b.profiel}</p>
+                  ${b.kenmerken.length ? `<ul class="icoon-lijst mt-2">
+                    ${b.kenmerken.map((k) => `<li>${vinkjeSVG}${k}</li>`).join("")}
+                  </ul>` : ""}
                 </section>
 
                 <section class="kaart detail-blok" aria-labelledby="kop-specs">
                   <h2 id="kop-specs">Specificaties</h2>
                   <table class="specs-tabel">
                     <tbody>
-                      ${specRij("Producten", b.producten.map((p) => PRODUCTEN[p]).join(", "))}
-                      ${specRij("Materialen", b.typen.map((t) => MATERIALEN[t]).join(", "))}
-                      ${specRij("Daktypen", b.dakTypen.map((d) => DAKTYPEN[d]).join(", "))}
-                      ${specRij("Opties", b.opties.map((o) => OPTIES[o]).join(", "))}
-                      ${specRij("Werkgebied", werkgebiedTekst)}
-                      ${specRij("Opgericht", b.opgericht)}
-                      ${specRij("Projecten per jaar", "± " + b.projectenPerJaar.toLocaleString("nl-NL"))}
-                      ${specRij("Gemiddelde levertijd", "± " + b.levertijdWeken + " weken")}
-                      ${specRij("Garantie", b.garantieJaren + " jaar op de constructie")}
-                      ${specRij("Montage door eigen team", b.montageEigenTeam ? "Ja, eigen monteurs" : "Nee, via montagepartners")}
-                      ${specRij("Showroom", b.showroom ? "Ja" : "Nee")}
+                      ${specsHTML}
                     </tbody>
                   </table>
+                  <p class="klein mb-0 mt-2">We tonen alleen gegevens die het bedrijf zelf publiceert; ontbrekende onderdelen laten we weg.</p>
                 </section>
 
                 <section class="kaart detail-blok" aria-labelledby="kop-prijs">
                   <h2 id="kop-prijs">Prijsindicatie</h2>
+                  <p>${b.naam} publiceert geen prijzen per m² op de eigen website, dus tonen we hier geen bedrijfsspecifieke prijs. Ter oriëntatie zie je de marktrichtprijs voor ${richtLabel} — een gemiddelde bandbreedte voor de Nederlandse markt, niet specifiek van dit bedrijf.</p>
                   <div class="prijs-regel">
-                    <span class="prijs-bedrag">${VF.euro(b.prijsPerM2.min)} – ${VF.euro(b.prijsPerM2.max)}</span>
-                    <span class="prijs-eenheid">per m², incl. montage</span>
-                    <span class="badge ${klasseBadge}">${PRIJSKLASSEN[b.prijsKlasse]}</span>
+                    <span class="prijs-bedrag">${VF.euro(richt.min)} – ${VF.euro(richt.max)}</span>
+                    <span class="prijs-eenheid">per m², incl. montage en btw</span>
+                    <span class="badge badge-uit">Marktrichtprijs, niet van dit bedrijf</span>
                   </div>
-                  <p>De uiteindelijke prijs hangt af van de uitvoering: afmeting, materiaal, daktype en opties zoals verlichting, zonwering of schuifwanden bepalen samen het eindbedrag. Zie deze richtprijs dus als een startpunt, niet als een offerte.</p>
-                  <h3 style="font-size:1rem">Voorbeeldberekening: veranda van 5×3 meter (${m2} m²)</h3>
-                  <table class="specs-tabel">
-                    <tbody>
-                      ${specRij("Eenvoudige uitvoering", `${m2} m² × ${VF.euro(b.prijsPerM2.min)} = <strong>${VF.euro(m2 * b.prijsPerM2.min)}</strong>`)}
-                      ${specRij("Luxe uitvoering", `${m2} m² × ${VF.euro(b.prijsPerM2.max)} = <strong>${VF.euro(m2 * b.prijsPerM2.max)}</strong>`)}
-                    </tbody>
-                  </table>
-                  <p class="mb-0 mt-1"><a href="prijzen.html">Bereken je eigen richtprijs met de prijswijzer →</a></p>
+                  <p>Wat je werkelijk betaalt hangt af van afmeting, materiaal, daktype en opties. Vraag daarom een offerte aan voor een echte prijs op maat.</p>
+                  <p class="mb-0"><a href="prijzen.html">Bekijk de marktrichtprijzen in de prijswijzer →</a></p>
                 </section>
 
                 <section class="kaart detail-blok" aria-labelledby="kop-reviews">
                   <h2 id="kop-reviews">Reviews</h2>
-                  <div class="review-overzicht">
-                    <div>
-                      <div class="review-gem-cijfer">${komma(b.rating)}</div>
-                      ${VF.sterrenHTML(b.rating)}
-                      <p class="klein mb-0 mt-1">op basis van ${b.aantalReviews} beoordelingen</p>
-                    </div>
-                    <div role="img" aria-label="${verdelingLabel}">
-                      ${verdelingHTML}
-                      <p class="klein mb-0 mt-1">Verdeling van de ${b.reviews.length} recentste reviews hieronder.</p>
-                    </div>
-                  </div>
-                  ${reviewsHTML}
+                  ${reviewsBlokHTML}
                 </section>
 
-                <section class="kaart detail-blok" aria-labelledby="kop-vergelijkbaar">
+                ${vergelijkbaar.length ? `<section class="kaart detail-blok" aria-labelledby="kop-vergelijkbaar">
                   <h2 id="kop-vergelijkbaar">Vergelijkbare bedrijven</h2>
-                  <p class="klein">Ook actief in jouw regio of in dezelfde prijsklasse.</p>
+                  <p class="klein">Actief in dezelfde regio, of landelijk werkend.</p>
                   <div class="raster-2">
-                    ${vergelijkbaar.map(VF.bedrijfKaartHTML).join("")}
+                    ${vergelijkbaar.map((x) => VF.bedrijfKaartHTML(x)).join("")}
                   </div>
-                </section>
+                </section>` : ""}
 
               </div>
 
@@ -238,20 +267,24 @@
                 <div class="kaart detail-blok">
                   <h2>Direct regelen</h2>
                   <div class="zijbalk-acties">
+                    ${b.website ? `<a class="knop knop-primair knop-breed" href="${b.website}" target="_blank" rel="noopener">Bezoek website ${externSVG}</a>` : ""}
                     <a class="knop knop-accent knop-breed" href="offerte.html">Offerte aanvragen</a>
                     <button type="button" class="knop knop-outline knop-breed" id="knop-vergelijk" data-vergelijk="${b.id}"></button>
                     <button type="button" class="knop knop-wit knop-breed" id="knop-fav" data-fav="${b.id}"></button>
-                    <a class="knop knop-ghost knop-breed" href="tel:${b.telefoon.replace(/\D/g, "")}">${telefoonSVG}${b.telefoon}</a>
                   </div>
-                  <p class="klein mb-0 mt-2">Gratis en vrijblijvend · reactie meestal binnen één werkdag.</p>
+                  <p class="klein mb-0 mt-2">Offertes aanvragen via Verandawijzer is gratis en vrijblijvend.</p>
                 </div>
                 <div class="kaart detail-blok">
                   <h2>Waarom via Verandawijzer</h2>
                   <ul class="icoon-lijst">
                     <li>${vinkjeSVG}Vergelijken en offertes aanvragen is 100% gratis.</li>
-                    <li>${vinkjeSVG}Reviews komen van echte klanten en worden gecontroleerd.</li>
+                    <li>${vinkjeSVG}Bedrijfsgegevens komen van de eigen website van het bedrijf.</li>
                     <li>${vinkjeSVG}Jij kiest wie je benadert — geen ongevraagde telefoontjes.</li>
                   </ul>
+                </div>
+                <div style="padding:0 6px">
+                  <p class="bron-regel mb-0">Gegevens afkomstig van <a href="${b.bron}" target="_blank" rel="noopener">de bedrijfswebsite</a>${b.gecontroleerd ? " · laatst gecontroleerd " + maandJaar(b.gecontroleerd) : ""} · <a href="contact.html">Klopt er iets niet?</a></p>
+                  <p class="bron-regel mb-0 mt-1">Ben jij ${b.naam}? <a href="contact.html">Claim of corrigeer deze vermelding</a>.</p>
                 </div>
               </aside>
             </div>
