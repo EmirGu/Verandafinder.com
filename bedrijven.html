@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verandabedrijven vergelijken — Verandawijzer.nl</title>
-  <meta name="description" content="Bekijk en filter alle aangesloten verandabedrijven op provincie, product, materiaal, daktype, prijsklasse en beoordeling. Vergelijk en vraag gratis offertes aan.">
+  <meta name="description" content="Bekijk alle verandabedrijven in de gids en filter op provincie, product, materiaal en daktype. Gegevens afkomstig van de bedrijfswebsites zelf.">
   <meta property="og:title" content="Verandabedrijven vergelijken — Verandawijzer.nl">
-  <meta property="og:description" content="Filter verandabedrijven op regio, product, prijsklasse en beoordeling en vind de bouwer die bij jouw project past.">
+  <meta property="og:description" content="Filter verandabedrijven op regio, product, materiaal en daktype en bekijk per bedrijf wat het aanbiedt.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,15 +14,14 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
-    /* Pagina-specifiek: 2 kolommen in het resultatenraster + kleine filterdetails */
-    .overzicht-indeling .kaarten-raster { grid-template-columns: repeat(2, 1fr); }
+    /* Pagina-specifiek: resultaten als lijst (één kolom) + kleine filterdetails */
+    #resultaten { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
     .filter-toggle-knop { margin-bottom: 18px; }
     .filter-kop { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
     .filter-kop h2 { margin-bottom: 0; }
     .filter-reset { background: none; border: 0; padding: 0; font: inherit; font-size: .86rem; color: var(--groen-700); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
     .filter-reset:hover { color: var(--groen-900); }
     .filter-groep h3 label { display: inline; margin: 0; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
-    @media (max-width: 760px) { .overzicht-indeling .kaarten-raster { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -35,7 +34,7 @@
       <div class="wrap">
         <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Bedrijven</span></nav>
         <h1>Alle verandabedrijven op een rij</h1>
-        <p>Vergelijk <span id="intro-aantal">alle</span> aangesloten verandabouwers op beoordeling, prijs en specialisatie. Filter op jouw provincie en wensen en vind de bedrijven die bij je project passen.</p>
+        <p>Bekijk <span id="intro-aantal">alle</span> bedrijven in de gids. Filter op provincie, product, materiaal of daktype en zie per bedrijf waar het gevestigd is en wat het aanbiedt.</p>
       </div>
     </section>
 
@@ -82,12 +81,14 @@
               <div id="filter-daktype"></div>
             </div>
 
-            <div class="filter-groep" role="group" aria-labelledby="kop-prijsklasse">
+            <!-- Prijsklasse en beoordeling verschijnen automatisch zodra er
+                 gepubliceerde prijzen of echte reviews in de data staan -->
+            <div class="filter-groep" role="group" aria-labelledby="kop-prijsklasse" id="groep-prijsklasse">
               <h3 id="kop-prijsklasse">Prijsklasse</h3>
               <div id="filter-prijsklasse"></div>
             </div>
 
-            <div class="filter-groep">
+            <div class="filter-groep" id="groep-score">
               <h3><label for="filter-score">Minimale beoordeling</label></h3>
               <select id="filter-score" name="score">
                 <option value="">Alle beoordelingen</option>
@@ -98,9 +99,9 @@
 
             <div class="filter-groep" role="group" aria-labelledby="kop-extra">
               <h3 id="kop-extra">Extra's</h3>
+              <label class="check-rij"><input type="checkbox" name="extra" value="showroom"> Eigen showroom</label>
               <label class="check-rij"><input type="checkbox" name="extra" value="montage"> Eigen montageteam</label>
-              <label class="check-rij"><input type="checkbox" name="extra" value="showroom"> Showroom aanwezig</label>
-              <label class="check-rij"><input type="checkbox" name="extra" value="keurmerk"> Met keurmerk</label>
+              <label class="check-rij"><input type="checkbox" name="extra" value="zelfbouw"> Zelfbouwpakket mogelijk</label>
             </div>
           </aside>
 
@@ -111,16 +112,16 @@
               <div class="sorteer">
                 <label for="sorteer-select">Sorteer op</label>
                 <select id="sorteer-select">
-                  <option value="rating">Beste beoordeling</option>
-                  <option value="reviews">Meeste reviews</option>
-                  <option value="prijs-op">Prijs (laag-hoog)</option>
-                  <option value="prijs-af">Prijs (hoog-laag)</option>
                   <option value="naam">Naam (A-Z)</option>
+                  <option value="plaats">Plaats (A-Z)</option>
+                  <option value="producten">Meeste producten</option>
                 </select>
               </div>
             </div>
 
-            <div class="kaarten-raster" id="resultaten"></div>
+            <p class="bron-regel">Gegevens afkomstig van de bedrijfswebsites, laatst gecontroleerd augustus 2026. Klopt er iets niet? <a href="contact.html">Geef het door</a>.</p>
+
+            <div id="resultaten"></div>
 
             <div class="kaart leeg-melding verborgen" id="leeg-melding">
               <div class="leeg-icoon" aria-hidden="true">
@@ -158,7 +159,7 @@
       const selProvincie = document.getElementById("filter-provincie");
       const selScore = document.getElementById("filter-score");
       const selSorteer = document.getElementById("sorteer-select");
-      const raster = document.getElementById("resultaten");
+      const lijstHouder = document.getElementById("resultaten");
       const leegMelding = document.getElementById("leeg-melding");
       const aantalEl = document.getElementById("resultaat-aantal");
 
@@ -175,7 +176,19 @@
       vulCheckGroep("filter-product", PRODUCTEN, "product");
       vulCheckGroep("filter-materiaal", MATERIALEN, "materiaal");
       vulCheckGroep("filter-daktype", DAKTYPEN, "daktype");
-      vulCheckGroep("filter-prijsklasse", PRIJSKLASSEN, "prijsklasse");
+
+      /* Prijs- en reviewfilters pas tonen zodra er echte gegevens zijn */
+      if (VF.heeftPrijzen) {
+        vulCheckGroep("filter-prijsklasse", PRIJSKLASSEN, "prijsklasse");
+      } else {
+        document.getElementById("groep-prijsklasse").remove();
+      }
+      if (VF.heeftReviews) {
+        selSorteer.insertAdjacentHTML("beforeend",
+          `<option value="rating">Beste beoordeling</option><option value="reviews">Meeste reviews</option>`);
+      } else {
+        document.getElementById("groep-score").remove();
+      }
 
       /* ---------- Filters lezen ---------- */
       const aangevinkt = (naam) => [...paneel.querySelectorAll(`input[name="${naam}"]:checked`)].map((el) => el.value);
@@ -187,38 +200,46 @@
           product: aangevinkt("product"),
           materiaal: aangevinkt("materiaal"),
           daktype: aangevinkt("daktype"),
-          prijsklasse: aangevinkt("prijsklasse"),
-          score: selScore.value,
+          prijsklasse: VF.heeftPrijzen ? aangevinkt("prijsklasse") : [],
+          score: VF.heeftReviews ? selScore.value : "",
           extra: aangevinkt("extra"),
           sorteer: selSorteer.value
         };
       }
 
-      /* ---------- Filteren ---------- */
+      /* ---------- Filteren (null-veilig: plaats, provincie en werkgebied
+                    kunnen ontbreken; typen/dakTypen kunnen leeg zijn) ---------- */
       function filterBedrijven(f) {
         const zoek = f.zoek.toLowerCase();
         return BEDRIJVEN.filter((b) => {
-          if (zoek && !b.naam.toLowerCase().includes(zoek) && !b.plaats.toLowerCase().includes(zoek)) return false;
-          if (f.provincie && !b.werkgebied.includes("Landelijk") && !b.werkgebied.includes(f.provincie) && b.provincie !== f.provincie) return false;
+          const werkgebied = b.werkgebied || [];
+          if (zoek && !b.naam.toLowerCase().includes(zoek) && !(b.plaats || "").toLowerCase().includes(zoek)) return false;
+          if (f.provincie && b.provincie !== f.provincie && !werkgebied.includes(f.provincie) && !werkgebied.includes("Landelijk")) return false;
           if (f.product.length && !f.product.some((p) => b.producten.includes(p))) return false;
           if (f.materiaal.length && !f.materiaal.some((m) => b.typen.includes(m))) return false;
           if (f.daktype.length && !f.daktype.some((d) => b.dakTypen.includes(d))) return false;
           if (f.prijsklasse.length && !f.prijsklasse.includes(b.prijsKlasse)) return false;
-          if (f.score && b.rating < parseFloat(f.score)) return false;
-          if (f.extra.includes("montage") && !b.montageEigenTeam) return false;
+          if (f.score && (b.rating || 0) < parseFloat(f.score)) return false;
           if (f.extra.includes("showroom") && !b.showroom) return false;
-          if (f.extra.includes("keurmerk") && !b.keurmerken.length) return false;
+          if (f.extra.includes("montage") && !b.montageEigenTeam) return false;
+          if (f.extra.includes("zelfbouw") && !b.zelfbouwMogelijk) return false;
           return true;
         });
       }
 
       /* ---------- Sorteren ---------- */
+      const opNaam = (a, b) => a.naam.localeCompare(b.naam, "nl");
       const SORTERINGEN = {
-        rating: (a, b) => b.rating - a.rating || b.aantalReviews - a.aantalReviews,
-        reviews: (a, b) => b.aantalReviews - a.aantalReviews || b.rating - a.rating,
-        "prijs-op": (a, b) => a.prijsPerM2.min - b.prijsPerM2.min || a.prijsPerM2.max - b.prijsPerM2.max,
-        "prijs-af": (a, b) => b.prijsPerM2.min - a.prijsPerM2.min || b.prijsPerM2.max - a.prijsPerM2.max,
-        naam: (a, b) => a.naam.localeCompare(b.naam, "nl")
+        naam: opNaam,
+        plaats: (a, b) => {
+          if (!a.plaats && !b.plaats) return opNaam(a, b);
+          if (!a.plaats) return 1;
+          if (!b.plaats) return -1;
+          return a.plaats.localeCompare(b.plaats, "nl") || opNaam(a, b);
+        },
+        producten: (a, b) => b.producten.length - a.producten.length || opNaam(a, b),
+        rating: (a, b) => (b.rating || 0) - (a.rating || 0) || b.aantalReviews - a.aantalReviews || opNaam(a, b),
+        reviews: (a, b) => b.aantalReviews - a.aantalReviews || (b.rating || 0) - (a.rating || 0) || opNaam(a, b)
       };
 
       /* ---------- URL bijwerken (deelbare links) ---------- */
@@ -232,7 +253,7 @@
         if (f.prijsklasse.length) p.set("prijsklasse", f.prijsklasse.join(","));
         if (f.score) p.set("score", f.score);
         if (f.extra.length) p.set("extra", f.extra.join(","));
-        if (f.sorteer !== "rating") p.set("sorteer", f.sorteer);
+        if (f.sorteer !== "naam") p.set("sorteer", f.sorteer);
         const qs = p.toString();
         history.replaceState(null, "", location.pathname + (qs ? "?" + qs : ""));
       }
@@ -240,15 +261,15 @@
       /* ---------- Renderen ---------- */
       function render() {
         const f = leesFilters();
-        const lijst = filterBedrijven(f).sort(SORTERINGEN[f.sorteer] || SORTERINGEN.rating);
+        const lijst = filterBedrijven(f).sort(SORTERINGEN[f.sorteer] || SORTERINGEN.naam);
         aantalEl.textContent = lijst.length === 1 ? "1 bedrijf gevonden" : `${lijst.length} bedrijven gevonden`;
         if (lijst.length) {
-          raster.innerHTML = lijst.map(VF.bedrijfKaartHTML).join("");
-          raster.classList.remove("verborgen");
+          lijstHouder.innerHTML = lijst.map(VF.bedrijfRijHTML).join("");
+          lijstHouder.classList.remove("verborgen");
           leegMelding.classList.add("verborgen");
         } else {
-          raster.innerHTML = "";
-          raster.classList.add("verborgen");
+          lijstHouder.innerHTML = "";
+          lijstHouder.classList.add("verborgen");
           leegMelding.classList.remove("verborgen");
         }
         schrijfURL(f);
@@ -259,7 +280,7 @@
       function wisFilters() {
         invoerZoek.value = "";
         selProvincie.value = "";
-        selScore.value = "";
+        if (VF.heeftReviews) selScore.value = "";
         paneel.querySelectorAll('input[type="checkbox"]').forEach((el) => { el.checked = false; });
         render();
       }
@@ -283,9 +304,9 @@
       vinkAan("prijsklasse", params.get("prijsklasse"));
       vinkAan("extra", params.get("extra"));
       const scoreParam = params.get("score");
-      if (scoreParam && [...selScore.options].some((o) => o.value === scoreParam)) selScore.value = scoreParam;
+      if (VF.heeftReviews && scoreParam && [...selScore.options].some((o) => o.value === scoreParam)) selScore.value = scoreParam;
       const sorteerParam = params.get("sorteer");
-      if (sorteerParam && SORTERINGEN[sorteerParam]) selSorteer.value = sorteerParam;
+      if (sorteerParam && [...selSorteer.options].some((o) => o.value === sorteerParam)) selSorteer.value = sorteerParam;
 
       /* ---------- Live bijwerken ---------- */
       paneel.addEventListener("input", render);
