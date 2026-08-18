@@ -416,7 +416,7 @@ const VF = (() => {
       if (link.target && link.target !== "_self") return;
       e.preventDefault();
       document.documentElement.classList.add("pagina-verlaat");
-      setTimeout(() => { location.href = href; }, 150);
+      setTimeout(() => { location.href = href; }, 180);
     });
   })();
 

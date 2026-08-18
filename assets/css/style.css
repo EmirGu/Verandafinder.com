@@ -395,21 +395,30 @@ body.met-vergelijkbalk { padding-bottom: 84px; }
 .hero {
   background: linear-gradient(180deg, #fff 0%, #f6f8f4 55%, #edf3ee 100%);
   border-bottom: 1px solid var(--lijn);
-  color: var(--ink-900); padding: 40px 0 210px; position: relative; overflow: hidden;
+  color: var(--ink-900); padding: 40px 0 clamp(220px, 16vw, 360px); position: relative; overflow: hidden;
   /* Vult het scherm onder de header (topstrip 32px + header 66px); pas na
      scrollen verschijnt de rest van de pagina. svh = veilig op mobiel. */
   min-height: calc(100svh - 98px);
   display: grid; place-items: center;
 }
 .hero-midden { position: relative; z-index: 1; }
-/* Illustratie onderin de hero: rustige tuinscène in gedempte tinten */
+/* Illustratie onderin de hero: rustige tuinscène in gedempte tinten.
+   De hoogte schaalt mee met de breedte (viewBox-verhouding 1600:310) zodat
+   de scène op brede schermen nooit van boven wordt afgesneden. */
 .hero-scene {
-  position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 240px;
+  position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
+  height: min(19.4vw, 430px);
   pointer-events: none; z-index: 0;
 }
+/* Korte (brede) schermen: scène iets lager afsnijden — alleen lucht valt weg,
+   de boom en het dak blijven altijd heel (yMax-uitlijning van de viewBox) */
+@media (max-height: 940px) {
+  .hero { padding-bottom: 190px; }
+  .hero-scene { height: min(19.4vw, 285px); }
+}
 @media (max-height: 700px), (max-width: 640px) {
-  .hero { padding-bottom: 110px; }
-  .hero-scene { height: 130px; opacity: .7; }
+  .hero { padding-bottom: 120px; }
+  .hero-scene { height: 140px; opacity: .7; }
 }
 .scroll-hint {
   position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 2;
@@ -664,14 +673,20 @@ body.met-vergelijkbalk { padding-bottom: 84px; }
 /* ---------- 21. Paginatransities ---------- */
 /* JavaScript-gedreven (zie app.js): werkt in élke browser en ook lokaal via
    file://, waar de native view-transitions-API niet beschikbaar is.
-   Binnenkomen: de inhoud vloeit zacht omhoog; vertrekken: korte fade-out.
-   De header en footer blijven rustig staan. */
-@keyframes pagina-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-main { animation: pagina-in .3s ease both; }
-body { transition: opacity .15s ease; }
-html.pagina-verlaat body { opacity: 0; }
+   Richtingsgevoel: de oude pagina schuift zacht omhoog en vervaagt, de
+   nieuwe komt van onderen binnen met een uitrollende easing. Header en
+   footer blijven rustig staan; de footer fade't alleen licht mee. */
+@keyframes pagina-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes footer-in { from { opacity: 0; } to { opacity: 1; } }
+main { animation: pagina-in .5s cubic-bezier(.22, 1, .36, 1) both; }
+#site-footer { animation: footer-in .5s ease both; }
+body { transition: opacity .18s cubic-bezier(.4, 0, 1, 1), transform .18s cubic-bezier(.4, 0, 1, 1); }
+html.pagina-verlaat body { opacity: 0; transform: translateY(-14px); }
 @media (prefers-reduced-motion: reduce) {
-  main, .scroll-hint svg { animation: none !important; }
+  main, #site-footer, .scroll-hint svg { animation: none !important; }
   body { transition: none !important; }
 }
 
