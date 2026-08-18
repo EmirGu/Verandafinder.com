@@ -39,7 +39,7 @@ const VF = (() => {
   const initialen = (naam) => naam.split(/\s+/).filter((w) => /^[A-Za-z&]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
   function coverHTML(bedrijf) {
-    return `<div class="bedrijf-cover" style="background:linear-gradient(135deg, ${bedrijf.kleur}, ${bedrijf.kleur}cc)">
+    return `<div class="bedrijf-cover" style="background:${bedrijf.kleur}">
       <svg class="cover-patroon" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <path d="M0 95 L200 15 L400 95" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="7"/>
         <path d="M35 95 L35 40 M365 95 L365 40" stroke="rgba(255,255,255,.4)" stroke-width="6"/>

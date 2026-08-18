@@ -40,17 +40,8 @@
             <div class="hero-cijfer"><div class="cijfer" id="cijfer-score">—</div><div class="cijfer-label">gemiddelde score</div></div>
           </div>
         </div>
-        <div class="hero-visual" aria-hidden="true">
-          <svg viewBox="0 0 440 340" fill="none">
-            <rect x="20" y="240" width="400" height="14" rx="7" fill="rgba(255,255,255,.18)"/>
-            <path d="M60 240V120L220 40l160 80v120" stroke="rgba(255,255,255,.75)" stroke-width="9" stroke-linecap="round"/>
-            <path d="M40 128 220 38l180 90" stroke="#f0b45c" stroke-width="9" stroke-linecap="round"/>
-            <path d="M120 240v-70M220 240v-95M320 240v-70" stroke="rgba(255,255,255,.4)" stroke-width="7" stroke-linecap="round"/>
-            <rect x="140" y="180" width="160" height="60" rx="6" fill="rgba(255,255,255,.12)"/>
-            <circle cx="220" cy="120" r="9" fill="#f0b45c"/>
-            <path d="M100 285c30-14 60-14 90 0s60 14 90 0" stroke="rgba(240,180,92,.65)" stroke-width="7" stroke-linecap="round"/>
-            <path d="M130 310c25-11 50-11 75 0s50 11 75 0" stroke="rgba(255,255,255,.25)" stroke-width="6" stroke-linecap="round"/>
-          </svg>
+        <div class="hero-visual">
+          <div class="hero-paneel" id="hero-paneel"></div>
         </div>
       </div>
     </section>
@@ -112,7 +103,6 @@
       <div class="wrap">
         <div class="cta-band">
           <div>
-            <span class="boventitel" style="color:var(--amber-400);font-family:var(--font-kop);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em">Prijswijzer</span>
             <h2>Wat kost jouw veranda?</h2>
             <p>Kies type, afmeting en opties en zie direct een realistische richtprijs, gebaseerd op actuele tarieven van aangesloten bedrijven.</p>
           </div>
@@ -213,11 +203,23 @@
       document.getElementById("cijfer-reviews").textContent = totaalReviews.toLocaleString("nl-NL") + "+";
       document.getElementById("cijfer-score").textContent = gemiddelde.toFixed(1).replace(".", ",");
 
-      /* Topbedrijven: hoogste rating (min. 100 reviews), top 6 */
+      /* Topbedrijven: hoogste rating, top 6 */
       const top = [...BEDRIJVEN]
         .sort((a, b) => b.rating - a.rating || b.aantalReviews - a.aantalReviews)
         .slice(0, 6);
       document.getElementById("top-bedrijven").innerHTML = top.map(VF.bedrijfKaartHTML).join("");
+      VF.verversUI();
+
+      /* Hero-paneel: top 3 van deze maand, live uit de data */
+      document.getElementById("hero-paneel").innerHTML = `
+        <div class="hp-kop">Best beoordeeld deze maand <span class="badge badge-groen">Live uit ${totaalReviews.toLocaleString("nl-NL")} reviews</span></div>
+        ${top.slice(0, 3).map((b) => `
+          <a class="hp-rij" href="bedrijf.html?id=${b.id}">
+            <span class="hp-logo" style="background:${b.kleur}">${VF.initialen(b.naam)}</span>
+            <span><span class="hp-naam">${b.naam}</span><br><span class="hp-sub">${b.plaats} · vanaf ${VF.euro(b.prijsPerM2.min)}/m²</span></span>
+            <span class="hp-score"><span class="score-cijfer">${b.rating.toFixed(1)}</span><br><span class="hp-sub">${b.aantalReviews} reviews</span></span>
+          </a>`).join("")}
+        <div class="hp-voet"><a href="bedrijven.html">Bekijk alle ${BEDRIJVEN.length} bedrijven →</a></div>`;
 
       /* Producttypen met aantallen */
       const iconen = {
@@ -258,7 +260,7 @@
       };
       document.getElementById("kennisbank-teaser").innerHTML = ARTIKELEN.slice(0, 3).map((a) => `
         <article class="kaart artikel-kaart">
-          <div class="artikel-cover" style="background:linear-gradient(135deg, ${a.kleur}, ${a.kleur}cc)">
+          <div class="artikel-cover" style="background:${a.kleur}">
             <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${artikelIconen[a.icoon]}</svg>
           </div>
           <div class="kaart-inhoud">

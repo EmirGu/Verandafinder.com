@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verandabedrijven vergelijken — Verandafinder.com</title>
+  <meta name="description" content="Bekijk en filter alle aangesloten verandabedrijven op provincie, product, materiaal, daktype, prijsklasse en beoordeling. Vergelijk en vraag gratis offertes aan.">
+  <meta property="og:title" content="Verandabedrijven vergelijken — Verandafinder.com">
+  <meta property="og:description" content="Filter verandabedrijven op regio, product, prijsklasse en beoordeling en vind de bouwer die bij jouw project past.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    /* Pagina-specifiek: 2 kolommen in het resultatenraster + kleine filterdetails */
+    .overzicht-indeling .kaarten-raster { grid-template-columns: repeat(2, 1fr); }
+    .filter-toggle-knop { margin-bottom: 18px; }
+    .filter-kop { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .filter-kop h2 { margin-bottom: 0; }
+    .filter-reset { background: none; border: 0; padding: 0; font: inherit; font-size: .86rem; color: var(--groen-700); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+    .filter-reset:hover { color: var(--groen-900); }
+    .filter-groep h3 label { display: inline; margin: 0; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+    @media (max-width: 760px) { .overzicht-indeling .kaarten-raster { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
+  <div id="site-header"></div>
+
+  <main id="inhoud">
+    <!-- Paginakop -->
+    <section class="pagina-kop">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Bedrijven</span></nav>
+        <h1>Alle verandabedrijven op een rij</h1>
+        <p>Vergelijk <span id="intro-aantal">alle</span> aangesloten verandabouwers op beoordeling, prijs en specialisatie. Filter op jouw provincie en wensen en vind de bedrijven die bij je project passen.</p>
+      </div>
+    </section>
+
+    <!-- Overzicht: filters + resultaten -->
+    <section class="sectie">
+      <div class="wrap">
+        <button type="button" class="knop knop-outline filter-toggle-knop" id="filter-toggle" aria-expanded="false" aria-controls="filter-paneel">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+          <span id="filter-toggle-tekst">Filters tonen</span>
+        </button>
+
+        <div class="overzicht-indeling">
+          <!-- Filterpaneel -->
+          <aside class="kaart filter-paneel" id="filter-paneel" aria-label="Filters">
+            <div class="filter-kop">
+              <h2>Filters</h2>
+              <button type="button" class="filter-reset" data-wis-filters>Wis alle filters</button>
+            </div>
+
+            <div class="filter-groep">
+              <h3><label for="filter-zoek">Zoeken</label></h3>
+              <input type="search" id="filter-zoek" name="zoek" placeholder="Bedrijfsnaam of plaats" autocomplete="off">
+            </div>
+
+            <div class="filter-groep">
+              <h3><label for="filter-provincie">Provincie</label></h3>
+              <select id="filter-provincie" name="provincie">
+                <option value="">Heel Nederland</option>
+              </select>
+            </div>
+
+            <div class="filter-groep" role="group" aria-labelledby="kop-product">
+              <h3 id="kop-product">Product</h3>
+              <div id="filter-product"></div>
+            </div>
+
+            <div class="filter-groep" role="group" aria-labelledby="kop-materiaal">
+              <h3 id="kop-materiaal">Materiaal</h3>
+              <div id="filter-materiaal"></div>
+            </div>
+
+            <div class="filter-groep" role="group" aria-labelledby="kop-daktype">
+              <h3 id="kop-daktype">Daktype</h3>
+              <div id="filter-daktype"></div>
+            </div>
+
+            <div class="filter-groep" role="group" aria-labelledby="kop-prijsklasse">
+              <h3 id="kop-prijsklasse">Prijsklasse</h3>
+              <div id="filter-prijsklasse"></div>
+            </div>
+
+            <div class="filter-groep">
+              <h3><label for="filter-score">Minimale beoordeling</label></h3>
+              <select id="filter-score" name="score">
+                <option value="">Alle beoordelingen</option>
+                <option value="4">4,0 sterren of hoger</option>
+                <option value="4.5">4,5 sterren of hoger</option>
+              </select>
+            </div>
+
+            <div class="filter-groep" role="group" aria-labelledby="kop-extra">
+              <h3 id="kop-extra">Extra's</h3>
+              <label class="check-rij"><input type="checkbox" name="extra" value="montage"> Eigen montageteam</label>
+              <label class="check-rij"><input type="checkbox" name="extra" value="showroom"> Showroom aanwezig</label>
+              <label class="check-rij"><input type="checkbox" name="extra" value="keurmerk"> Met keurmerk</label>
+            </div>
+          </aside>
+
+          <!-- Resultaten -->
+          <div>
+            <div class="resultaat-balk">
+              <p class="aantal mb-0" id="resultaat-aantal" role="status">Bedrijven laden…</p>
+              <div class="sorteer">
+                <label for="sorteer-select">Sorteer op</label>
+                <select id="sorteer-select">
+                  <option value="rating">Beste beoordeling</option>
+                  <option value="reviews">Meeste reviews</option>
+                  <option value="prijs-op">Prijs (laag-hoog)</option>
+                  <option value="prijs-af">Prijs (hoog-laag)</option>
+                  <option value="naam">Naam (A-Z)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="kaarten-raster" id="resultaten"></div>
+
+            <div class="kaart leeg-melding verborgen" id="leeg-melding">
+              <div class="leeg-icoon" aria-hidden="true">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="var(--ink-300)" stroke-width="1.8" stroke-linecap="round" style="margin:0 auto"><circle cx="10.5" cy="10.5" r="7"/><path d="M15.7 15.7 21 21M7.5 10.5h6"/></svg>
+              </div>
+              <h2 style="font-size:1.3rem">Geen bedrijven gevonden</h2>
+              <p>Er is geen bedrijf dat aan al je filters voldoet. Haal een filter weg of begin opnieuw met een schone lei.</p>
+              <button type="button" class="knop knop-primair" data-wis-filters>Wis alle filters</button>
+            </div>
+
+            <div class="cta-band mt-3">
+              <div>
+                <h2>Liever direct gerichte voorstellen?</h2>
+                <p>Beantwoord een paar vragen over je project en zie meteen welke bedrijven het beste bij je wensen passen. Gratis en vrijblijvend — jij kiest wie je benadert.</p>
+              </div>
+              <div class="cta-acties">
+                <a class="knop knop-accent knop-groot" href="offerte.html">Offertes aanvragen</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      /* ---------- Elementen ---------- */
+      const paneel = document.getElementById("filter-paneel");
+      const invoerZoek = document.getElementById("filter-zoek");
+      const selProvincie = document.getElementById("filter-provincie");
+      const selScore = document.getElementById("filter-score");
+      const selSorteer = document.getElementById("sorteer-select");
+      const raster = document.getElementById("resultaten");
+      const leegMelding = document.getElementById("leeg-melding");
+      const aantalEl = document.getElementById("resultaat-aantal");
+
+      document.getElementById("intro-aantal").textContent = "alle " + BEDRIJVEN.length;
+
+      /* ---------- Filteropties vullen vanuit de data ---------- */
+      PROVINCIES.forEach((p) => selProvincie.insertAdjacentHTML("beforeend", `<option value="${p}">${p}</option>`));
+
+      const vulCheckGroep = (houderId, opties, naam) => {
+        document.getElementById(houderId).innerHTML = Object.entries(opties)
+          .map(([sleutel, label]) => `<label class="check-rij"><input type="checkbox" name="${naam}" value="${sleutel}"> ${label}</label>`)
+          .join("");
+      };
+      vulCheckGroep("filter-product", PRODUCTEN, "product");
+      vulCheckGroep("filter-materiaal", MATERIALEN, "materiaal");
+      vulCheckGroep("filter-daktype", DAKTYPEN, "daktype");
+      vulCheckGroep("filter-prijsklasse", PRIJSKLASSEN, "prijsklasse");
+
+      /* ---------- Filters lezen ---------- */
+      const aangevinkt = (naam) => [...paneel.querySelectorAll(`input[name="${naam}"]:checked`)].map((el) => el.value);
+
+      function leesFilters() {
+        return {
+          zoek: invoerZoek.value.trim(),
+          provincie: selProvincie.value,
+          product: aangevinkt("product"),
+          materiaal: aangevinkt("materiaal"),
+          daktype: aangevinkt("daktype"),
+          prijsklasse: aangevinkt("prijsklasse"),
+          score: selScore.value,
+          extra: aangevinkt("extra"),
+          sorteer: selSorteer.value
+        };
+      }
+
+      /* ---------- Filteren ---------- */
+      function filterBedrijven(f) {
+        const zoek = f.zoek.toLowerCase();
+        return BEDRIJVEN.filter((b) => {
+          if (zoek && !b.naam.toLowerCase().includes(zoek) && !b.plaats.toLowerCase().includes(zoek)) return false;
+          if (f.provincie && !b.werkgebied.includes("Landelijk") && !b.werkgebied.includes(f.provincie) && b.provincie !== f.provincie) return false;
+          if (f.product.length && !f.product.some((p) => b.producten.includes(p))) return false;
+          if (f.materiaal.length && !f.materiaal.some((m) => b.typen.includes(m))) return false;
+          if (f.daktype.length && !f.daktype.some((d) => b.dakTypen.includes(d))) return false;
+          if (f.prijsklasse.length && !f.prijsklasse.includes(b.prijsKlasse)) return false;
+          if (f.score && b.rating < parseFloat(f.score)) return false;
+          if (f.extra.includes("montage") && !b.montageEigenTeam) return false;
+          if (f.extra.includes("showroom") && !b.showroom) return false;
+          if (f.extra.includes("keurmerk") && !b.keurmerken.length) return false;
+          return true;
+        });
+      }
+
+      /* ---------- Sorteren ---------- */
+      const SORTERINGEN = {
+        rating: (a, b) => b.rating - a.rating || b.aantalReviews - a.aantalReviews,
+        reviews: (a, b) => b.aantalReviews - a.aantalReviews || b.rating - a.rating,
+        "prijs-op": (a, b) => a.prijsPerM2.min - b.prijsPerM2.min || a.prijsPerM2.max - b.prijsPerM2.max,
+        "prijs-af": (a, b) => b.prijsPerM2.min - a.prijsPerM2.min || b.prijsPerM2.max - a.prijsPerM2.max,
+        naam: (a, b) => a.naam.localeCompare(b.naam, "nl")
+      };
+
+      /* ---------- URL bijwerken (deelbare links) ---------- */
+      function schrijfURL(f) {
+        const p = new URLSearchParams();
+        if (f.zoek) p.set("zoek", f.zoek);
+        if (f.provincie) p.set("provincie", f.provincie);
+        if (f.product.length) p.set("product", f.product.join(","));
+        if (f.materiaal.length) p.set("materiaal", f.materiaal.join(","));
+        if (f.daktype.length) p.set("daktype", f.daktype.join(","));
+        if (f.prijsklasse.length) p.set("prijsklasse", f.prijsklasse.join(","));
+        if (f.score) p.set("score", f.score);
+        if (f.extra.length) p.set("extra", f.extra.join(","));
+        if (f.sorteer !== "rating") p.set("sorteer", f.sorteer);
+        const qs = p.toString();
+        history.replaceState(null, "", location.pathname + (qs ? "?" + qs : ""));
+      }
+
+      /* ---------- Renderen ---------- */
+      function render() {
+        const f = leesFilters();
+        const lijst = filterBedrijven(f).sort(SORTERINGEN[f.sorteer] || SORTERINGEN.rating);
+        aantalEl.textContent = lijst.length === 1 ? "1 bedrijf gevonden" : `${lijst.length} bedrijven gevonden`;
+        if (lijst.length) {
+          raster.innerHTML = lijst.map(VF.bedrijfKaartHTML).join("");
+          raster.classList.remove("verborgen");
+          leegMelding.classList.add("verborgen");
+        } else {
+          raster.innerHTML = "";
+          raster.classList.add("verborgen");
+          leegMelding.classList.remove("verborgen");
+        }
+        schrijfURL(f);
+        VF.verversUI();
+      }
+
+      /* ---------- Wissen ---------- */
+      function wisFilters() {
+        invoerZoek.value = "";
+        selProvincie.value = "";
+        selScore.value = "";
+        paneel.querySelectorAll('input[type="checkbox"]').forEach((el) => { el.checked = false; });
+        render();
+      }
+      document.querySelectorAll("[data-wis-filters]").forEach((kn) => kn.addEventListener("click", wisFilters));
+
+      /* ---------- URL-parameters overnemen bij laden ---------- */
+      const params = new URLSearchParams(location.search);
+      if (params.get("zoek")) invoerZoek.value = params.get("zoek");
+      const provincieParam = params.get("provincie");
+      if (provincieParam && PROVINCIES.includes(provincieParam)) selProvincie.value = provincieParam;
+      const vinkAan = (naam, waarde) => {
+        if (!waarde) return;
+        waarde.split(",").forEach((v) => {
+          const el = paneel.querySelector(`input[name="${naam}"][value="${v}"]`);
+          if (el) el.checked = true;
+        });
+      };
+      vinkAan("product", params.get("product"));
+      vinkAan("materiaal", params.get("materiaal"));
+      vinkAan("daktype", params.get("daktype"));
+      vinkAan("prijsklasse", params.get("prijsklasse"));
+      vinkAan("extra", params.get("extra"));
+      const scoreParam = params.get("score");
+      if (scoreParam && [...selScore.options].some((o) => o.value === scoreParam)) selScore.value = scoreParam;
+      const sorteerParam = params.get("sorteer");
+      if (sorteerParam && SORTERINGEN[sorteerParam]) selSorteer.value = sorteerParam;
+
+      /* ---------- Live bijwerken ---------- */
+      paneel.addEventListener("input", render);
+      selSorteer.addEventListener("input", render);
+
+      /* ---------- Filtertoggle (mobiel) ---------- */
+      const toggle = document.getElementById("filter-toggle");
+      toggle.addEventListener("click", () => {
+        const open = paneel.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open);
+        document.getElementById("filter-toggle-tekst").textContent = open ? "Filters verbergen" : "Filters tonen";
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>
