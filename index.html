@@ -91,6 +91,31 @@
     @media (prefers-reduced-motion: reduce) {
       .provincie-tegel:hover { transform: none; }
     }
+
+    /* -- Populaire zoekopdrachten onder de hero-cijfers -- */
+    .hero-populair { margin: 18px 0 0; font-size: .88rem; color: var(--ink-500); }
+    .hero-populair a { color: var(--groen-700); font-weight: 500; }
+
+    /* -- Producttegels: vijf categorieën op één rij -- */
+    .product-tegels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .product-tegel {
+      display: flex; align-items: center; gap: 13px; padding: 16px;
+      text-decoration: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .product-tegel:hover { border-color: var(--groen-500); box-shadow: var(--schaduw-m); }
+    .prt-icoon {
+      width: 46px; height: 46px; border-radius: 10px; flex: none;
+      background: var(--groen-50); color: var(--groen-700); display: grid; place-items: center;
+      transition: background .15s;
+    }
+    .product-tegel:hover .prt-icoon { background: var(--groen-100); }
+    .prt-tekst { display: grid; min-width: 0; }
+    .prt-tekst strong { font-family: var(--font-kop); font-size: .93rem; color: var(--groen-900); line-height: 1.3; }
+    .prt-tekst small { font-size: .8rem; color: var(--ink-500); }
+    .prt-pijl { margin-left: auto; color: var(--ink-300); flex: none; transition: color .15s; }
+    .product-tegel:hover .prt-pijl { color: var(--groen-700); }
+    @media (max-width: 1020px) { .product-tegels { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .product-tegels { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -129,11 +154,56 @@
           <div class="hero-cijfer"><div class="cijfer" id="cijfer-provincies">—</div><div class="cijfer-label">provincies gedekt</div></div>
           <div class="hero-cijfer"><div class="cijfer" id="cijfer-showrooms">—</div><div class="cijfer-label">met eigen showroom</div></div>
         </div>
+        <p class="hero-populair">Populair:
+          <a href="bedrijven.html?product=veranda">Veranda's</a> ·
+          <a href="bedrijven.html?product=tuinkamer">Tuinkamers</a> ·
+          <a href="bedrijven.html?product=lamellendak">Lamellendaken</a> ·
+          <a href="prijzen.html">Wat kost een veranda?</a>
+        </p>
       </div>
       <a class="scroll-hint" href="#gids">
         Ontdek de gids
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </a>
+      <!-- Tuinscène onderin: vlak lijnwerk in gedempte tinten -->
+      <svg class="hero-scene" viewBox="0 0 1600 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <!-- laagstaande zon -->
+        <circle cx="410" cy="128" r="44" fill="#f7e7ca"/>
+        <!-- glooiing achteraan -->
+        <path d="M0 196 Q260 172 520 188 T1040 184 T1600 192 L1600 240 L0 240 Z" fill="#e7efe8"/>
+        <!-- boom links -->
+        <g fill="#d9e7dd">
+          <circle cx="198" cy="118" r="50"/><circle cx="252" cy="140" r="36"/><circle cx="152" cy="148" r="32"/>
+        </g>
+        <rect x="192" y="152" width="10" height="58" rx="4" fill="#c9dccf"/>
+        <!-- struiken middenin -->
+        <g fill="#d3e2d7">
+          <ellipse cx="700" cy="204" rx="46" ry="20"/>
+          <ellipse cx="762" cy="208" rx="30" ry="14"/>
+          <ellipse cx="948" cy="206" rx="38" ry="17"/>
+        </g>
+        <!-- huis met veranda rechts, als rustig lijnwerk -->
+        <g stroke="#b9cfc2" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1310 210V112l92-60 92 60v98"/>
+          <path d="M1292 116l110-72 112 74"/>
+          <path d="M1310 124l-190 22"/>
+          <path d="M1128 148v62M1236 134v76"/>
+        </g>
+        <rect x="1368" y="138" width="32" height="44" rx="4" fill="#e2ede6"/>
+        <!-- plantenbak met amber accent onder de veranda -->
+        <rect x="1160" y="192" width="44" height="18" rx="4" fill="#eddcbb"/>
+        <g fill="#cfe0d5">
+          <ellipse cx="1182" cy="188" rx="20" ry="11"/>
+        </g>
+        <!-- grondlijn voorgrond -->
+        <path d="M0 212 Q400 202 800 210 T1600 208 L1600 240 L0 240 Z" fill="#dfe9e1"/>
+        <!-- graspollen -->
+        <g stroke="#c4d8ca" stroke-width="4" fill="none" stroke-linecap="round">
+          <path d="M580 212c-2-10 2-18 6-24M590 212c0-9 4-16 10-21M600 212c2-8 0-16-3-22"/>
+          <path d="M1044 210c-2-9 1-16 5-21M1053 210c0-8 4-14 9-18"/>
+          <path d="M90 214c-2-9 1-16 5-21M99 214c0-8 4-14 9-18M108 214c2-7 0-14-2-19"/>
+        </g>
+      </svg>
     </section>
 
     <!-- Onlangs bekeken (alleen zichtbaar na bezoek aan een profiel) -->
@@ -164,7 +234,7 @@
           <span class="boventitel">Wat zoek je?</span>
           <h2>Vergelijk per type overkapping</h2>
         </div>
-        <div class="kaarten-raster-4" id="product-typen"></div>
+        <div class="product-tegels" id="product-typen"></div>
       </div>
     </section>
 
@@ -416,10 +486,10 @@
       };
       document.getElementById("product-typen").innerHTML = Object.entries(PRODUCTEN).map(([sleutel, label]) => {
         const aantal = BEDRIJVEN.filter((b) => b.producten.includes(sleutel)).length;
-        return `<a class="kaart stap" style="text-decoration:none" href="bedrijven.html?product=${sleutel}">
-          <span class="stap-nr" style="background:var(--groen-50);color:var(--groen-700)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${iconen[sleutel]}</svg></span>
-          <h3>${label}</h3>
-          <p>${aantal} bedrijven vergelijken</p>
+        return `<a class="kaart product-tegel" href="bedrijven.html?product=${sleutel}">
+          <span class="prt-icoon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">${iconen[sleutel]}</svg></span>
+          <span class="prt-tekst"><strong>${label}</strong><small>${aantal} bedrijven</small></span>
+          <svg class="prt-pijl" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </a>`;
       }).join("");
 

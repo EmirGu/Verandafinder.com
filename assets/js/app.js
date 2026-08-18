@@ -79,16 +79,19 @@ const VF = (() => {
 
   const PLAATS_SVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>`;
 
-  /* Centrale bedrijfskaart — gebruikt op home en favorieten */
+  /* Centrale bedrijfskaart — gebruikt op home en favorieten.
+     Toont een korte profielzin en merken zodat de kaart echt iets vertelt;
+     sterren verschijnen vanzelf zodra er reviews zijn. */
   function bedrijfKaartHTML(b) {
     const tags = [
-      ...(b.prijsKlasse ? [PRIJSKLASSEN[b.prijsKlasse]] : []),
       ...b.typen.slice(0, 2).map((t) => MATERIALEN[t]),
+      ...(b.merken || []).slice(0, 2),
       ...(b.keurmerken && b.keurmerken.length ? [b.keurmerken[0]] : [])
-    ];
+    ].slice(0, 3);
+    const snippet = (b.profiel || "").split(/(?<=\.)\s/)[0] || "";
     const voetLinks = b.prijsPerM2
       ? `<span class="prijs-vanaf">Vanaf<strong>${euro(b.prijsPerM2.min)} / m²</strong></span>`
-      : `<span class="prijs-vanaf">${b.producten.length} product${b.producten.length === 1 ? "" : "en"}<strong>${b.showroom ? "Met showroom" : "Op afspraak"}</strong></span>`;
+      : `<span class="prijs-vanaf">${b.producten.length} product${b.producten.length === 1 ? "" : "en"}<strong>${b.showroom ? "Met showroom" : "Bekijk profiel →"}</strong></span>`;
     return `<article class="kaart bedrijf-kaart" data-id="${b.id}">
       <div class="kaart-inhoud" style="padding-top:20px">
         <div style="display:flex;gap:12px;align-items:center">
@@ -98,8 +101,9 @@ const VF = (() => {
             <span class="bedrijf-plaats">${PLAATS_SVG}${b.plaats ? `${b.plaats}${b.provincie ? ", " + b.provincie : ""}` : "Landelijk actief"}</span>
           </div>
         </div>
-        ${scoreHTML(b)}
-        <div class="bedrijf-tags">${tags.map((t) => `<span class="badge">${t}</span>`).join("")}</div>
+        ${snippet ? `<p class="kaart-profiel">${snippet}</p>` : ""}
+        ${b.rating ? scoreHTML(b) : ""}
+        ${tags.length ? `<div class="bedrijf-tags">${tags.map((t) => `<span class="badge">${t}</span>`).join("")}</div>` : ""}
         <div class="kaart-voet">
           ${voetLinks}
           ${actieKnoppenHTML(b)}

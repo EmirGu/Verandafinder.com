@@ -273,6 +273,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus
   color: #fff; box-shadow: var(--schaduw-s); border: 3px solid #fff;
 }
 .bedrijf-kaart .kaart-inhoud { padding: 36px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.kaart-profiel {
+  margin: 0; font-size: .88rem; color: var(--ink-500); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 .bedrijf-kaart h3 { margin: 0; font-size: 1.12rem; }
 .bedrijf-kaart h3 a { color: inherit; text-decoration: none; }
 .bedrijf-kaart h3 a:hover { color: var(--groen-700); }
@@ -389,15 +393,26 @@ body.met-vergelijkbalk { padding-bottom: 84px; }
 
 /* ---------- 10. Hero (home) — paginavullend zoekscherm ---------- */
 .hero {
-  background: #fff; border-bottom: 1px solid var(--lijn);
-  color: var(--ink-900); padding: 40px 0 84px; position: relative;
+  background: linear-gradient(180deg, #fff 0%, #f6f8f4 55%, #edf3ee 100%);
+  border-bottom: 1px solid var(--lijn);
+  color: var(--ink-900); padding: 40px 0 210px; position: relative; overflow: hidden;
   /* Vult het scherm onder de header (topstrip 32px + header 66px); pas na
      scrollen verschijnt de rest van de pagina. svh = veilig op mobiel. */
   min-height: calc(100svh - 98px);
   display: grid; place-items: center;
 }
+.hero-midden { position: relative; z-index: 1; }
+/* Illustratie onderin de hero: rustige tuinscène in gedempte tinten */
+.hero-scene {
+  position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 240px;
+  pointer-events: none; z-index: 0;
+}
+@media (max-height: 700px), (max-width: 640px) {
+  .hero { padding-bottom: 110px; }
+  .hero-scene { height: 130px; opacity: .7; }
+}
 .scroll-hint {
-  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 2;
   display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
   font-family: var(--font-kop); font-size: .78rem; font-weight: 500;
   color: var(--ink-500); text-decoration: none;
