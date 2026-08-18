@@ -186,6 +186,21 @@ const VF = (() => {
     setTimeout(() => el.remove(), 3200);
   }
 
+  /* ---------- Logo: kompas met wordmark ----------
+     De "wijzer" (kompasnaald) leidt je naar het juiste bedrijf.
+     donker=true geeft de witte variant voor donkere ondergronden. */
+  function logoHTML(donker = false) {
+    const ring = donker ? "#ffffff" : "#1b3a2d";
+    return `<a class="logo" href="index.html" aria-label="Verandawijzer.nl home">
+      <svg class="logo-mark" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="20" fill="none" stroke="${ring}" stroke-width="4.5"/>
+        <polygon points="35.5,12.5 27.2,27.2 20.8,20.8" fill="${ring}"/>
+        <polygon points="12.5,35.5 27.2,27.2 20.8,20.8" fill="#e8a33d"/>
+      </svg>
+      <span class="logo-tekst">verandawijzer<span class="logo-tld">.nl</span></span>
+    </a>`;
+  }
+
   /* ---------- Header & footer ---------- */
   function paginaNaam() {
     const p = location.pathname.split("/").pop() || "index.html";
@@ -213,10 +228,7 @@ const VF = (() => {
     </div>
     <header class="site-header">
       <div class="wrap">
-        <a class="logo" href="index.html" aria-label="Verandawijzer home">
-          <span class="logo-beeld"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 11 12 4l10 7"/><path d="M5 9.5V20M19 9.5V20"/><path d="M3 20h18"/><path d="M9 20v-5h6v5"/></svg></span>
-          <span>Veranda<span class="logo-accent">wijzer</span></span>
-        </a>
+        ${logoHTML(false)}
         <button class="menu-knop" type="button" aria-expanded="false" aria-controls="hoofdnav" aria-label="Menu">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         </button>
@@ -241,7 +253,8 @@ const VF = (() => {
       <div class="wrap">
         <div class="footer-boven">
           <div class="footer-intro">
-            <a class="logo" href="index.html" style="color:#fff"><span class="logo-beeld"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 11 12 4l10 7"/><path d="M5 9.5V20M19 9.5V20"/><path d="M3 20h18"/><path d="M9 20v-5h6v5"/></svg></span><span>Veranda<span class="logo-accent">wijzer</span></span></a>
+            ${logoHTML(true)}
+            <p class="logo-tagline">Vergelijk verandabedrijven</p>
             <p class="mt-2">Onafhankelijk veranda's, overkappingen en tuinkamers vergelijken. Vind het bedrijf dat bij jouw wensen, regio en budget past.</p>
           </div>
           <div>
