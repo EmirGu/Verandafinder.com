@@ -32,7 +32,8 @@
       border-radius: 50%; cursor: pointer; font-size: .78rem; line-height: 1; display: grid; place-items: center;
     }
     .selectie-chip button:hover { background: var(--rood-600); color: #fff; }
-    .selectie-toevoegen select { width: auto; min-width: 230px; padding: 9px 38px 9px 12px; font-size: .9rem; }
+    .selectie-toevoegen { max-width: 100%; }
+    .selectie-toevoegen select { width: auto; min-width: min(230px, 100%); max-width: 100%; padding: 9px 38px 9px 12px; font-size: .9rem; }
     .vt-kop { display: flex; align-items: center; gap: 10px; }
     .vt-logo { width: 38px; height: 38px; font-size: .78rem; }
     .vt-naam { display: grid; line-height: 1.3; }
@@ -56,7 +57,7 @@
       <div class="wrap">
         <nav class="breadcrumb" aria-label="Kruimelpad"><a href="index.html">Home</a> › <span aria-current="page">Vergelijken</span></nav>
         <h1>Bedrijven naast elkaar vergelijken</h1>
-        <p>Zet maximaal drie verandabedrijven naast elkaar en zie in één oogopslag de verschillen in werkgebied, producten, materialen, opties en merken. Jouw selectie wordt lokaal in je browser bewaard.</p>
+        <p>Zet maximaal drie verandabedrijven naast elkaar en zie in één oogopslag de verschillen in werkgebied, producten, materialen, opties en merken. Jouw selectie wordt lokaal in je browser bewaard en is via een link te delen.</p>
       </div>
     </section>
 
@@ -78,6 +79,49 @@
 
       /* Vestigingstekst: landelijke aanbieders zonder vermelde vestiging krijgen "Landelijk actief" */
       const vestiging = (b) => (b.plaats ? `${b.plaats}, ${b.provincie}` : "Landelijk actief");
+
+      /* ---------- Deelbare vergelijking via ?ids=a,b,c ----------
+         Geldige ids in de URL vervangen de lokaal bewaarde selectie en worden
+         daarin opgeslagen, zodat de rest van de site (balk, tellers, knoppen)
+         dezelfde selectie toont. Onbekende ids worden stil genegeerd. */
+      function neemIdsUitUrlOver() {
+        let ruw = null;
+        try { ruw = new URLSearchParams(location.search).get("ids"); } catch (e) { return false; }
+        if (!ruw) return false;
+        const ids = [...new Set(ruw.split(",").map((s) => s.trim()))]
+          .filter((id) => VF.getBedrijf(id))
+          .slice(0, 3);
+        if (!ids.length) return false;
+        try { localStorage.setItem("vf_vergelijk", JSON.stringify(ids)); } catch (e) { /* privémodus: geen opslag */ }
+        return true;
+      }
+
+      /* URL van deze pagina zonder query en fragment */
+      const basisUrl = () => location.href.split("#")[0].split("?")[0];
+
+      /* De URL live bijhouden zodat de adresbalk altijd deelbaar is.
+         Kan de omgeving dat niet (bijv. beperkingen bij file://), dan
+         blijft de pagina gewoon werken. */
+      function werkUrlBij(gekozen) {
+        try {
+          history.replaceState(null, "", gekozen.length ? `${basisUrl()}?ids=${gekozen.join(",")}` : basisUrl());
+        } catch (e) { /* geen history-API beschikbaar */ }
+      }
+
+      function koppelKopieerKnop() {
+        const knop = document.getElementById("kopieer-link");
+        if (!knop) return;
+        knop.addEventListener("click", async () => {
+          const url = `${basisUrl()}?ids=${VF.leesVergelijk().join(",")}`;
+          try {
+            await navigator.clipboard.writeText(url);
+            VF.toast("Link gekopieerd naar je klembord");
+          } catch (e) {
+            /* Geen klembordtoegang (bijv. file:// of geweigerd): toon de link om zelf te kopiëren */
+            prompt("Kopieer deze link naar de vergelijking:", url);
+          }
+        });
+      }
 
       /* Select met alle nog niet gekozen bedrijven */
       function toevoegSelectHTML(gekozen) {
@@ -123,6 +167,7 @@
       function render() {
         const gekozen = VF.leesVergelijk();
         const bedrijven = gekozen.map(VF.getBedrijf);
+        werkUrlBij(gekozen);
 
         /* Lege staat */
         if (!bedrijven.length) {
@@ -194,9 +239,15 @@
           </td>`).join("")}</tr>`
         ].join("");
 
+        /* Deelknop: kopieert de URL met ?ids=…, zodat de vergelijking deelbaar is */
+        const kopieerKnop = `<button type="button" class="knop knop-outline knop-klein" id="kopieer-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7.1-7.1l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/></svg>
+            Kopieer link naar deze vergelijking
+          </button>`;
+
         houder.innerHTML = `
           <h2 class="selectie-kop">Jouw selectie <span class="klein">(${bedrijven.length} van 3)</span></h2>
-          <div class="selectie-beheer">${chips}${bedrijven.length < 3 ? toevoegSelectHTML(gekozen) : ""}</div>
+          <div class="selectie-beheer">${chips}${bedrijven.length < 3 ? toevoegSelectHTML(gekozen) : ""}${kopieerKnop}</div>
           ${bedrijven.length === 1
             ? '<div class="melding melding-info">Je vergelijkt nu één bedrijf. Voeg er nog één of twee toe om de verschillen echt te zien.</div>'
             : (besteBeoordeling > -1 ? '<p class="klein mb-2">De beste beoordeling is <span class="badge badge-groen">groen gemarkeerd</span>.</p>' : "")}
@@ -211,10 +262,14 @@
           </div>
           <p class="klein mt-2">— = niet vermeld op de website van het bedrijf. Alle gegevens komen van de eigen websites van de bedrijven; klopt er iets niet, dan kan het bedrijf dit via de <a href="contact.html">contactpagina</a> laten aanpassen.</p>`;
         koppelSelect();
+        koppelKopieerKnop();
       }
 
+      const overgenomen = neemIdsUitUrlOver();
       render();
       VF.bijVerversen(render);
+      /* Na overname uit de URL ook de navigatietellers en knop-status elders bijwerken */
+      if (overgenomen) VF.verversUI();
     });
   </script>
 </body>

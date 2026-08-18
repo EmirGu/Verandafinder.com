@@ -22,6 +22,35 @@
     .filter-reset { background: none; border: 0; padding: 0; font: inherit; font-size: .86rem; color: var(--groen-700); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
     .filter-reset:hover { color: var(--groen-900); }
     .filter-groep h3 label { display: inline; margin: 0; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+
+    /* Aantallen per filteroptie: grijs tussen haakjes; opties zonder treffers dimmen */
+    .optie-aantal { color: var(--ink-300); font-size: .85em; font-variant-numeric: tabular-nums; }
+    .check-rij.optie-nul { opacity: .45; }
+    .filter-paneel select option.optie-nul { opacity: .45; color: var(--ink-300); }
+
+    /* Actieve-filter-chips boven de resultaten */
+    .actieve-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+    .actieve-filters:focus { outline: none; }
+    .chips-label { font-family: var(--font-kop); font-weight: 600; font-size: .85rem; color: var(--ink-500); }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 8px; background: var(--groen-50);
+      border: 1px solid var(--groen-100); color: var(--groen-800); border-radius: var(--radius-pill);
+      padding: 5px 6px 5px 13px; font-size: .85rem; font-weight: 500; max-width: 100%;
+    }
+    .filter-chip button {
+      background: var(--groen-100); border: 0; color: var(--groen-900); width: 21px; height: 21px;
+      flex: none; border-radius: 50%; cursor: pointer; font-size: .72rem; line-height: 1;
+      display: grid; place-items: center; transition: background .15s, color .15s;
+    }
+    .filter-chip button:hover { background: var(--rood-600); color: #fff; }
+    .chip-wis {
+      background: none; border: 0; padding: 4px 2px; font: inherit; font-size: .85rem; font-weight: 600;
+      color: var(--groen-700); text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+    }
+    .chip-wis:hover { color: var(--groen-900); }
+
+    /* Paginering */
+    .toon-meer { display: flex; justify-content: center; margin-top: 24px; }
   </style>
 </head>
 <body>
@@ -99,9 +128,9 @@
 
             <div class="filter-groep" role="group" aria-labelledby="kop-extra">
               <h3 id="kop-extra">Extra's</h3>
-              <label class="check-rij"><input type="checkbox" name="extra" value="showroom"> Eigen showroom</label>
-              <label class="check-rij"><input type="checkbox" name="extra" value="montage"> Eigen montageteam</label>
-              <label class="check-rij"><input type="checkbox" name="extra" value="zelfbouw"> Zelfbouwpakket mogelijk</label>
+              <label class="check-rij"><input type="checkbox" name="extra" value="showroom"> <span>Eigen showroom <span class="optie-aantal"></span></span></label>
+              <label class="check-rij"><input type="checkbox" name="extra" value="montage"> <span>Eigen montageteam <span class="optie-aantal"></span></span></label>
+              <label class="check-rij"><input type="checkbox" name="extra" value="zelfbouw"> <span>Zelfbouwpakket mogelijk <span class="optie-aantal"></span></span></label>
             </div>
           </aside>
 
@@ -115,11 +144,14 @@
                   <option value="naam">Naam (A-Z)</option>
                   <option value="plaats">Plaats (A-Z)</option>
                   <option value="producten">Meeste producten</option>
+                  <option value="recent" id="sorteer-recent" hidden>Laatst gecontroleerd</option>
                 </select>
               </div>
             </div>
 
             <p class="bron-regel">Gegevens afkomstig van de bedrijfswebsites, laatst gecontroleerd augustus 2026. Klopt er iets niet? <a href="contact.html">Geef het door</a>.</p>
+
+            <div class="actieve-filters verborgen" id="actieve-filters" role="group" aria-label="Actieve filters" tabindex="-1"></div>
 
             <div id="resultaten"></div>
 
@@ -130,6 +162,10 @@
               <h2 style="font-size:1.3rem">Geen bedrijven gevonden</h2>
               <p>Er is geen bedrijf dat aan al je filters voldoet. Haal een filter weg of begin opnieuw met een schone lei.</p>
               <button type="button" class="knop knop-primair" data-wis-filters>Wis alle filters</button>
+            </div>
+
+            <div class="toon-meer verborgen" id="toon-meer-houder">
+              <button type="button" class="knop knop-outline" id="toon-meer">Toon meer bedrijven</button>
             </div>
 
             <div class="cta-band mt-3">
@@ -159,9 +195,24 @@
       const selProvincie = document.getElementById("filter-provincie");
       const selScore = document.getElementById("filter-score");
       const selSorteer = document.getElementById("sorteer-select");
+      /* "Laatst gecontroleerd" pas tonen zodra de data verschillende datums kent —
+         nu is elke controle-datum gelijk en zou de optie niets zichtbaars doen */
+      if (new Set(BEDRIJVEN.map((b) => b.gecontroleerd)).size > 1) {
+        document.getElementById("sorteer-recent").hidden = false;
+      }
       const lijstHouder = document.getElementById("resultaten");
       const leegMelding = document.getElementById("leeg-melding");
       const aantalEl = document.getElementById("resultaat-aantal");
+      const chipsHouder = document.getElementById("actieve-filters");
+      const toonMeerHouder = document.getElementById("toon-meer-houder");
+      const toonMeerKnop = document.getElementById("toon-meer");
+
+      /* ---------- Paginering ---------- */
+      const PAGINA_GROOTTE = 30;
+      let zichtbaar = PAGINA_GROOTTE;
+
+      const EXTRA_LABELS = { showroom: "Eigen showroom", montage: "Eigen montageteam", zelfbouw: "Zelfbouwpakket mogelijk" };
+      const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
       document.getElementById("intro-aantal").textContent = "alle " + BEDRIJVEN.length;
 
@@ -170,7 +221,7 @@
 
       const vulCheckGroep = (houderId, opties, naam) => {
         document.getElementById(houderId).innerHTML = Object.entries(opties)
-          .map(([sleutel, label]) => `<label class="check-rij"><input type="checkbox" name="${naam}" value="${sleutel}"> ${label}</label>`)
+          .map(([sleutel, label]) => `<label class="check-rij"><input type="checkbox" name="${naam}" value="${sleutel}"> <span>${label} <span class="optie-aantal"></span></span></label>`)
           .join("");
       };
       vulCheckGroep("filter-product", PRODUCTEN, "product");
@@ -238,6 +289,8 @@
           return a.plaats.localeCompare(b.plaats, "nl") || opNaam(a, b);
         },
         producten: (a, b) => b.producten.length - a.producten.length || opNaam(a, b),
+        /* "JJJJ-MM" sorteert als tekst correct chronologisch; nieuwste eerst */
+        recent: (a, b) => (b.gecontroleerd || "").localeCompare(a.gecontroleerd || "") || opNaam(a, b),
         rating: (a, b) => (b.rating || 0) - (a.rating || 0) || b.aantalReviews - a.aantalReviews || opNaam(a, b),
         reviews: (a, b) => b.aantalReviews - a.aantalReviews || (b.rating || 0) - (a.rating || 0) || opNaam(a, b)
       };
@@ -258,13 +311,93 @@
         history.replaceState(null, "", location.pathname + (qs ? "?" + qs : ""));
       }
 
+      /* ---------- Aantallen per filteroptie ----------
+         Per optie: hoeveel treffers levert die optie op, gegeven de overige
+         actieve filters? Binnen een meerkeuzegroep telt de optie zelf los van
+         de huidige keuze in die groep; bij de Extra's (die als EN-voorwaarden
+         werken) blijven de overige aangevinkte extra's meetellen. */
+      const telMet = (f, wijzig) => filterBedrijven(Object.assign({}, f, wijzig)).length;
+
+      function bijwerkSelectAantallen(sel, telFn) {
+        [...sel.options].forEach((opt) => {
+          if (!opt.dataset.basis) opt.dataset.basis = opt.textContent.trim();
+          const n = telFn(opt.value);
+          opt.textContent = `${opt.dataset.basis} (${n})`;
+          opt.classList.toggle("optie-nul", n === 0);
+        });
+      }
+
+      function bijwerkAantallen(f) {
+        paneel.querySelectorAll('.check-rij input[type="checkbox"]').forEach((inp) => {
+          const n = inp.name === "extra"
+            ? telMet(f, { extra: [...new Set([...f.extra, inp.value])] })
+            : telMet(f, { [inp.name]: [inp.value] });
+          const rij = inp.closest(".check-rij");
+          const span = rij.querySelector(".optie-aantal");
+          if (span) span.textContent = `(${n})`;
+          rij.classList.toggle("optie-nul", n === 0);
+        });
+        bijwerkSelectAantallen(selProvincie, (waarde) => telMet(f, { provincie: waarde }));
+        if (document.contains(selScore)) {
+          bijwerkSelectAantallen(selScore, (waarde) => telMet(f, { score: waarde }));
+        }
+      }
+
+      /* ---------- Actieve-filter-chips ---------- */
+      function renderChips(f) {
+        const chips = [];
+        const chip = (tekst, type, waarde) => {
+          const t = escapeHTML(tekst);
+          chips.push(`<span class="filter-chip">${t}<button type="button" data-chip-verwijder="${type}"${waarde ? ` data-chip-waarde="${escapeHTML(waarde)}"` : ""} aria-label="Verwijder filter ${t}">✕</button></span>`);
+        };
+        if (f.zoek) chip(`Zoekterm: “${f.zoek}”`, "zoek");
+        if (f.provincie) chip(`Provincie: ${f.provincie}`, "provincie");
+        f.product.forEach((v) => chip(`Product: ${PRODUCTEN[v]}`, "product", v));
+        f.materiaal.forEach((v) => chip(`Materiaal: ${MATERIALEN[v]}`, "materiaal", v));
+        f.daktype.forEach((v) => chip(`Daktype: ${DAKTYPEN[v]}`, "daktype", v));
+        f.prijsklasse.forEach((v) => chip(`Prijsklasse: ${PRIJSKLASSEN[v]}`, "prijsklasse", v));
+        if (f.score && document.contains(selScore)) {
+          const optie = [...selScore.options].find((o) => o.value === f.score);
+          chip(`Beoordeling: ${optie ? optie.dataset.basis || optie.textContent : f.score}`, "score");
+        }
+        f.extra.forEach((v) => chip(`${EXTRA_LABELS[v] || v}`, "extra", v));
+
+        if (!chips.length) {
+          chipsHouder.innerHTML = "";
+          chipsHouder.classList.add("verborgen");
+          return;
+        }
+        const wisAlles = chips.length >= 2 ? `<button type="button" class="chip-wis" data-chip-wis>Wis alles</button>` : "";
+        chipsHouder.innerHTML = `<span class="chips-label">Actieve filters:</span>${chips.join("")}${wisAlles}`;
+        chipsHouder.classList.remove("verborgen");
+      }
+
+      chipsHouder.addEventListener("click", (e) => {
+        if (e.target.closest("[data-chip-wis]")) { wisFilters(); return; }
+        const kn = e.target.closest("[data-chip-verwijder]");
+        if (!kn) return;
+        const type = kn.dataset.chipVerwijder;
+        if (type === "zoek") invoerZoek.value = "";
+        else if (type === "provincie") selProvincie.value = "";
+        else if (type === "score") { if (document.contains(selScore)) selScore.value = ""; }
+        else {
+          const el = paneel.querySelector(`input[name="${type}"][value="${kn.dataset.chipWaarde}"]`);
+          if (el) el.checked = false;
+        }
+        zichtbaar = PAGINA_GROOTTE;
+        render();
+        /* Focus niet laten wegvallen nu de aangeklikte knop weg is */
+        if (!chipsHouder.classList.contains("verborgen")) chipsHouder.focus();
+      });
+
       /* ---------- Renderen ---------- */
       function render() {
         const f = leesFilters();
         const lijst = filterBedrijven(f).sort(SORTERINGEN[f.sorteer] || SORTERINGEN.naam);
         aantalEl.textContent = lijst.length === 1 ? "1 bedrijf gevonden" : `${lijst.length} bedrijven gevonden`;
+        const getoond = lijst.slice(0, zichtbaar);
         if (lijst.length) {
-          lijstHouder.innerHTML = lijst.map(VF.bedrijfRijHTML).join("");
+          lijstHouder.innerHTML = getoond.map(VF.bedrijfRijHTML).join("");
           lijstHouder.classList.remove("verborgen");
           leegMelding.classList.add("verborgen");
         } else {
@@ -272,8 +405,28 @@
           lijstHouder.classList.add("verborgen");
           leegMelding.classList.remove("verborgen");
         }
+        const rest = lijst.length - getoond.length;
+        toonMeerKnop.textContent = `Toon meer bedrijven (${rest} resterend)`;
+        toonMeerHouder.classList.toggle("verborgen", rest <= 0);
+        renderChips(f);
+        bijwerkAantallen(f);
         schrijfURL(f);
         VF.verversUI();
+      }
+
+      /* Volgende 30 laden; focus verhuist naar de eerste nieuw geladen rij */
+      toonMeerKnop.addEventListener("click", () => {
+        const eersteNieuwe = zichtbaar;
+        zichtbaar += PAGINA_GROOTTE;
+        render();
+        const link = lijstHouder.querySelectorAll(".bedrijf-rij h3 a")[eersteNieuwe];
+        if (link) link.focus();
+      });
+
+      /* Bij filteren of sorteren terug naar de eerste 30 */
+      function renderVanafBegin() {
+        zichtbaar = PAGINA_GROOTTE;
+        render();
       }
 
       /* ---------- Wissen ---------- */
@@ -282,7 +435,7 @@
         selProvincie.value = "";
         if (VF.heeftReviews) selScore.value = "";
         paneel.querySelectorAll('input[type="checkbox"]').forEach((el) => { el.checked = false; });
-        render();
+        renderVanafBegin();
       }
       document.querySelectorAll("[data-wis-filters]").forEach((kn) => kn.addEventListener("click", wisFilters));
 
@@ -309,8 +462,8 @@
       if (sorteerParam && [...selSorteer.options].some((o) => o.value === sorteerParam)) selSorteer.value = sorteerParam;
 
       /* ---------- Live bijwerken ---------- */
-      paneel.addEventListener("input", render);
-      selSorteer.addEventListener("input", render);
+      paneel.addEventListener("input", renderVanafBegin);
+      selSorteer.addEventListener("input", renderVanafBegin);
 
       /* ---------- Filtertoggle (mobiel) ---------- */
       const toggle = document.getElementById("filter-toggle");

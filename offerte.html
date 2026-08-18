@@ -36,6 +36,32 @@
       .veld-rij { grid-template-columns: 1fr; }
       .match-kaart { flex-direction: column; }
     }
+    /* Print of bewaar als PDF: alleen de aanvraagsamenvatting en de matchlijst
+       komen op papier. Print-only elementen staan op scherm verborgen. */
+    .alleen-print { display: none; }
+    @media print {
+      .topstrip, .pagina-kop, .usp-rij, .wizard-voortgang, .wizard-stap-label, .wizard-knoppen,
+      .tekst-midden, .m2-weergave, .match-acties, #resultaat-titel,
+      #resultaat .melding, #resultaat > p.klein, #resultaat .geen-reviews,
+      .bedrijf-avatar { display: none !important; }
+      .alleen-print { display: block; }
+      #wizard-kaart { border: 0; box-shadow: none; padding: 0; }
+      .print-kop { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; border-bottom: 2px solid #1b3a2d; padding-bottom: 10px; margin-bottom: 18px; }
+      .print-wordmark { font-family: var(--font-kop); font-weight: 700; font-size: 1.25rem; color: #1b3a2d; }
+      .print-wordmark .logo-tld { color: #8a8378; }
+      .print-kop .print-onderwerp { font-size: .9rem; color: #444; }
+      .print-samenvatting { margin-bottom: 20px; }
+      .print-samenvatting h3 { font-size: 1.05rem; margin-bottom: 8px; }
+      .print-samenvatting table { border-collapse: collapse; font-size: .9rem; }
+      .print-samenvatting th { text-align: left; font-weight: 600; padding: 2px 16px 2px 0; white-space: nowrap; vertical-align: top; color: #1b3a2d; }
+      .print-samenvatting td { padding: 2px 0; }
+      .print-matchkop { font-size: 1.05rem; margin-bottom: 4px; }
+      .match-lijst { margin-top: 10px; }
+      .match-kaart { break-inside: avoid; box-shadow: none; border: 1px solid #999; }
+      .match-score { border: 2px solid currentColor; }
+      .badge { background: #fff !important; border: 1px solid #999; color: #333 !important; }
+      .match-web { font-size: .88rem; color: #1b3a2d; }
+    }
   </style>
 </head>
 <body>
@@ -461,6 +487,7 @@
               ${b.showroom ? `<span>${CHECK_SVG}Showroom</span>` : ""}
               ${b.montageEigenTeam ? `<span>${CHECK_SVG}Eigen montageteam</span>` : ""}
             </div>
+            ${b.website ? `<span class="alleen-print match-web">Website: ${b.website.replace(/^https?:\/\//, "")}</span>` : ""}
             <div class="match-acties">
               <a class="knop knop-primair knop-klein" href="${mailtoHref(b, a)}">Stuur aanvraag</a>
               ${b.website ? `<a class="knop knop-outline knop-klein" href="${b.website}" target="_blank" rel="noopener">Bezoek website</a>` : ""}
@@ -469,18 +496,58 @@
         </article>`;
       }
 
+      /* ---------- Printbare samenvatting ----------
+         Alleen zichtbaar bij printen (klasse alleen-print): een printkop met
+         het Verandawijzer-wordmark en een tabel met de opgegeven wensen. */
+      function printSamenvattingHTML(a) {
+        /* Vrije invoer netjes escapen voordat die in de tabel belandt */
+        const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const rijen = [
+          ["Type project", PRODUCTEN[a.product]],
+          ["Materiaal", a.materiaal ? MATERIALEN[a.materiaal] : "Nog geen voorkeur"],
+          ["Daktype", a.dak ? DAKTYPEN[a.dak] : "Nog geen voorkeur"],
+          ["Afmetingen", `${nl(a.breedte)} m breed × ${nl(a.diepte)} m diep (ca. ${nl(a.m2)} m²)`],
+          ["Gewenste opties", a.opties.length ? a.opties.map((o) => OPTIES[o]).join(", ") : "Geen"],
+          ["Provincie", a.provincie],
+          ["Gewenste termijn", a.termijn],
+          ["Naam", esc(a.naam)],
+          ["E-mailadres", esc(a.email)],
+          ...(a.telefoon ? [["Telefoon", esc(a.telefoon)]] : []),
+          ...(a.opmerkingen ? [["Opmerkingen", esc(a.opmerkingen)]] : [])
+        ];
+        return `<div class="alleen-print print-kop">
+            <span class="print-wordmark">verandawijzer<span class="logo-tld">.nl</span></span>
+            <span class="print-onderwerp">Offerteaanvraag — samenvatting</span>
+          </div>
+          <div class="alleen-print print-samenvatting">
+            <h3>Jouw aanvraag</h3>
+            <table>
+              <tbody>${rijen.map(([label, waarde]) => `<tr><th scope="row">${label}</th><td>${waarde}</td></tr>`).join("")}</tbody>
+            </table>
+          </div>`;
+      }
+
       /* Marktrichtprijs: één regel boven de matchlijst, berekend uit de
          marktrichtprijzen per m² (RICHTPRIJZEN_M2, eigen marktanalyse
          Verandawijzer) — nadrukkelijk géén offerte of prijs van de getoonde
          bedrijven. Een lamellendak heeft een eigen range; anders geldt de
          range van het gekozen materiaal, of "standaard" bij geen voorkeur. */
       function marktRichtprijsHTML(a) {
-        const range = a.product === "lamellendak"
+        const basis = a.product === "lamellendak"
           ? RICHTPRIJZEN_M2.lamellendak
           : (RICHTPRIJZEN_M2[a.materiaal] || RICHTPRIJZEN_M2.standaard);
-        if (!range || !a.m2) return "";
+        if (!basis || !a.m2) return "";
+        /* Zelfde daktype-segmentlogica als de prijswijzer (prijzen.html), zodat
+           beide pagina's dezelfde richtprijs tonen voor dezelfde combinatie.
+           Bij product lamellendak zit het lamellendak al in de eigen range. */
+        const SEGMENT = { polycarbonaat: [0, 0.55], sandwichpaneel: [0.15, 0.7], glas: [0.3, 1], lamellen: [0.45, 1] };
+        const seg = (a.dak && a.product !== "lamellendak") ? (SEGMENT[a.dak] || [0, 1]) : [0, 1];
+        const span = basis.max - basis.min;
+        const min = basis.min + span * seg[0];
+        const max = basis.min + span * seg[1];
+        const rond50 = (n) => Math.round(n / 50) * 50;
         return `<div class="m2-weergave" style="margin:16px 0 0">
-          <span>Marktrichtprijs voor ${nl(a.m2)} m²: <strong>${VF.euro(range.min * a.m2)} – ${VF.euro(range.max * a.m2)}</strong> inclusief montage. Dit is een marktrichtprijs op basis van onze eigen marktanalyse — geen offerte van deze bedrijven. <a href="prijzen.html">Meer over prijzen</a></span>
+          <span>Marktrichtprijs voor ${nl(a.m2)} m²: <strong>${VF.euro(rond50(min * a.m2))} – ${VF.euro(rond50(max * a.m2))}</strong> inclusief montage. Dit is een marktrichtprijs op basis van onze eigen marktanalyse — geen offerte van deze bedrijven. <a href="prijzen.html">Meer over prijzen</a></span>
         </div>`;
       }
 
@@ -521,11 +588,14 @@
         const top = matches.slice(0, 5);
         resultaatTitel.textContent = "Deze bedrijven passen bij jouw aanvraag";
         resultaatEl.innerHTML = `
+          ${printSamenvattingHTML(a)}
           <div class="melding melding-ok" role="status">Je aanvraag is samengesteld.</div>
           <p class="klein mb-0">We vonden <strong>${matches.length}</strong> ${matches.length === 1 ? "bedrijf dat" : "bedrijven die"} jouw ${PRODUCTEN[a.product].toLowerCase()} in ${a.provincie} ${matches.length === 1 ? "kan" : "kunnen"} bouwen${matches.length > 5 ? "; dit zijn de vijf beste matches" : ""}. Verandawijzer verstuurt niets automatisch: klik bij de bedrijven van jouw keuze op &ldquo;Stuur aanvraag&rdquo; en verstuur de voorbereide e-mail zelf.</p>
           ${marktRichtprijsHTML(a)}
+          <h3 class="alleen-print print-matchkop">Passende bedrijven</h3>
           <div class="match-lijst">${top.map((m) => matchKaartHTML(m.bedrijf, a, m.score)).join("")}</div>
           <div class="match-acties mt-2">
+            <button type="button" class="knop knop-outline" id="knop-print">Print of bewaar als PDF</button>
             <button type="button" class="knop knop-outline" id="knop-opnieuw">Opnieuw beginnen</button>
           </div>`;
         if (nieuwBewaard) VF.toast("Je aanvraag is samengesteld");
@@ -533,6 +603,7 @@
 
       /* Acties binnen het resultaat (herrenderd, dus via delegatie) */
       resultaatEl.addEventListener("click", (e) => {
+        if (e.target.closest("#knop-print")) { window.print(); return; }
         if (e.target.closest("#knop-opnieuw")) {
           form.reset();
           toonM2();

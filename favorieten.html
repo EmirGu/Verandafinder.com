@@ -13,6 +13,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%231b3a2d'/%3E%3Ccircle cx='24' cy='24' r='15' fill='none' stroke='%23fff' stroke-width='3.5'/%3E%3Cpolygon points='32.5,15.5 26.4,26.4 21.6,21.6' fill='%23fff'/%3E%3Cpolygon points='15.5,32.5 26.4,26.4 21.6,21.6' fill='%23e8a33d'/%3E%3C/svg%3E">
+  <style>
+    /* Pagina-specifiek: compacte rij "Onlangs bekeken" onder het favorietenraster */
+    #recent-sectie { padding-top: 0; }
+    .recent-kop { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
+    .recent-kop h2 { font-size: 1.05rem; margin: 0; }
+    .wis-recent {
+      background: none; border: 0; padding: 0; cursor: pointer;
+      font: inherit; font-size: .84rem; color: var(--ink-500); text-decoration: underline;
+    }
+    .wis-recent:hover { color: var(--groen-700); }
+    .recent-rij { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+    .recent-kaart { display: flex; align-items: center; gap: 11px; padding: 10px 18px 10px 10px; text-decoration: none; flex: none; max-width: 260px; transition: border-color .15s, box-shadow .15s; }
+    .recent-kaart:hover { border-color: var(--groen-500); box-shadow: var(--schaduw-m); }
+    .recent-kaart .recent-tekst { display: grid; min-width: 0; }
+    .recent-kaart strong { font-family: var(--font-kop); font-size: .92rem; color: var(--groen-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recent-kaart small { font-size: .8rem; color: var(--ink-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bedrijf-avatar.avatar-klein { width: 40px; height: 40px; font-size: .78rem; }
+    .bedrijf-avatar.avatar-klein.met-logo img { padding: 5px; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#inhoud">Direct naar inhoud</a>
@@ -32,6 +51,17 @@
     <section class="sectie">
       <div class="wrap">
         <div id="favorieten-inhoud" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Onlangs bekeken (alleen zichtbaar na bezoek aan een bedrijfsprofiel) -->
+    <section class="sectie-strak verborgen" id="recent-sectie" aria-labelledby="recent-titel">
+      <div class="wrap">
+        <div class="recent-kop">
+          <h2 id="recent-titel">Onlangs bekeken</h2>
+          <button type="button" class="wis-recent" id="wis-recent" aria-label="Wis de lijst met onlangs bekeken bedrijven">wis</button>
+        </div>
+        <div class="recent-rij" id="recent-lijst"></div>
       </div>
     </section>
 
@@ -100,7 +130,32 @@
         });
       }
 
+      /* ---------- Onlangs bekeken (lokaal, alleen na bezoek aan een profiel) ---------- */
+      function renderRecent() {
+        const sectie = document.getElementById("recent-sectie");
+        const recent = VF.leesRecent();
+        if (!recent.length) {
+          sectie.classList.add("verborgen");
+          return;
+        }
+        document.getElementById("recent-lijst").innerHTML = recent.map((id) => {
+          const b = VF.getBedrijf(id);
+          return `<a class="kaart recent-kaart" href="bedrijf.html?id=${b.id}">
+            ${VF.avatarHTML(b, "avatar-klein")}
+            <span class="recent-tekst"><strong>${b.naam}</strong><small>${b.plaats ? `${b.plaats}${b.provincie ? ", " + b.provincie : ""}` : "Landelijk actief"}</small></span>
+          </a>`;
+        }).join("");
+        sectie.classList.remove("verborgen");
+      }
+
+      document.getElementById("wis-recent").addEventListener("click", () => {
+        try { localStorage.removeItem("vf_recent"); } catch (e) { /* privémodus: geen opslag */ }
+        VF.toast("Onlangs bekeken is gewist");
+        renderRecent();
+      });
+
       render();
+      renderRecent();
       VF.verversUI();
       VF.bijVerversen(render);
     });

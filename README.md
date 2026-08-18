@@ -28,7 +28,7 @@ Bezoekers vergelijken verandabedrijven op prijs, reviews, werkgebied en speciali
 
 ## Bedrijvendata: echte bedrijven, alleen feiten
 
-De gids in `assets/js/data.js` bevat **161 echte Nederlandse verandabedrijven** in alle 12 provincies, samengesteld op basis van openbare informatie van hun eigen websites (per profiel staat de bron-URL en de controle-datum). Bewuste keuzes:
+De gids in `assets/js/data.js` bevat **215 echte Nederlandse verandabedrijven** in alle 12 provincies, samengesteld op basis van openbare informatie van hun eigen websites (per profiel staat de bron-URL en de controle-datum). Bewuste keuzes:
 
 - **Geen verzonnen reviews, scores of prijzen.** `rating`/`reviews` staan leeg tot er echte reviews binnenkomen; de site toont dan netjes "Nog geen reviews". Zodra je echte reviewdata toevoegt, verschijnen sterren, sorteren-op-beoordeling en de reviewsecties vanzelf (schakel: `VF.heeftReviews`).
 - **Prijzen in de prijswijzer zijn marktrichtprijzen** (`RICHTPRIJZEN_M2` in data.js), niet afkomstig van individuele bedrijven.

@@ -33,6 +33,13 @@
     .zijbalk-acties { display: grid; gap: 10px; }
     .knop.actief.knop-outline { background: var(--groen-700); color: #fff; }
     .knop.actief.knop-wit { border-color: var(--rood-600); color: var(--rood-600); }
+    /* Eerder bekeken: compacte rijen onderaan het profiel */
+    .eerder-lijst { display: grid; gap: 10px; max-width: 420px; }
+    .eerder-rij { display: flex; align-items: center; gap: 11px; padding: 10px 14px 10px 10px; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+    .eerder-rij:hover { border-color: var(--groen-500); box-shadow: var(--schaduw-m); }
+    .eerder-rij .eerder-tekst { display: grid; min-width: 0; }
+    .eerder-rij strong { font-family: var(--font-kop); font-size: .92rem; color: var(--groen-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .eerder-rij small { font-size: .8rem; color: var(--ink-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     @media (max-width: 760px) {
       .review-overzicht, .raster-2 { grid-template-columns: 1fr; }
     }
@@ -96,6 +103,14 @@
 
       /* --- Bedrijf gevonden: titel en profiel opbouwen --- */
       document.title = b.naam + " — Verandawijzer.nl";
+
+      /* Eerder bekeken: eerst de lijst van vóór dit bezoek lezen (zonder dit
+         bedrijf zelf), daarna dit bezoek registreren voor volgende pagina's. */
+      const eerderBekeken = VF.leesRecent()
+        .filter((x) => x !== b.id)
+        .slice(0, 3)
+        .map((x) => VF.getBedrijf(x));
+      VF.registreerBezoek(b.id);
 
       /* Vestiging, null-veilig: landelijke aanbieders zonder vermelde vestiging */
       const plaatsTekst = [b.plaats, b.provincie].filter(Boolean).join(", ") || "Landelijk actief";
@@ -258,6 +273,17 @@
                   <p class="klein">Actief in dezelfde regio, of landelijk werkend.</p>
                   <div class="raster-2">
                     ${vergelijkbaar.map((x) => VF.bedrijfKaartHTML(x)).join("")}
+                  </div>
+                </section>` : ""}
+
+                ${eerderBekeken.length ? `<section class="kaart detail-blok" aria-labelledby="kop-eerder">
+                  <h2 id="kop-eerder">Eerder bekeken</h2>
+                  <p class="klein">Bedrijfsprofielen die je eerder bekeek. Deze lijst staat alleen in jouw eigen browser.</p>
+                  <div class="eerder-lijst">
+                    ${eerderBekeken.map((x) => `<a class="kaart eerder-rij" href="bedrijf.html?id=${x.id}">
+                      ${VF.avatarHTML(x)}
+                      <span class="eerder-tekst"><strong>${x.naam}</strong><small>${x.plaats ? `${x.plaats}${x.provincie ? ", " + x.provincie : ""}` : "Landelijk actief"}</small></span>
+                    </a>`).join("")}
                   </div>
                 </section>` : ""}
 
