@@ -384,6 +384,28 @@ const VF = (() => {
     if (vbVerwijder) { e.preventDefault(); verwijderVergelijk(vbVerwijder.dataset.vbVerwijder); }
   });
 
+  /* ---------- Paginatransities ----------
+     Werkt in elke browser, ook lokaal via file:// waar de native
+     view-transitions-API niet beschikbaar is: bij een klik op een interne
+     link eerst kort uitfaden (CSS: html.pagina-verlaat), dan navigeren.
+     De nieuwe pagina komt binnen via de pagina-in-animatie op <main>. */
+  (function () {
+    /* bfcache: bij terugnavigeren de uitfade-klasse altijd opruimen */
+    window.addEventListener("pageshow", () => document.documentElement.classList.remove("pagina-verlaat"));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = e.target.closest("a[href]");
+      if (!link) return;
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#") || href.includes("#") || /^(https?:|mailto:|tel:)/.test(href)) return;
+      if (link.target && link.target !== "_self") return;
+      e.preventDefault();
+      document.documentElement.classList.add("pagina-verlaat");
+      setTimeout(() => { location.href = href; }, 150);
+    });
+  })();
+
   /* ---------- Init ---------- */
   document.addEventListener("DOMContentLoaded", () => {
     renderHeader();

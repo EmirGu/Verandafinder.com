@@ -387,11 +387,24 @@ body.met-vergelijkbalk { padding-bottom: 84px; }
 }
 @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-/* ---------- 10. Hero (home) — één ding: zoeken ---------- */
+/* ---------- 10. Hero (home) — paginavullend zoekscherm ---------- */
 .hero {
   background: #fff; border-bottom: 1px solid var(--lijn);
-  color: var(--ink-900); padding: 64px 0 60px; position: relative;
+  color: var(--ink-900); padding: 40px 0 84px; position: relative;
+  /* Vult het scherm onder de header (topstrip 32px + header 66px); pas na
+     scrollen verschijnt de rest van de pagina. svh = veilig op mobiel. */
+  min-height: calc(100svh - 98px);
+  display: grid; place-items: center;
 }
+.scroll-hint {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
+  font-family: var(--font-kop); font-size: .78rem; font-weight: 500;
+  color: var(--ink-500); text-decoration: none;
+}
+.scroll-hint:hover { color: var(--groen-700); }
+.scroll-hint svg { animation: hint-stuiter 1.8s ease-in-out infinite; }
+@keyframes hint-stuiter { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 .hero-midden { max-width: 780px; margin: 0 auto; text-align: center; }
 .hero .boventitel {
   display: inline-block; font-family: var(--font-kop); font-size: .78rem; font-weight: 600;
@@ -634,23 +647,17 @@ body.met-vergelijkbalk { padding-bottom: 84px; }
 }
 
 /* ---------- 21. Paginatransities ---------- */
-/* Cross-document view transitions: zachte overgang bij het wisselen van pagina.
-   Werkt in Chrome/Edge/Safari; browsers zonder ondersteuning krijgen de
-   fallback hieronder. De header behoudt zijn eigen naam en blijft daardoor
-   rustig staan terwijl de inhoud overvloeit. */
-@view-transition { navigation: auto; }
-#site-header { view-transition-name: site-kop; }
-::view-transition-old(root) { animation: vt-uit .16s ease both; }
-::view-transition-new(root) { animation: vt-in .24s ease both; }
-@keyframes vt-uit { to { opacity: 0; } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
-@keyframes pagina-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@supports not (view-transition-name: root) {
-  main { animation: pagina-in .28s ease both; }
-}
+/* JavaScript-gedreven (zie app.js): werkt in élke browser en ook lokaal via
+   file://, waar de native view-transitions-API niet beschikbaar is.
+   Binnenkomen: de inhoud vloeit zacht omhoog; vertrekken: korte fade-out.
+   De header en footer blijven rustig staan. */
+@keyframes pagina-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+main { animation: pagina-in .3s ease both; }
+body { transition: opacity .15s ease; }
+html.pagina-verlaat body { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
-  main { animation: none !important; }
+  main, .scroll-hint svg { animation: none !important; }
+  body { transition: none !important; }
 }
 
 @media print {
