@@ -94,7 +94,7 @@ const VF = (() => {
           ${avatarHTML(b)}
           <div style="min-width:0">
             <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
-            <span class="bedrijf-plaats">${PLAATS_SVG}${b.plaats}, ${b.provincie}</span>
+            <span class="bedrijf-plaats">${PLAATS_SVG}${b.plaats ? `${b.plaats}${b.provincie ? ", " + b.provincie : ""}` : "Landelijk actief"}</span>
           </div>
         </div>
         ${scoreHTML(b)}
@@ -110,7 +110,7 @@ const VF = (() => {
   /* Bedrijfsrij — dichte lijstweergave voor het overzicht */
   function bedrijfRijHTML(b) {
     const feiten = [
-      `<span>${PLAATS_SVG}${b.plaats}, ${b.provincie}</span>`,
+      ...(b.plaats ? [`<span>${PLAATS_SVG}${b.plaats}${b.provincie ? ", " + b.provincie : ""}</span>`] : []),
       `<span>${b.producten.map((p) => PRODUCTEN[p]).slice(0, 3).join(" · ")}</span>`,
       ...(b.typen.length ? [`<span>${b.typen.map((t) => MATERIALEN[t]).join(", ")}</span>`] : []),
       ...(b.showroom ? [`<span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Showroom</span>`] : []),

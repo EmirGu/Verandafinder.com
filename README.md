@@ -26,9 +26,15 @@ Bezoekers vergelijken verandabedrijven op prijs, reviews, werkgebied en speciali
 - Design system in `assets/css/style.css` (CSS custom properties, licht/donker-neutraal, volledig responsive).
 - Vergelijken en favorieten werken via `localStorage`; de offertewizard matcht bedrijven client-side.
 
-## ⚠️ Voorbeelddata
+## Bedrijvendata: echte bedrijven, alleen feiten
 
-De bedrijven in `assets/js/data.js` zijn **fictieve voorbeeldbedrijven** zodat de site direct volledig werkt en te demonstreren is. Vervang ze door echte aangesloten bedrijven vóór livegang: elk bedrijf is één object in de lijst — kopieer een bestaand object en pas de velden aan. Het schema staat bovenaan het bestand gedocumenteerd.
+De gids in `assets/js/data.js` bevat **31 echte Nederlandse verandabedrijven**, samengesteld op basis van openbare informatie van hun eigen websites (per profiel staat de bron-URL en de controle-datum). Bewuste keuzes:
+
+- **Geen verzonnen reviews, scores of prijzen.** `rating`/`reviews` staan leeg tot er echte reviews binnenkomen; de site toont dan netjes "Nog geen reviews". Zodra je echte reviewdata toevoegt, verschijnen sterren, sorteren-op-beoordeling en de reviewsecties vanzelf (schakel: `VF.heeftReviews`).
+- **Prijzen in de prijswijzer zijn marktrichtprijzen** (`RICHTPRIJZEN_M2` in data.js), niet afkomstig van individuele bedrijven.
+- Bedrijven zijn "vermeld", niet "aangesloten": ze kunnen hun vermelding gratis claimen, corrigeren of laten verwijderen via de contactpagina. Verifieer gegevens periodiek opnieuw — websites veranderen.
+
+Nieuw bedrijf toevoegen: kopieer een object in `BEDRIJVEN` en vul alleen in wat je kunt onderbouwen. Het schema staat bovenaan het bestand gedocumenteerd.
 
 ## Lokaal bekijken
 
