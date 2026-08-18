@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232c5e46'/%3E%3Cpath d='M4 11.5 12 5l8 6.5M6.5 10v9M17.5 10v9M4.5 19h15M10 19v-4h4v4' stroke='%23f0b45c' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 </head>
@@ -24,7 +24,7 @@
       <div class="wrap hero-raster">
         <div>
           <h1>Vind de <em>beste verandabouwer</em> voor jouw tuin</h1>
-          <p class="hero-intro">Vergelijk verandabedrijven op prijs, reviews en specialisatie. Onafhankelijk, overzichtelijk en gratis — zodat jij met vertrouwen kiest.</p>
+          <p class="hero-intro">Vergelijk verandabedrijven op aanbod, materiaal, werkgebied en specialisatie. Onafhankelijk, overzichtelijk en gratis.</p>
           <form class="hero-zoek" action="bedrijven.html" method="get">
             <select name="provincie" aria-label="Kies je provincie">
               <option value="">Heel Nederland</option>
@@ -35,9 +35,9 @@
             <button class="knop knop-accent" type="submit">Toon bedrijven</button>
           </form>
           <div class="hero-cijfers">
-            <div class="hero-cijfer"><div class="cijfer" id="cijfer-bedrijven">—</div><div class="cijfer-label">aangesloten bedrijven</div></div>
-            <div class="hero-cijfer"><div class="cijfer" id="cijfer-reviews">—</div><div class="cijfer-label">klantbeoordelingen</div></div>
-            <div class="hero-cijfer"><div class="cijfer" id="cijfer-score">—</div><div class="cijfer-label">gemiddelde score</div></div>
+            <div class="hero-cijfer"><div class="cijfer" id="cijfer-bedrijven">—</div><div class="cijfer-label">bedrijven in de gids</div></div>
+            <div class="hero-cijfer"><div class="cijfer" id="cijfer-provincies">—</div><div class="cijfer-label">provincies gedekt</div></div>
+            <div class="hero-cijfer"><div class="cijfer" id="cijfer-showrooms">—</div><div class="cijfer-label">met eigen showroom</div></div>
           </div>
         </div>
         <div class="hero-visual">
@@ -78,9 +78,9 @@
     <section class="sectie" style="background:#fff">
       <div class="wrap">
         <div class="sectie-kop">
-          <span class="boventitel">Best beoordeeld</span>
-          <h2>Topbedrijven volgens klanten</h2>
-          <p>De hoogst gewaardeerde verandabouwers van dit moment, beoordeeld door mensen die je voorgingen.</p>
+          <span class="boventitel">Uitgelicht</span>
+          <h2>Een greep uit de gids</h2>
+          <p>Bekijk profielen, zet bedrijven naast elkaar en vraag gericht offertes aan bij wie bij jouw project past.</p>
         </div>
         <div class="kaarten-raster" id="top-bedrijven"></div>
         <p class="tekst-midden mt-3"><a class="knop knop-outline" href="bedrijven.html">Bekijk alle bedrijven →</a></p>
@@ -113,15 +113,15 @@
       </div>
     </section>
 
-    <!-- Recente reviews -->
+    <!-- Per provincie -->
     <section class="sectie">
       <div class="wrap">
         <div class="sectie-kop">
-          <span class="boventitel">Ervaringen</span>
-          <h2>Wat klanten zeggen</h2>
-          <p>Recente beoordelingen van mensen die via Verandawijzer hun verandabouwer vonden.</p>
+          <span class="boventitel">In jouw regio</span>
+          <h2>Zoek per provincie</h2>
+          <p>Elk bedrijf in de gids heeft een vestigingsplaats en, waar bekend, een werkgebied. Kies je provincie en zie direct wie er bij jou in de buurt bouwt.</p>
         </div>
-        <div class="kaarten-raster" id="recente-reviews"></div>
+        <div class="chips" id="provincie-chips"></div>
       </div>
     </section>
 
@@ -147,11 +147,11 @@
         </div>
         <details class="faq-item">
           <summary>Is Verandawijzer echt gratis en onafhankelijk?</summary>
-          <div class="faq-antwoord"><p>Ja. Vergelijken, de prijswijzer en offertes aanvragen zijn volledig gratis voor bezoekers. Bedrijven betalen een vast bedrag voor hun vermelding — de hoogte daarvan heeft géén invloed op hun positie of beoordeling. Reviews en scores komen van klanten, niet van ons.</p></div>
+          <div class="faq-antwoord"><p>Ja. Vergelijken, de prijswijzer en offertes aanvragen zijn volledig gratis voor bezoekers. De gids is samengesteld op basis van openbare informatie van de bedrijfswebsites; de volgorde in overzichten is niet te koop. Bedrijven kunnen hun vermelding kosteloos controleren en aanvullen via de <a href="contact.html">contactpagina</a>.</p></div>
         </details>
         <details class="faq-item">
-          <summary>Hoe betrouwbaar zijn de reviews?</summary>
-          <div class="faq-antwoord"><p>Reviews worden gecontroleerd op echtheid: we vragen om een projectomschrijving en controleren dubbele of verdachte inzendingen. Bedrijven kunnen reviews niet verwijderen of aanpassen.</p></div>
+          <summary>Waar komen de gegevens van de bedrijven vandaan?</summary>
+          <div class="faq-antwoord"><p>Van de eigen websites van de bedrijven. Per profiel staat vermeld wanneer de gegevens voor het laatst gecontroleerd zijn. Klopt er iets niet of ontbreekt jouw bedrijf? <a href="contact.html">Geef het door</a>, dan passen we het aan.</p></div>
         </details>
         <details class="faq-item">
           <summary>Wat kost een veranda gemiddeld?</summary>
@@ -197,27 +197,36 @@
       const selProduct = document.querySelector('select[name="product"]');
       Object.entries(PRODUCTEN).forEach(([sleutel, label]) => selProduct.insertAdjacentHTML("beforeend", `<option value="${sleutel}">${label}</option>`));
 
-      const totaalReviews = BEDRIJVEN.reduce((som, b) => som + b.aantalReviews, 0);
-      const gemiddelde = BEDRIJVEN.reduce((som, b) => som + b.rating, 0) / BEDRIJVEN.length;
+      /* Feitelijke cijfers uit de gids */
+      const provinciesGedekt = new Set(BEDRIJVEN.map((b) => b.provincie).filter(Boolean)).size;
+      const metShowroom = BEDRIJVEN.filter((b) => b.showroom).length;
       document.getElementById("cijfer-bedrijven").textContent = BEDRIJVEN.length;
-      document.getElementById("cijfer-reviews").textContent = totaalReviews.toLocaleString("nl-NL") + "+";
-      document.getElementById("cijfer-score").textContent = gemiddelde.toFixed(1).replace(".", ",");
+      document.getElementById("cijfer-provincies").textContent = provinciesGedekt;
+      document.getElementById("cijfer-showrooms").textContent = metShowroom;
 
-      /* Topbedrijven: hoogste rating, top 6 */
-      const top = [...BEDRIJVEN]
-        .sort((a, b) => b.rating - a.rating || b.aantalReviews - a.aantalReviews)
-        .slice(0, 6);
-      document.getElementById("top-bedrijven").innerHTML = top.map(VF.bedrijfKaartHTML).join("");
+      /* Uitgelichte bedrijven: gespreid over provincies, met reviews bovenaan als die er zijn */
+      const uitgelicht = [];
+      const gezienProvincie = new Set();
+      const kandidaten = [...BEDRIJVEN].sort((a, b) =>
+        (b.rating || 0) - (a.rating || 0) || (b.showroom ? 1 : 0) - (a.showroom ? 1 : 0) || a.naam.localeCompare(b.naam));
+      for (const b of kandidaten) {
+        if (!gezienProvincie.has(b.provincie) || uitgelicht.length >= BEDRIJVEN.length - 6) {
+          uitgelicht.push(b);
+          gezienProvincie.add(b.provincie);
+        }
+        if (uitgelicht.length === 6) break;
+      }
+      document.getElementById("top-bedrijven").innerHTML = uitgelicht.map(VF.bedrijfKaartHTML).join("");
       VF.verversUI();
 
-      /* Hero-paneel: top 3 van deze maand, live uit de data */
+      /* Hero-paneel: drie bedrijven uit de gids */
       document.getElementById("hero-paneel").innerHTML = `
-        <div class="hp-kop">Best beoordeeld deze maand <span class="badge badge-groen">Live uit ${totaalReviews.toLocaleString("nl-NL")} reviews</span></div>
-        ${top.slice(0, 3).map((b) => `
+        <div class="hp-kop">Uit de gids <span class="badge">${BEDRIJVEN.length} bedrijven</span></div>
+        ${uitgelicht.slice(0, 3).map((b) => `
           <a class="hp-rij" href="bedrijf.html?id=${b.id}">
-            <span class="hp-logo" style="background:${b.kleur}">${VF.initialen(b.naam)}</span>
-            <span><span class="hp-naam">${b.naam}</span><br><span class="hp-sub">${b.plaats} · vanaf ${VF.euro(b.prijsPerM2.min)}/m²</span></span>
-            <span class="hp-score"><span class="score-cijfer">${VF.komma(b.rating)}</span><br><span class="hp-sub">${b.aantalReviews} reviews</span></span>
+            ${VF.avatarHTML(b)}
+            <span><span class="hp-naam">${b.naam}</span><br><span class="hp-sub">${b.plaats}${b.provincie ? ", " + b.provincie : ""} · ${b.producten.slice(0, 2).map((p) => PRODUCTEN[p]).join(", ")}</span></span>
+            <span class="hp-score">${b.rating ? `<span class="score-cijfer">${VF.komma(b.rating)}</span>` : `<span class="hp-sub">${b.showroom ? "Showroom" : "Bekijk profiel"}</span>`}</span>
           </a>`).join("")}
         <div class="hp-voet"><a href="bedrijven.html">Bekijk alle ${BEDRIJVEN.length} bedrijven →</a></div>`;
 
@@ -238,16 +247,11 @@
         </a>`;
       }).join("");
 
-      /* Recente reviews: nieuwste 5-sterren reviews over alle bedrijven */
-      const alleReviews = BEDRIJVEN.flatMap((b) => b.reviews.map((r) => ({ ...r, bedrijf: b })));
-      const recent = alleReviews.filter((r) => r.score >= 5).sort((a, b) => b.datum.localeCompare(a.datum)).slice(0, 3);
-      document.getElementById("recente-reviews").innerHTML = recent.map((r) => `
-        <article class="kaart detail-blok">
-          <div class="score-blok mb-2">${VF.sterrenHTML(r.score)}<span class="review-meta">${r.naam} · ${r.plaats}</span></div>
-          <h3 style="font-size:1.05rem">${r.titel}</h3>
-          <p style="color:var(--ink-700);font-size:.94rem">“${r.tekst}”</p>
-          <p class="klein mb-0">Over <a href="bedrijf.html?id=${r.bedrijf.id}">${r.bedrijf.naam}</a> · ${r.project}</p>
-        </article>`).join("");
+      /* Provincie-chips met aantallen (vestiging of werkgebied) */
+      document.getElementById("provincie-chips").innerHTML = PROVINCIES.map((p) => {
+        const n = BEDRIJVEN.filter((b) => b.provincie === p || (b.werkgebied || []).includes(p) || (b.werkgebied || [])[0] === "Landelijk").length;
+        return `<a class="chip" style="text-decoration:none" href="bedrijven.html?provincie=${encodeURIComponent(p)}"><span>${p} <small style="opacity:.65">(${n})</small></span></a>`;
+      }).join("");
 
       /* Kennisbank-teaser: eerste 3 artikelen */
       const artikelIconen = {

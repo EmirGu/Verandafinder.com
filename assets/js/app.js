@@ -42,45 +42,91 @@ const VF = (() => {
 
   const initialen = (naam) => naam.split(/\s+/).filter((w) => /^[A-Za-z&]/.test(w)).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
-  function coverHTML(bedrijf) {
-    return `<div class="bedrijf-cover" style="background:${bedrijf.kleur}">
-      <svg class="cover-patroon" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <path d="M0 95 L200 15 L400 95" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="7"/>
-        <path d="M35 95 L35 40 M365 95 L365 40" stroke="rgba(255,255,255,.4)" stroke-width="6"/>
-        <path d="M0 96 h400" stroke="rgba(255,255,255,.35)" stroke-width="4"/>
-        <path d="M110 95 L110 55 M200 95 L200 25 M290 95 L290 55" stroke="rgba(255,255,255,.25)" stroke-width="4"/>
-      </svg>
-      <span class="bedrijf-logo" style="background:${bedrijf.kleur}">${initialen(bedrijf.naam)}</span>
-    </div>`;
+  /* Logo: echte favicon van de bedrijfswebsite, met monogram als vangnet.
+     Laadt de favicon niet of heeft het bedrijf geen website, dan blijft het monogram staan. */
+  function avatarHTML(b, extraKlasse = "") {
+    const monogram = initialen(b.naam);
+    let img = "";
+    if (b.website) {
+      const domein = b.website.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+      img = `<img src="https://www.google.com/s2/favicons?domain=${domein}&sz=64" alt="" loading="lazy"
+        onload="if(this.naturalWidth>16){this.closest('.bedrijf-avatar').classList.add('met-logo')}else{this.remove()}"
+        onerror="this.remove()">`;
+    }
+    return `<span class="bedrijf-avatar ${extraKlasse}" style="background:${b.kleur || "#2c5e46"}" aria-hidden="true">${monogram}${img}</span>`;
   }
 
-  /* Centrale bedrijfskaart — gebruikt op home, overzicht en favorieten */
-  function bedrijfKaartHTML(b) {
+  /* Score-weergave: sterren + cijfer, of een nette melding zolang er nog geen reviews zijn */
+  function scoreHTML(b) {
+    if (!b.rating) return `<span class="geen-reviews">Nog geen reviews via Verandawijzer</span>`;
+    return `<span class="score-blok">${sterrenHTML(b.rating)}<span class="score-cijfer">${komma(b.rating)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></span>`;
+  }
+
+  /* Actieknoppen (favoriet + vergelijken) — gedeeld door kaart en rij */
+  function actieKnoppenHTML(b) {
     const inVergelijk = leesVergelijk().includes(b.id);
     const isFavoriet = leesFavorieten().includes(b.id);
+    return `<span class="kaart-acties">
+      <button type="button" class="icoon-knop fav ${isFavoriet ? "actief" : ""}" data-fav="${b.id}" aria-label="${isFavoriet ? "Verwijder uit favorieten" : "Bewaar als favoriet"}" aria-pressed="${isFavoriet}" title="Favoriet">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="${isFavoriet ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      </button>
+      <button type="button" class="icoon-knop vgl ${inVergelijk ? "actief" : ""}" data-vergelijk="${b.id}" aria-label="${inVergelijk ? "Verwijder uit vergelijking" : "Voeg toe aan vergelijking"}" aria-pressed="${inVergelijk}" title="Vergelijken">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+      </button>
+    </span>`;
+  }
+
+  const PLAATS_SVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>`;
+
+  /* Centrale bedrijfskaart — gebruikt op home en favorieten */
+  function bedrijfKaartHTML(b) {
     const tags = [
-      PRIJSKLASSEN[b.prijsKlasse],
+      ...(b.prijsKlasse ? [PRIJSKLASSEN[b.prijsKlasse]] : []),
       ...b.typen.slice(0, 2).map((t) => MATERIALEN[t]),
-      ...(b.keurmerken.length ? [b.keurmerken[0]] : [])
+      ...(b.keurmerken && b.keurmerken.length ? [b.keurmerken[0]] : [])
     ];
+    const voetLinks = b.prijsPerM2
+      ? `<span class="prijs-vanaf">Vanaf<strong>${euro(b.prijsPerM2.min)} / m²</strong></span>`
+      : `<span class="prijs-vanaf">${b.producten.length} product${b.producten.length === 1 ? "" : "en"}<strong>${b.showroom ? "Met showroom" : "Op afspraak"}</strong></span>`;
     return `<article class="kaart bedrijf-kaart" data-id="${b.id}">
-      ${coverHTML(b)}
-      <div class="kaart-inhoud">
-        <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
-        <span class="bedrijf-plaats"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>${b.plaats}, ${b.provincie}</span>
-        <div class="score-blok">${sterrenHTML(b.rating)}<span class="score-cijfer">${komma(b.rating)}</span><span class="review-aantal">${b.aantalReviews} reviews</span></div>
+      <div class="kaart-inhoud" style="padding-top:20px">
+        <div style="display:flex;gap:12px;align-items:center">
+          ${avatarHTML(b)}
+          <div style="min-width:0">
+            <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
+            <span class="bedrijf-plaats">${PLAATS_SVG}${b.plaats}, ${b.provincie}</span>
+          </div>
+        </div>
+        ${scoreHTML(b)}
         <div class="bedrijf-tags">${tags.map((t) => `<span class="badge">${t}</span>`).join("")}</div>
         <div class="kaart-voet">
-          <span class="prijs-vanaf">Vanaf<strong>${euro(b.prijsPerM2.min)} / m²</strong></span>
-          <span class="kaart-acties">
-            <button type="button" class="icoon-knop fav ${isFavoriet ? "actief" : ""}" data-fav="${b.id}" aria-label="${isFavoriet ? "Verwijder uit favorieten" : "Bewaar als favoriet"}" aria-pressed="${isFavoriet}" title="Favoriet">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="${isFavoriet ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-            </button>
-            <button type="button" class="icoon-knop vgl ${inVergelijk ? "actief" : ""}" data-vergelijk="${b.id}" aria-label="${inVergelijk ? "Verwijder uit vergelijking" : "Voeg toe aan vergelijking"}" aria-pressed="${inVergelijk}" title="Vergelijken">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
-            </button>
-          </span>
+          ${voetLinks}
+          ${actieKnoppenHTML(b)}
         </div>
+      </div>
+    </article>`;
+  }
+
+  /* Bedrijfsrij — dichte lijstweergave voor het overzicht */
+  function bedrijfRijHTML(b) {
+    const feiten = [
+      `<span>${PLAATS_SVG}${b.plaats}, ${b.provincie}</span>`,
+      `<span>${b.producten.map((p) => PRODUCTEN[p]).slice(0, 3).join(" · ")}</span>`,
+      ...(b.typen.length ? [`<span>${b.typen.map((t) => MATERIALEN[t]).join(", ")}</span>`] : []),
+      ...(b.showroom ? [`<span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Showroom</span>`] : []),
+      ...(b.werkgebied && b.werkgebied[0] === "Landelijk" ? [`<span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Werkt landelijk</span>`] : [])
+    ];
+    return `<article class="kaart bedrijf-rij" data-id="${b.id}">
+      ${avatarHTML(b)}
+      <div class="rij-inhoud">
+        <h3><a href="bedrijf.html?id=${b.id}">${b.naam}</a></h3>
+        <div class="rij-feiten">${feiten.join("")}</div>
+        ${scoreHTML(b)}
+        ${b.keurmerken && b.keurmerken.length ? `<div class="bedrijf-tags">${b.keurmerken.map((k) => `<span class="badge">${k}</span>`).join("")}</div>` : ""}
+      </div>
+      <div class="rij-acties">
+        ${actieKnoppenHTML(b)}
+        ${b.prijsPerM2 ? `<span class="prijs-vanaf" style="text-align:right">Vanaf<strong>${euro(b.prijsPerM2.min)} / m²</strong></span>` : ""}
       </div>
     </article>`;
   }
@@ -158,7 +204,14 @@ const VF = (() => {
       ["kennisbank.html", "Kennisbank"],
       ["favorieten.html", "Favorieten", "favorieten"]
     ];
-    houder.innerHTML = `<header class="site-header">
+    houder.innerHTML = `<div class="topstrip">
+      <div class="wrap">
+        <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Onafhankelijke vergelijker</span>
+        <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>${BEDRIJVEN.length} bedrijven in heel Nederland</span>
+        <span class="ts-rechts"><a href="over-ons.html">Voor bedrijven</a><a href="contact.html">Contact</a></span>
+      </div>
+    </div>
+    <header class="site-header">
       <div class="wrap">
         <a class="logo" href="index.html" aria-label="Verandawijzer home">
           <span class="logo-beeld"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 11 12 4l10 7"/><path d="M5 9.5V20M19 9.5V20"/><path d="M3 20h18"/><path d="M9 20v-5h6v5"/></svg></span>
@@ -221,6 +274,10 @@ const VF = (() => {
               <li><a href="voorwaarden.html">Gebruiksvoorwaarden</a></li>
             </ul>
           </div>
+        </div>
+        <div class="footer-per-provincie">
+          <h4>Verandabedrijven per provincie</h4>
+          <p>${PROVINCIES.map((p) => `<a href="bedrijven.html?provincie=${encodeURIComponent(p)}">${p}</a>`).join(" · ")}</p>
         </div>
         <div class="footer-onder">
           <span>© ${jaar} Verandawijzer.nl — Vergelijk zorgeloos, kies bewust.</span>
@@ -321,7 +378,10 @@ const VF = (() => {
   });
 
   return {
-    getBedrijf, euro, komma, sterrenHTML, initialen, coverHTML, bedrijfKaartHTML,
+    getBedrijf, euro, komma, sterrenHTML, initialen, avatarHTML, scoreHTML,
+    bedrijfKaartHTML, bedrijfRijHTML, actieKnoppenHTML,
+    heeftReviews: BEDRIJVEN.some((b) => b.rating),
+    heeftPrijzen: BEDRIJVEN.some((b) => b.prijsPerM2),
     leesVergelijk, toggleVergelijk, verwijderVergelijk,
     leesFavorieten, toggleFavoriet,
     toast, verversUI, bijVerversen
